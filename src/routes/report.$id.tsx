@@ -67,27 +67,27 @@ function ReportView() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 stagger">
                   {a.values.map((v, i) => {
                     const t = statusTone(v.status);
                     const isOpen = open[i] ?? v.status !== "normal";
                     return (
-                      <div key={i} className="glass overflow-hidden">
+                      <div key={i} className="glass overflow-hidden hover:border-accent/20 transition-colors">
                         <button
                           onClick={() => setOpen(o => ({...o, [i]: !isOpen}))}
-                          className="w-full flex items-center gap-4 p-4 text-left hover:bg-white/[0.02] transition"
+                          className="w-full flex items-center gap-4 p-4 text-left hover:bg-white/[0.03] transition"
                         >
                           <span className={`dot ${t.dot}`} />
                           <div className="min-w-0 flex-1">
                             <div className="font-medium truncate">{v.name}</div>
-                            <div className="text-xs text-muted-foreground mt-0.5">{v.value}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5 tabular-nums">{v.value}</div>
                           </div>
-                          <span className={`text-xs px-2.5 py-1 rounded-full bg-white/5 ${t.color}`}>{t.label}</span>
-                          <ChevronDown size={16} className={`text-muted-foreground transition ${isOpen ? "rotate-180" : ""}`}/>
+                          <span className={`badge-status ${t.badge}`}>{t.label}</span>
+                          <ChevronDown size={16} className={`text-muted-foreground transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}/>
                         </button>
                         {isOpen && (
-                          <div className="px-4 pb-4 pt-0 text-sm text-muted-foreground border-t border-border/40">
-                            <div className="pt-3">{v.explanation}</div>
+                          <div className="px-4 pb-4 pt-0 text-sm text-muted-foreground border-t border-border/40 animate-fade-up">
+                            <div className="pt-3 leading-relaxed">{v.explanation}</div>
                           </div>
                         )}
                       </div>
