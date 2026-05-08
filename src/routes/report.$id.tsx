@@ -19,6 +19,7 @@ function ReportView() {
   const { user, loading } = useAuth();
   const nav = useNavigate();
   const [report, setReport] = useState<Report | null>(null);
+  const [reports, setReports] = useState<Report[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState<Record<number, boolean>>({});
 
