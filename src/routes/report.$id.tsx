@@ -52,10 +52,13 @@ function ReportView() {
           return (
             <div className="grid lg:grid-cols-[1fr_320px] gap-8">
               <div>
-                <div className="mb-8">
-                  <div className="text-xs text-muted-foreground mb-2">{new Date(report.created_at).toLocaleDateString(undefined, { dateStyle: "long" })}</div>
-                  <h1 className="text-4xl mb-2">{a.title}</h1>
-                  <p className="text-muted-foreground">{a.values.length} values analyzed{flagged>0 && <span className="text-warning"> · {flagged} flagged</span>}</p>
+                <div className="mb-8 relative">
+                  <div className="aurora opacity-60" />
+                  <div className="relative z-10">
+                    <div className="text-xs text-muted-foreground mb-2 uppercase tracking-[0.18em]">{new Date(report.created_at).toLocaleDateString(undefined, { dateStyle: "long" })}</div>
+                    <h1 className="text-5xl mb-3 gradient-text leading-tight">{a.title}</h1>
+                    <p className="text-muted-foreground">{a.values.length} values analyzed{flagged>0 && <span className="text-warning"> · {flagged} flagged</span>}</p>
+                  </div>
                 </div>
 
                 <div className="glass glass-glow p-5 mb-6">
