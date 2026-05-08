@@ -102,13 +102,13 @@ function Dashboard() {
               No reports yet. Upload your first lab to get started.
             </div>
           )}
-          <div className="space-y-3">
+          <div className="space-y-3 stagger">
             {reports.map((r) => {
               const flagCount = r.analysis?.values?.filter(v => v.status !== "normal").length ?? 0;
               return (
                 <Link key={r.id} to="/report/$id" params={{ id: r.id }}
-                  className="glass glass-glow p-4 flex items-center gap-4 hover:bg-white/[0.03] transition group">
-                  <div className="w-10 h-10 rounded-xl bg-accent/10 grid place-items-center text-accent shrink-0">
+                  className="glass glass-glow p-4 flex items-center gap-4 hover:bg-white/[0.04] hover:-translate-y-0.5 hover:border-accent/30 transition-all duration-300 group">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent/25 to-accent/5 grid place-items-center text-accent shrink-0 border border-accent/15">
                     <FileText size={18}/>
                   </div>
                   <div className="min-w-0 flex-1">
@@ -119,7 +119,7 @@ function Dashboard() {
                       {flagCount > 0 && <span className="text-warning"> · {flagCount} flagged</span>}
                     </div>
                   </div>
-                  <ChevronRight size={16} className="text-muted-foreground group-hover:text-accent group-hover:translate-x-0.5 transition"/>
+                  <ChevronRight size={16} className="text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition"/>
                 </Link>
               );
             })}
