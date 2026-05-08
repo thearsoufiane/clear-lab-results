@@ -143,7 +143,8 @@ function ReportView() {
             </div>
           );
         })()}
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
