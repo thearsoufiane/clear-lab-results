@@ -8,9 +8,9 @@ import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info } from "lucide-r
 export const Route = createFileRoute("/report/$id")({ component: ReportView });
 
 function statusTone(s: string) {
-  if (s === "normal") return { dot: "dot-normal", label: "Normal", color: "text-success" };
-  if (s === "low" || s === "high") return { dot: "dot-warn", label: s.charAt(0).toUpperCase()+s.slice(1), color: "text-warning" };
-  return { dot: "dot-bad", label: s.charAt(0).toUpperCase()+s.slice(1), color: "text-danger" };
+  if (s === "normal") return { dot: "dot-normal", badge: "badge-normal", label: "Normal", color: "text-success" };
+  if (s === "low" || s === "high") return { dot: "dot-warn", badge: "badge-warn", label: s.charAt(0).toUpperCase()+s.slice(1), color: "text-warning" };
+  return { dot: "dot-bad", badge: "badge-bad", label: s.charAt(0).toUpperCase()+s.slice(1), color: "text-danger" };
 }
 
 function ReportView() {
