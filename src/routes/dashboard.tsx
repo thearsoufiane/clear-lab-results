@@ -59,11 +59,23 @@ function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-10 animate-fade-up">
-        <h1 className="text-4xl mb-1">{greeting}, <span className="italic" style={{color:"#c8f0d8"}}>{name}</span>.</h1>
-        <p className="text-muted-foreground mb-8">Here's the state of your bloodwork.</p>
+      <main className="max-w-5xl mx-auto px-6 py-12 animate-fade-up relative">
+        <div className="relative mb-10">
+          <div className="aurora" />
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent accent-glow" />
+              labread.health
+            </div>
+            <h1 className="text-5xl md:text-6xl mb-3 leading-[1.05] tracking-tight">
+              {greeting},<br/>
+              <span className="italic gradient-text">{name}</span>.
+            </h1>
+            <p className="text-muted-foreground text-lg">Here's the state of your bloodwork.</p>
+          </div>
+        </div>
 
-        <div className="grid sm:grid-cols-3 gap-4 mb-10">
+        <div className="grid sm:grid-cols-3 gap-4 mb-10 stagger">
           <Stat icon={FileText} label="Reports" value={reports.length} />
           <Stat icon={AlertTriangle} label="Flagged values" value={flagged} tone={flagged>0?"warn":"normal"} />
           <Stat icon={Stethoscope} label="Screenings due" value={screenings} tone={screenings>0?"warn":"normal"} />
@@ -90,13 +102,13 @@ function Dashboard() {
               No reports yet. Upload your first lab to get started.
             </div>
           )}
-          <div className="space-y-3">
+          <div className="space-y-3 stagger">
             {reports.map((r) => {
               const flagCount = r.analysis?.values?.filter(v => v.status !== "normal").length ?? 0;
               return (
                 <Link key={r.id} to="/report/$id" params={{ id: r.id }}
-                  className="glass glass-glow p-4 flex items-center gap-4 hover:bg-white/[0.03] transition group">
-                  <div className="w-10 h-10 rounded-xl bg-accent/10 grid place-items-center text-accent shrink-0">
+                  className="glass glass-glow p-4 flex items-center gap-4 hover:bg-white/[0.04] hover:-translate-y-0.5 hover:border-accent/30 transition-all duration-300 group">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent/25 to-accent/5 grid place-items-center text-accent shrink-0 border border-accent/15">
                     <FileText size={18}/>
                   </div>
                   <div className="min-w-0 flex-1">
@@ -107,7 +119,7 @@ function Dashboard() {
                       {flagCount > 0 && <span className="text-warning"> · {flagCount} flagged</span>}
                     </div>
                   </div>
-                  <ChevronRight size={16} className="text-muted-foreground group-hover:text-accent group-hover:translate-x-0.5 transition"/>
+                  <ChevronRight size={16} className="text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition"/>
                 </Link>
               );
             })}
@@ -122,13 +134,18 @@ function Dashboard() {
 }
 
 function Stat({ icon: Icon, label, value, tone = "normal" }: { icon: any; label: string; value: number; tone?: "normal"|"warn" }) {
+  const accent = tone === "warn" ? "text-warning" : "text-accent";
   return (
-    <div className="glass glass-glow p-5">
-      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-        <Icon size={14} className={tone === "warn" ? "text-warning" : "text-accent"} />
-        {label}
+    <div className="glass glass-glow p-5 hover:-translate-y-0.5 hover:border-accent/30 transition-all duration-300 group relative overflow-hidden">
+      <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{ background: tone === "warn" ? "radial-gradient(circle, rgba(245,198,106,0.18), transparent 70%)" : "radial-gradient(circle, rgba(200,240,216,0.18), transparent 70%)" }}/>
+      <div className="relative">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+          <Icon size={14} className={accent} />
+          {label}
+        </div>
+        <div key={value} className="text-4xl font-serif animate-count-up tabular-nums">{value}</div>
       </div>
-      <div className="text-3xl font-serif">{value}</div>
     </div>
   );
 }
@@ -136,12 +153,16 @@ function Stat({ icon: Icon, label, value, tone = "normal" }: { icon: any; label:
 function UploadZone({ onClick }: { onClick: () => void }) {
   return (
     <button onClick={onClick}
-      className="w-full glass glass-glow border-dashed border-2 border-border/80 hover:border-accent/60 transition rounded-2xl p-8 text-center group">
-      <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-accent/10 text-accent mb-3 group-hover:scale-110 transition">
-        <Plus size={20}/>
+      className="w-full glass glass-glow border-dashed border-2 border-border/80 hover:border-accent/60 hover:-translate-y-0.5 transition-all duration-300 rounded-2xl p-10 text-center group relative overflow-hidden">
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{ background: "radial-gradient(circle at 50% 0%, rgba(200,240,216,0.10), transparent 60%)" }}/>
+      <div className="relative">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-accent/30 to-accent/5 text-accent mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 border border-accent/20">
+          <Plus size={22}/>
+        </div>
+        <div className="font-medium text-base">Upload a new report</div>
+        <div className="text-sm text-muted-foreground mt-1">Drag & drop a PDF or photo, or click to browse</div>
       </div>
-      <div className="font-medium">Upload a new report</div>
-      <div className="text-sm text-muted-foreground mt-1">Drag & drop a PDF or photo, or click to browse</div>
     </button>
   );
 }

@@ -8,9 +8,9 @@ import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info } from "lucide-r
 export const Route = createFileRoute("/report/$id")({ component: ReportView });
 
 function statusTone(s: string) {
-  if (s === "normal") return { dot: "dot-normal", label: "Normal", color: "text-success" };
-  if (s === "low" || s === "high") return { dot: "dot-warn", label: s.charAt(0).toUpperCase()+s.slice(1), color: "text-warning" };
-  return { dot: "dot-bad", label: s.charAt(0).toUpperCase()+s.slice(1), color: "text-danger" };
+  if (s === "normal") return { dot: "dot-normal", badge: "badge-normal", label: "Normal", color: "text-success" };
+  if (s === "low" || s === "high") return { dot: "dot-warn", badge: "badge-warn", label: s.charAt(0).toUpperCase()+s.slice(1), color: "text-warning" };
+  return { dot: "dot-bad", badge: "badge-bad", label: s.charAt(0).toUpperCase()+s.slice(1), color: "text-danger" };
 }
 
 function ReportView() {
@@ -52,10 +52,13 @@ function ReportView() {
           return (
             <div className="grid lg:grid-cols-[1fr_320px] gap-8">
               <div>
-                <div className="mb-8">
-                  <div className="text-xs text-muted-foreground mb-2">{new Date(report.created_at).toLocaleDateString(undefined, { dateStyle: "long" })}</div>
-                  <h1 className="text-4xl mb-2">{a.title}</h1>
-                  <p className="text-muted-foreground">{a.values.length} values analyzed{flagged>0 && <span className="text-warning"> · {flagged} flagged</span>}</p>
+                <div className="mb-8 relative">
+                  <div className="aurora opacity-60" />
+                  <div className="relative z-10">
+                    <div className="text-xs text-muted-foreground mb-2 uppercase tracking-[0.18em]">{new Date(report.created_at).toLocaleDateString(undefined, { dateStyle: "long" })}</div>
+                    <h1 className="text-5xl mb-3 gradient-text leading-tight">{a.title}</h1>
+                    <p className="text-muted-foreground">{a.values.length} values analyzed{flagged>0 && <span className="text-warning"> · {flagged} flagged</span>}</p>
+                  </div>
                 </div>
 
                 <div className="glass glass-glow p-5 mb-6">
@@ -67,27 +70,27 @@ function ReportView() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 stagger">
                   {a.values.map((v, i) => {
                     const t = statusTone(v.status);
                     const isOpen = open[i] ?? v.status !== "normal";
                     return (
-                      <div key={i} className="glass overflow-hidden">
+                      <div key={i} className="glass overflow-hidden hover:border-accent/20 transition-colors">
                         <button
                           onClick={() => setOpen(o => ({...o, [i]: !isOpen}))}
-                          className="w-full flex items-center gap-4 p-4 text-left hover:bg-white/[0.02] transition"
+                          className="w-full flex items-center gap-4 p-4 text-left hover:bg-white/[0.03] transition"
                         >
                           <span className={`dot ${t.dot}`} />
                           <div className="min-w-0 flex-1">
                             <div className="font-medium truncate">{v.name}</div>
-                            <div className="text-xs text-muted-foreground mt-0.5">{v.value}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5 tabular-nums">{v.value}</div>
                           </div>
-                          <span className={`text-xs px-2.5 py-1 rounded-full bg-white/5 ${t.color}`}>{t.label}</span>
-                          <ChevronDown size={16} className={`text-muted-foreground transition ${isOpen ? "rotate-180" : ""}`}/>
+                          <span className={`badge-status ${t.badge}`}>{t.label}</span>
+                          <ChevronDown size={16} className={`text-muted-foreground transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}/>
                         </button>
                         {isOpen && (
-                          <div className="px-4 pb-4 pt-0 text-sm text-muted-foreground border-t border-border/40">
-                            <div className="pt-3">{v.explanation}</div>
+                          <div className="px-4 pb-4 pt-0 text-sm text-muted-foreground border-t border-border/40 animate-fade-up">
+                            <div className="pt-3 leading-relaxed">{v.explanation}</div>
                           </div>
                         )}
                       </div>
