@@ -39,15 +39,17 @@ function ReportView() {
   if (loading || !user) return null;
 
   return (
-    <div className="min-h-screen">
-      <header className="px-6 py-5 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
+    <div className="min-h-screen flex flex-col">
+      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
         <Logo />
         <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5">
           <ArrowLeft size={14}/> Dashboard
         </Link>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-10 animate-fade-up">
+      <div className="flex flex-1 min-h-0">
+        <HistorySidebar reports={reports} currentId={id} />
+        <main className="flex-1 min-w-0 px-6 py-10 animate-fade-up max-w-6xl mx-auto w-full">
         {error && <div className="glass p-4 text-danger border-danger/30">{error}</div>}
         {!report && !error && <div className="text-muted-foreground">Loading report…</div>}
 
