@@ -31,6 +31,9 @@ function ReportView() {
       if (error) setError(error.message);
       else setReport(data as Report);
     });
+    supabase.from("reports").select("*").order("created_at", { ascending: false }).then(({ data }) => {
+      if (data) setReports(data as Report[]);
+    });
   }, [user, id]);
 
   if (loading || !user) return null;
