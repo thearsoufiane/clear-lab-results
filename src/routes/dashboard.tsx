@@ -45,8 +45,8 @@ function Dashboard() {
   const name = (user.email || "").split("@")[0];
 
   return (
-    <div className="min-h-screen">
-      <header className="px-6 py-5 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
+    <div className="min-h-screen flex flex-col">
+      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
         <Logo />
         <div className="flex items-center gap-3">
           <button onClick={() => setOpen(true)}
@@ -60,27 +60,35 @@ function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-12 animate-fade-up relative">
-        <div className="relative mb-10">
-          <div className="aurora" />
-          <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent accent-glow" />
-              labread.health
-            </div>
-            <h1 className="text-5xl md:text-6xl mb-3 leading-[1.05] tracking-tight">
-              {greeting},<br/>
-              <span className="italic gradient-text">{name}</span>.
-            </h1>
-            <p className="text-muted-foreground text-lg">Here's the state of your bloodwork.</p>
-          </div>
-        </div>
+      <div className="flex flex-1 min-h-0">
+        <HistorySidebar reports={reports} />
 
-        <div className="grid sm:grid-cols-3 gap-4 mb-10 stagger">
-          <Stat icon={FileText} label="Reports" value={reports.length} />
-          <Stat icon={AlertTriangle} label="Flagged values" value={flagged} tone={flagged>0?"warn":"normal"} />
-          <Stat icon={Stethoscope} label="Screenings due" value={screenings} tone={screenings>0?"warn":"normal"} />
-        </div>
+        <main className="flex-1 min-w-0 px-6 py-10 animate-fade-up">
+          <div className="max-w-4xl mx-auto">
+            <div className="relative mb-10 rounded-3xl overflow-hidden p-8 md:p-10 border border-border/40">
+              <div className="animated-gradient" />
+              <div className="relative z-10 animate-fade-up">
+                <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent accent-glow" />
+                  labread.health
+                </div>
+                <h1 className="text-4xl md:text-6xl mb-3 leading-[1.05] tracking-tight">
+                  {greeting},<br/>
+                  <span className="italic gradient-text">{name}</span>.
+                </h1>
+                <p className="text-muted-foreground text-base md:text-lg">Here's the state of your bloodwork.</p>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-4 mb-10 stagger">
+              <Stat icon={FileText} label="Reports" value={reports.length} tone={reports.length > 0 ? "normal" : "neutral"} />
+              <Stat icon={AlertTriangle} label="Flagged values"
+                value={flagged}
+                tone={flagged === 0 ? "normal" : flagged < 3 ? "warn" : "bad"} />
+              <Stat icon={Stethoscope} label="Screenings due"
+                value={screenings}
+                tone={screenings === 0 ? "normal" : screenings < 2 ? "warn" : "bad"} />
+            </div>
 
         <UploadZone onClick={() => setOpen(true)} />
 
