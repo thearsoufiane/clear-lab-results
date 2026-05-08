@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
 export const analyzeLabReport = createServerFn({ method: "POST" })
-  .inputValidator((data: { imageBase64: string; mimeType: string }) => data)
+  .inputValidator((data: { base64: string; mimeType: string; fileName?: string }) => data)
   .handler(async ({ data }) => {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) throw new Error("OPENAI_API_KEY is not configured on the server.");
@@ -17,10 +17,26 @@ export const analyzeLabReport = createServerFn({ method: "POST" })
   ]
 }`;
 
-    const dataUrl = `data:${data.mimeType};base64,${data.imageBase64}`;
+    const isPdf = data.mimeType === "application/pdf";
+    const dataUrl = `data:${data.mimeType};base64,${data.base64}`;
+
+    const userContent: any[] = [
+      { type: "text", text: "Analyze this lab report and return the JSON described." },
+    ];
+    if (isPdf) {
+      userContent.push({
+        type: "file",
+        file: {
+          filename: data.fileName || "report.pdf",
+          file_data: dataUrl,
+        },
+      });
+    } else {
+      userContent.push({ type: "image_url", image_url: { url: dataUrl } });
+    }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 90_000);
+    const timeout = setTimeout(() => controller.abort(), 120_000);
 
     let res: Response;
     try {
@@ -37,13 +53,7 @@ export const analyzeLabReport = createServerFn({ method: "POST" })
           response_format: { type: "json_object" },
           messages: [
             { role: "system", content: systemPrompt },
-            {
-              role: "user",
-              content: [
-                { type: "text", text: "Analyze this lab report image and return the JSON described." },
-                { type: "image_url", image_url: { url: dataUrl } },
-              ],
-            },
+            { role: "user", content: userContent },
           ],
         }),
       });
@@ -60,11 +70,9 @@ export const analyzeLabReport = createServerFn({ method: "POST" })
     const raw = json.choices?.[0]?.message?.content ?? "";
     const cleaned = raw.replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
 
-    let parsed;
     try {
-      parsed = JSON.parse(cleaned);
-    } catch (e) {
+      return JSON.parse(cleaned);
+    } catch {
       throw new Error(`Failed to parse model JSON. Raw: ${cleaned.slice(0, 500)}`);
     }
-    return parsed;
   });

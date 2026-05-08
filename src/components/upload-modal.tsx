@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { X, Upload, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
-import { fileToImageBase64 } from "@/lib/pdf";
+import { fileToBase64 } from "@/lib/pdf";
 import { analyzeLabReport } from "@/lib/analyze.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase, type Analysis } from "@/lib/supabase";
@@ -49,8 +49,8 @@ export function UploadModal({
     if (!file) return;
     setPhase("running"); setStep(0); setErr(null);
     try {
-      const { base64, mimeType } = await fileToImageBase64(file);
-      const analysis = (await analyze({ data: { imageBase64: base64, mimeType } })) as Analysis;
+      const { base64, mimeType, fileName } = await fileToBase64(file);
+      const analysis = (await analyze({ data: { base64, mimeType, fileName } })) as Analysis;
       const { data, error } = await supabase
         .from("reports")
         .insert({ user_id: userId, title: analysis.title || file.name, analysis, file_name: file.name })
