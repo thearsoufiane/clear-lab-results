@@ -53,6 +53,10 @@ function Dashboard() {
             className="hidden sm:inline-flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2 rounded-full text-sm font-medium accent-glow hover:scale-[1.02] transition">
             <Plus size={14}/> New report
           </button>
+          <Link to="/profile"
+            className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="Profile">
+            <User size={16}/>
+          </Link>
           <button onClick={() => supabase.auth.signOut()}
             className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="Sign out">
             <LogOut size={16}/>
