@@ -4,7 +4,7 @@ import { supabase, type Report } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/logo";
 import { HistorySidebar } from "@/components/history-sidebar";
-import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info } from "lucide-react";
+import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info, User } from "lucide-react";
 
 export const Route = createFileRoute("/report/$id")({ component: ReportView });
 
