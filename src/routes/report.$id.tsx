@@ -4,7 +4,7 @@ import { supabase, type Report } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/logo";
 import { HistorySidebar } from "@/components/history-sidebar";
-import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info } from "lucide-react";
+import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info, User } from "lucide-react";
 
 export const Route = createFileRoute("/report/$id")({ component: ReportView });
 
@@ -42,9 +42,14 @@ function ReportView() {
     <div className="min-h-screen flex flex-col">
       <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
         <Logo />
-        <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5">
-          <ArrowLeft size={14}/> Dashboard
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link to="/profile" className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="Profile">
+            <User size={16}/>
+          </Link>
+          <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 px-2">
+            <ArrowLeft size={14}/> Dashboard
+          </Link>
+        </div>
       </header>
 
       <div className="flex flex-1 min-h-0">
