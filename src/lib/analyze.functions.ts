@@ -1,19 +1,57 @@
 import { createServerFn } from "@tanstack/react-start";
 
+type Profile = {
+  age?: number | null;
+  biological_sex?: string | null;
+  diabetes?: boolean | null;
+  heart_disease?: boolean | null;
+  high_blood_pressure?: boolean | null;
+  cancer_history?: boolean | null;
+  smoking?: boolean | null;
+} | null;
+
+function profileSummary(p: Profile): string {
+  if (!p) return "No patient profile provided. Give general guidance.";
+  const parts: string[] = [];
+  if (p.age != null) parts.push(`Age: ${p.age}`);
+  if (p.biological_sex) parts.push(`Biological sex: ${p.biological_sex}`);
+  const conds = [
+    p.diabetes && "diabetes",
+    p.heart_disease && "heart disease",
+    p.high_blood_pressure && "high blood pressure",
+    p.cancer_history && "history of cancer",
+    p.smoking && "current smoker",
+  ].filter(Boolean) as string[];
+  parts.push(`Existing conditions: ${conds.length ? conds.join(", ") : "none reported"}`);
+  return parts.join(" · ");
+}
+
 export const analyzeLabReport = createServerFn({ method: "POST" })
-  .inputValidator((data: { base64: string; mimeType: string; fileName?: string }) => data)
+  .inputValidator((data: { base64: string; mimeType: string; fileName?: string; profile?: Profile }) => data)
   .handler(async ({ data }) => {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) throw new Error("OPENAI_API_KEY is not configured on the server.");
 
-    const systemPrompt = `You are a medical lab report interpreter. Analyze ALL lab values and respond ONLY with this exact JSON structure, no markdown:
+    const patient = profileSummary(data.profile ?? null);
+
+    const systemPrompt = `You are a medical lab report interpreter personalizing analysis to a specific patient.
+
+PATIENT PROFILE:
+${patient}
+
+Use the patient's age, biological sex and existing conditions to:
+- Apply age- and sex-appropriate reference ranges when relevant
+- Tailor each explanation to what the value means for THIS patient given their conditions
+- Prioritize screenings that are specifically recommended for their age, sex and risk factors (e.g. mammography, colonoscopy, lipid panel cadence, A1c monitoring for diabetics, BP follow-up for hypertensives, lung cancer screening for smokers, cardiac workup for heart disease history)
+
+Respond ONLY with this exact JSON structure, no markdown:
 {
   "title": "short descriptive title of the report",
   "values": [
-    { "name": "lab value name", "value": "number with unit", "status": "normal or low or high or elevated or deficient", "explanation": "2-3 sentences in plain language" }
+    { "name": "lab value name", "value": "number with unit", "status": "normal or low or high or elevated or deficient", "explanation": "2-3 sentences in plain language, personalized to the patient when relevant" }
   ],
   "screenings": [
-    { "name": "screening name", "detail": "why recommended", "urgency": "urgent or routine or informational" }
+    { "name": "screening name", "detail": "why recommended for THIS patient (reference their age/sex/conditions when applicable)", "urgency": "urgent or routine or informational" }
   ]
 }`;
 
@@ -21,7 +59,7 @@ export const analyzeLabReport = createServerFn({ method: "POST" })
     const dataUrl = `data:${data.mimeType};base64,${data.base64}`;
 
     const userContent: any[] = [
-      { type: "text", text: "Analyze this lab report and return the JSON described." },
+      { type: "text", text: `Analyze this lab report for the patient described in the system message and return the JSON described.` },
     ];
     if (isPdf) {
       userContent.push({

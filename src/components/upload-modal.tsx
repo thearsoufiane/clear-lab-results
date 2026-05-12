@@ -50,7 +50,10 @@ export function UploadModal({
     setPhase("running"); setStep(0); setErr(null);
     try {
       const { base64, mimeType, fileName } = await fileToBase64(file);
-      const analysis = (await analyze({ data: { base64, mimeType, fileName } })) as Analysis;
+      const { data: profile } = await supabase
+        .from("profiles").select("age,biological_sex,diabetes,heart_disease,high_blood_pressure,cancer_history,smoking")
+        .eq("id", userId).maybeSingle();
+      const analysis = (await analyze({ data: { base64, mimeType, fileName, profile: profile ?? undefined } })) as Analysis;
       const { data, error } = await supabase
         .from("reports")
         .insert({ user_id: userId, title: analysis.title || file.name, analysis, file_name: file.name })
