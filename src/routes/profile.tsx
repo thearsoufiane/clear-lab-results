@@ -13,14 +13,19 @@ const CONDITIONS = [
   { key: "high_blood_pressure", label: "High blood pressure" },
   { key: "cancer_history", label: "Cancer history" },
   { key: "smoking", label: "Smoking" },
-];
+] as const;
+
+type ConditionKey = typeof CONDITIONS[number]["key"];
 
 function ProfilePage() {
   const { user, loading } = useAuth();
   const nav = useNavigate();
   const [age, setAge] = useState<string>("");
   const [sex, setSex] = useState<"male" | "female" | "">("");
-  const [conditions, setConditions] = useState<string[]>([]);
+  const [flags, setFlags] = useState<Record<ConditionKey, boolean>>({
+    diabetes: false, heart_disease: false, high_blood_pressure: false,
+    cancer_history: false, smoking: false,
+  });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,32 +35,38 @@ function ProfilePage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle()
+    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle()
       .then(({ data, error }) => {
         if (error) setError(error.message);
         else if (data) {
           setAge(data.age?.toString() ?? "");
-          setSex(data.sex ?? "");
-          setConditions(Array.isArray(data.conditions) ? data.conditions : []);
+          setSex((data.biological_sex as "male" | "female") ?? "");
+          setFlags({
+            diabetes: !!data.diabetes,
+            heart_disease: !!data.heart_disease,
+            high_blood_pressure: !!data.high_blood_pressure,
+            cancer_history: !!data.cancer_history,
+            smoking: !!data.smoking,
+          });
         }
         setFetched(true);
       });
   }, [user]);
 
-  const toggle = (k: string) =>
-    setConditions((c) => c.includes(k) ? c.filter(x => x !== k) : [...c, k]);
+  const toggle = (k: ConditionKey) =>
+    setFlags((f) => ({ ...f, [k]: !f[k] }));
 
   const save = async () => {
     if (!user) return;
     setSaving(true); setError(null); setSaved(false);
     const payload = {
-      user_id: user.id,
+      id: user.id,
       age: age ? parseInt(age, 10) : null,
-      sex: sex || null,
-      conditions,
+      biological_sex: sex || null,
+      ...flags,
       updated_at: new Date().toISOString(),
     };
-    const { error } = await supabase.from("profiles").upsert(payload, { onConflict: "user_id" });
+    const { error } = await supabase.from("profiles").upsert(payload, { onConflict: "id" });
     setSaving(false);
     if (error) setError(error.message);
     else { setSaved(true); setTimeout(() => setSaved(false), 2000); }
@@ -112,7 +123,7 @@ function ProfilePage() {
                 <label className="block text-sm font-medium mb-3">Existing conditions</label>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {CONDITIONS.map((c) => {
-                    const on = conditions.includes(c.key);
+                    const on = flags[c.key];
                     return (
                       <button key={c.key} type="button" onClick={() => toggle(c.key)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-left text-sm transition ${
@@ -134,7 +145,7 @@ function ProfilePage() {
                 <div className="glass p-4 text-sm text-danger border-danger/30">
                   {error}
                   <div className="text-muted-foreground mt-2 text-xs">
-                    If the profiles table doesn't exist, run the SQL in <code>supabase/profiles.sql</code>.
+                    If you still see a schema cache error, go to Supabase → API settings and click "Reload schema", or wait ~30s for PostgREST to refresh.
                   </div>
                 </div>
               )}
