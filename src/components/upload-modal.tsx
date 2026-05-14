@@ -1,8 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { X, Upload, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
 import { fileToBase64 } from "@/lib/pdf";
-import { analyzeLabReport } from "@/lib/analyze.functions";
-import { useServerFn } from "@tanstack/react-start";
 import { supabase, type Analysis } from "@/lib/supabase";
 
 const STEPS = [
@@ -24,7 +22,6 @@ export function UploadModal({
   const [step, setStep] = useState(0);
   const [err, setErr] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const analyze = useServerFn(analyzeLabReport);
 
   useEffect(() => {
     if (!open) { setFile(null); setPhase("idle"); setErr(null); setStep(0); }
@@ -53,7 +50,16 @@ export function UploadModal({
       const { data: profile } = await supabase
         .from("profiles").select("age,biological_sex,diabetes,heart_disease,high_blood_pressure,cancer_history,smoking")
         .eq("id", userId).maybeSingle();
-      const analysis = (await analyze({ data: { base64, mimeType, fileName, profile: profile ?? undefined } })) as Analysis;
+      const { data: analysis, error: functionError } = await supabase.functions.invoke<Analysis>("analyze-report", {
+        body: {
+          base64,
+          mimeType,
+          fileName,
+          profile: profile ?? undefined,
+        },
+      });
+      if (functionError) throw functionError;
+      if (!analysis) throw new Error("The analysis function returned no data.");
       const { data, error } = await supabase
         .from("reports")
         .insert({ user_id: userId, title: analysis.title || file.name, analysis, file_name: file.name })
