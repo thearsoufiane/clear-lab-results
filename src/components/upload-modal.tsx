@@ -50,15 +50,25 @@ export function UploadModal({
       const { data: profile } = await supabase
         .from("profiles").select("age,biological_sex,diabetes,heart_disease,high_blood_pressure,cancer_history,smoking")
         .eq("id", userId).maybeSingle();
-      const { data: analysis, error: functionError } = await supabase.functions.invoke<Analysis>("analyze-report", {
-        body: {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch("https://lxbpwjktchbdoyphnbvt.supabase.co/functions/v1/analyze-report", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
+        body: JSON.stringify({
           base64,
-          mimeType,
+          mediaType: mimeType,
           fileName,
           profile: profile ?? undefined,
-        },
+        }),
       });
-      if (functionError) throw functionError;
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Edge function error (${res.status}): ${text}`);
+      }
+      const analysis = (await res.json()) as Analysis;
       if (!analysis) throw new Error("The analysis function returned no data.");
       const { data, error } = await supabase
         .from("reports")
