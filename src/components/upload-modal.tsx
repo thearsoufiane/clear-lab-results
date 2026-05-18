@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { X, Upload, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
 import { fileToBase64 } from "@/lib/pdf";
-import { supabase, type Analysis } from "@/lib/supabase";
+import { supabase, SUPABASE_ANON_KEY, SUPABASE_URL, type Analysis } from "@/lib/supabase";
 
 const STEPS = [
   "Extracting values",
@@ -54,16 +54,38 @@ export function UploadModal({
         .from("profiles").select("age,biological_sex,diabetes,heart_disease,high_blood_pressure,cancer_history,smoking")
         .eq("id", userId).maybeSingle();
       const { data: { session } } = await supabase.auth.getSession();
-      console.log("[analyze] invoking edge function", { mimeType, hasSession: !!session?.access_token });
+      if (!session?.access_token) {
+        throw new Error("Your session expired. Please sign in again and retry.");
+      }
+      console.log("[analyze] invoking edge function", { mimeType, hasSession: true });
       const t0 = performance.now();
-      const { data: analysis, error: fnError } = await supabase.functions.invoke<Analysis>(
-        "analyze-report",
-        {
-          body: { base64, mediaType: mimeType, fileName, profile: profile ?? undefined },
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/analyze-report`, {
+        method: "POST",
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${session.access_token}`,
         },
-      );
-      console.log("[analyze] edge function returned in", Math.round(performance.now() - t0), "ms", { fnError, hasAnalysis: !!analysis });
-      if (fnError) throw new Error(`Edge function error: ${fnError.message || String(fnError)}`);
+        body: JSON.stringify({
+          base64,
+          mimeType,
+          mediaType: mimeType,
+          fileName,
+          profile: profile ?? undefined,
+        }),
+      });
+      const responseText = await response.text();
+      console.log("[analyze] edge function returned in", Math.round(performance.now() - t0), "ms", { status: response.status });
+      if (!response.ok) {
+        throw new Error(`Edge function ${response.status}: ${responseText || response.statusText}`);
+      }
+      let analysis: Analysis;
+      try {
+        analysis = JSON.parse(responseText) as Analysis;
+      } catch {
+        throw new Error(`Edge function returned invalid JSON: ${responseText.slice(0, 400)}`);
+      }
       if (!analysis || !Array.isArray((analysis as any).values)) {
         throw new Error("The analysis function returned no data. Try again or use a clearer image.");
       }
