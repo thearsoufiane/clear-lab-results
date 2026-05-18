@@ -149,6 +149,11 @@ export function UploadModal({
                 </div>
               ))}
             </div>
+            {step >= STEPS.length && (
+              <div className="mt-5 text-xs text-muted-foreground">
+                Still working — large reports can take up to a couple of minutes.
+              </div>
+            )}
           </div>
         )}
 
