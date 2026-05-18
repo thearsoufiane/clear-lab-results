@@ -29,7 +29,7 @@ export function UploadModal({
 
   useEffect(() => {
     if (phase !== "running") return;
-    const t = setInterval(() => setStep((s) => Math.min(s + 1, STEPS.length - 1)), 1800);
+    const t = setInterval(() => setStep((s) => Math.min(s + 1, STEPS.length)), 1800);
     return () => clearInterval(t);
   }, [phase]);
 
