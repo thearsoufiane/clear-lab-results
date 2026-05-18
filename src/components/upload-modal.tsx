@@ -29,7 +29,7 @@ export function UploadModal({
 
   useEffect(() => {
     if (phase !== "running") return;
-    const t = setInterval(() => setStep((s) => Math.min(s + 1, STEPS.length - 1)), 1800);
+    const t = setInterval(() => setStep((s) => Math.min(s + 1, STEPS.length)), 1800);
     return () => clearInterval(t);
   }, [phase]);
 
@@ -45,31 +45,28 @@ export function UploadModal({
   const submit = async () => {
     if (!file) return;
     setPhase("running"); setStep(0); setErr(null);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 180_000); // 3 min hard cap
     try {
+      console.log("[analyze] preparing file", file.name, file.size);
       const { base64, mimeType, fileName } = await fileToBase64(file);
       const { data: profile } = await supabase
         .from("profiles").select("age,biological_sex,diabetes,heart_disease,high_blood_pressure,cancer_history,smoking")
         .eq("id", userId).maybeSingle();
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch("https://lxbpwjktchbdoyphnbvt.supabase.co/functions/v1/analyze-report", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+      console.log("[analyze] invoking edge function", { mimeType, hasSession: !!session?.access_token });
+      const t0 = performance.now();
+      const { data: analysis, error: fnError } = await supabase.functions.invoke<Analysis>(
+        "analyze-report",
+        {
+          body: { base64, mediaType: mimeType, fileName, profile: profile ?? undefined },
         },
-        body: JSON.stringify({
-          base64,
-          mediaType: mimeType,
-          fileName,
-          profile: profile ?? undefined,
-        }),
-      });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Edge function error (${res.status}): ${text}`);
+      );
+      console.log("[analyze] edge function returned in", Math.round(performance.now() - t0), "ms", { fnError, hasAnalysis: !!analysis });
+      if (fnError) throw new Error(`Edge function error: ${fnError.message || String(fnError)}`);
+      if (!analysis || !Array.isArray((analysis as any).values)) {
+        throw new Error("The analysis function returned no data. Try again or use a clearer image.");
       }
-      const analysis = (await res.json()) as Analysis;
-      if (!analysis) throw new Error("The analysis function returned no data.");
       const { data, error } = await supabase
         .from("reports")
         .insert({ user_id: userId, title: analysis.title || file.name, analysis, file_name: file.name })
@@ -77,8 +74,14 @@ export function UploadModal({
       if (error) throw error;
       onCreated(data.id);
     } catch (e: any) {
-      setErr(e?.message || String(e));
+      console.error("[analyze] failed", e);
+      const msg = e?.name === "AbortError"
+        ? "The analysis took too long (over 3 minutes) and was cancelled. Please try a smaller or clearer file."
+        : (e?.message || String(e));
+      setErr(msg);
       setPhase("error");
+    } finally {
+      clearTimeout(timeoutId);
     }
   };
 
@@ -146,6 +149,11 @@ export function UploadModal({
                 </div>
               ))}
             </div>
+            {step >= STEPS.length && (
+              <div className="mt-5 text-xs text-muted-foreground">
+                Still working — large reports can take up to a couple of minutes.
+              </div>
+            )}
           </div>
         )}
 
