@@ -5,7 +5,7 @@ import { supabase, type Report } from "@/lib/supabase";
 import { Logo } from "@/components/logo";
 import { UploadModal } from "@/components/upload-modal";
 import { HistorySidebar } from "@/components/history-sidebar";
-import { FileText, AlertTriangle, Stethoscope, Plus, LogOut, ChevronRight, User } from "lucide-react";
+import { FileText, AlertTriangle, Stethoscope, Plus, LogOut, ChevronRight, User, History } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({ component: Dashboard });
 
