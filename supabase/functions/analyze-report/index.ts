@@ -1,7 +1,8 @@
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-auth",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Max-Age": "86400",
 };
 
 type Profile = {
@@ -16,7 +17,8 @@ type Profile = {
 
 type AnalyzePayload = {
   base64: string;
-  mimeType: string;
+  mimeType?: string;
+  mediaType?: string;
   fileName?: string;
   profile?: Profile;
 };
@@ -38,45 +40,48 @@ function profileSummary(p: Profile): string {
 }
 
 Deno.serve(async (req) => {
+  // Always handle CORS preflight FIRST, before any auth/validation
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { status: 200, headers: corsHeaders });
   }
 
-  if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }), {
-      status: 405,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-
-  const apiKey = Deno.env.get("OPENAI_API_KEY");
-  if (!apiKey) {
-    return new Response(JSON.stringify({ error: "OPENAI_API_KEY is not configured in Supabase secrets." }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-
-  let payload: AnalyzePayload;
   try {
-    payload = (await req.json()) as AnalyzePayload;
-  } catch {
-    return new Response(JSON.stringify({ error: "Invalid JSON body." }), {
-      status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
+    if (req.method !== "POST") {
+      return new Response(JSON.stringify({ error: "Method not allowed" }), {
+        status: 405,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-  if (!payload?.base64 || !payload?.mimeType) {
-    return new Response(JSON.stringify({ error: "Missing required fields: base64 and mimeType." }), {
-      status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
+    const apiKey = Deno.env.get("OPENAI_API_KEY");
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: "OPENAI_API_KEY is not configured in Supabase secrets." }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-  const patient = profileSummary(payload.profile ?? null);
+    let payload: AnalyzePayload;
+    try {
+      payload = (await req.json()) as AnalyzePayload;
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid JSON body." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-  const systemPrompt = `You are a medical lab report interpreter personalizing analysis to a specific patient.
+    const mimeType = payload?.mimeType || payload?.mediaType;
+    if (!payload?.base64 || !mimeType) {
+      return new Response(JSON.stringify({ error: "Missing required fields: base64 and mimeType/mediaType." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const patient = profileSummary(payload.profile ?? null);
+
+    const systemPrompt = `You are a medical lab report interpreter personalizing analysis to a specific patient.
 
 PATIENT PROFILE:
 ${patient}
@@ -97,76 +102,82 @@ Respond ONLY with this exact JSON structure, no markdown:
   ]
 }`;
 
-  const dataUrl = `data:${payload.mimeType};base64,${payload.base64}`;
-  const userContent: Array<Record<string, unknown>> = [
-    {
-      type: "text",
-      text: "Analyze this lab report for the patient described in the system message and return the JSON described.",
-    },
-  ];
-
-  if (payload.mimeType === "application/pdf") {
-    userContent.push({
-      type: "file",
-      file: {
-        filename: payload.fileName || "report.pdf",
-        file_data: dataUrl,
-      },
-    });
-  } else {
-    userContent.push({
-      type: "image_url",
-      image_url: { url: dataUrl },
-    });
-  }
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 120_000);
-
-  let openAiResponse: Response;
-  try {
-    openAiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      signal: controller.signal,
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        temperature: 0.2,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userContent },
-        ],
-      }),
-    });
-  } finally {
-    clearTimeout(timeout);
-  }
-
-  if (!openAiResponse.ok) {
-    return new Response(
-      JSON.stringify({ error: `OpenAI ${openAiResponse.status}: ${await openAiResponse.text()}` }),
+    const dataUrl = `data:${mimeType};base64,${payload.base64}`;
+    const userContent: Array<Record<string, unknown>> = [
       {
+        type: "text",
+        text: "Analyze this lab report for the patient described in the system message and return the JSON described.",
+      },
+    ];
+
+    if (mimeType === "application/pdf") {
+      userContent.push({
+        type: "file",
+        file: {
+          filename: payload.fileName || "report.pdf",
+          file_data: dataUrl,
+        },
+      });
+    } else {
+      userContent.push({
+        type: "image_url",
+        image_url: { url: dataUrl },
+      });
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120_000);
+
+    let openAiResponse: Response;
+    try {
+      openAiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          temperature: 0.2,
+          response_format: { type: "json_object" },
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userContent },
+          ],
+        }),
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    if (!openAiResponse.ok) {
+      return new Response(
+        JSON.stringify({ error: `OpenAI ${openAiResponse.status}: ${await openAiResponse.text()}` }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
+    }
+
+    const json = await openAiResponse.json();
+    const raw = json.choices?.[0]?.message?.content ?? "";
+    const cleaned = raw.replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+
+    try {
+      const parsed = JSON.parse(cleaned);
+      return new Response(JSON.stringify(parsed), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    } catch {
+      return new Response(JSON.stringify({ error: `Failed to parse model JSON. Raw: ${cleaned.slice(0, 500)}` }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
-    );
-  }
-
-  const json = await openAiResponse.json();
-  const raw = json.choices?.[0]?.message?.content ?? "";
-  const cleaned = raw.replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
-
-  try {
-    const parsed = JSON.parse(cleaned);
-    return new Response(JSON.stringify(parsed), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  } catch {
-    return new Response(JSON.stringify({ error: `Failed to parse model JSON. Raw: ${cleaned.slice(0, 500)}` }), {
+      });
+    }
+  } catch (err) {
+    return new Response(JSON.stringify({ error: (err as Error)?.message || String(err) }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
