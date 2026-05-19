@@ -5,7 +5,7 @@ import { supabase, type Report } from "@/lib/supabase";
 import { Logo } from "@/components/logo";
 import { UploadModal } from "@/components/upload-modal";
 import { HistorySidebar } from "@/components/history-sidebar";
-import { FileText, AlertTriangle, Stethoscope, Plus, LogOut, ChevronRight, User } from "lucide-react";
+import { FileText, AlertTriangle, Stethoscope, Plus, LogOut, ChevronRight, User, History } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({ component: Dashboard });
 
@@ -53,6 +53,10 @@ function Dashboard() {
             className="hidden sm:inline-flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2 rounded-full text-sm font-medium accent-glow hover:scale-[1.02] transition">
             <Plus size={14}/> New report
           </button>
+          <Link to="/history"
+            className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="History">
+            <History size={16}/>
+          </Link>
           <Link to="/profile"
             className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="Profile">
             <User size={16}/>
