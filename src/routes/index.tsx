@@ -93,6 +93,92 @@ function Landing() {
           </div>
         </section>
 
+        {/* Pricing */}
+        <section id="pricing" className="py-16 animate-fade-up">
+          <div className="text-center mb-12">
+            <div className="text-[11px] uppercase tracking-[0.2em] text-accent mb-3">Pricing</div>
+            <h2 className="text-3xl md:text-4xl tracking-tight">Choose your plan.</h2>
+            <p className="text-muted-foreground mt-3 max-w-md mx-auto">Simple pricing. Cancel anytime, or own it forever.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto stagger">
+            {/* Pro */}
+            <div className="glass glass-glow p-8 relative flex flex-col">
+              <div className="badge-status badge-normal absolute -top-3 left-6">Most Popular</div>
+              <div className="mb-6">
+                <div className="text-sm text-muted-foreground mb-2">Pro</div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-5xl font-serif tracking-tight">$12.99</span>
+                  <span className="text-muted-foreground text-sm">/month</span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-3">Full access to everything. Cancel anytime.</p>
+              </div>
+              <ul className="space-y-3 mb-8 flex-1">
+                {[
+                  "Unlimited reports",
+                  "Plain-language explanations of every value",
+                  "Trend tracking over time",
+                  "PDF export",
+                  "Personalized cancer screening recommendations",
+                  "Priority support",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm">
+                    <Check size={14} className="text-accent mt-0.5 shrink-0" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={PRO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-full glass hover:bg-white/5 transition text-sm font-medium border border-accent/30 hover:border-accent/60"
+              >
+                Start 7-day free trial <ArrowRight size={14} />
+              </a>
+            </div>
+
+            {/* Founding Member */}
+            <div className="glass glow-normal p-8 relative flex flex-col accent-glow">
+              <div className="animated-gradient opacity-50" />
+              <div className="badge-status badge-normal absolute -top-3 left-6">
+                <Crown size={11} /> Limited — 200 spots only
+              </div>
+              <div className="mb-6 relative z-10">
+                <div className="text-sm text-accent mb-2 inline-flex items-center gap-1.5">
+                  <Crown size={13} /> Founding Member
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-5xl font-serif tracking-tight gradient-text">$99</span>
+                  <span className="text-muted-foreground text-sm">one-time</span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-3">Pay once. Own it forever. Never pay again.</p>
+              </div>
+              <ul className="space-y-3 mb-8 flex-1 relative z-10">
+                {[
+                  "Everything in Pro",
+                  "Lifetime access",
+                  "All future features included",
+                  "Founding member badge",
+                  "Lock in before price increases",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm">
+                    <Check size={14} className="text-accent mt-0.5 shrink-0" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={FOUNDING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative z-10 inline-flex items-center justify-center gap-2 w-full bg-accent text-accent-foreground px-6 py-3.5 rounded-full font-medium accent-glow hover:scale-[1.02] transition text-sm"
+              >
+                Get Lifetime Access <ArrowRight size={14} />
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* Features */}
         <section className="py-16 animate-fade-up">
           <div className="text-center mb-12">
