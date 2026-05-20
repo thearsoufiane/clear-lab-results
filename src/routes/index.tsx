@@ -4,8 +4,11 @@ import { useEffect } from "react";
 import { Logo } from "@/components/logo";
 import {
   ArrowRight, Sparkles, ShieldCheck, FileText, Stethoscope,
-  Upload, Brain, HeartPulse, Check, Globe2,
+  Upload, Brain, HeartPulse, Check, Globe2, Crown,
 } from "lucide-react";
+
+const PRO_URL = "https://labread-health.lemonsqueezy.com/checkout/buy/3761e3f5-03d1-4fdb-b43a-cb884e221717";
+const FOUNDING_URL = "https://labread-health.lemonsqueezy.com/checkout/buy/017ecdad-34fb-49ab-a63d-b7a719a94fb8";
 
 export const Route = createFileRoute("/")({
   head: () => ({
