@@ -8,6 +8,74 @@ import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info, User } from "lu
 
 export const Route = createFileRoute("/report/$id")({ component: ReportView });
 
+function normalizeName(name: string): string {
+  // Map of common medical abbreviations to full names
+  const abbrevMap: Record<string, string> = {
+    "wbc": "white blood cell",
+    "rbc": "red blood cell",
+    "hgb": "hemoglobin",
+    "hct": "hematocrit",
+    "mcv": "mean corpuscular volume",
+    "plt": "platelet",
+    "bun": "blood urea nitrogen",
+    "creatinine": "creatinine",
+    "ast": "aspartate aminotransferase",
+    "alt": "alanine aminotransferase",
+    "ggt": "gamma glutamyl transferase",
+    "ldh": "lactate dehydrogenase",
+    "tsh": "thyroid stimulating hormone",
+    "t3": "triiodothyronine",
+    "t4": "thyroxine",
+    "tg": "triglyceride",
+    "ldl": "low density lipoprotein",
+    "hdl": "high density lipoprotein",
+    "vldl": "very low density lipoprotein",
+    "fasting glucose": "glucose",
+    "blood glucose": "glucose",
+    "blood sugar": "glucose",
+    "total cholesterol": "cholesterol",
+  };
+
+  let normalized = name
+    .toLowerCase()
+    .trim()
+    // Strip parentheses and content inside: "Hemoglobin (Hgb)" → "Hemoglobin "
+    .replace(/\s*\([^)]*\)/g, "")
+    .trim();
+
+  // Replace known abbreviations
+  for (const [abbrev, full] of Object.entries(abbrevMap)) {
+    if (normalized === abbrev || normalized.includes(` ${abbrev}`) || normalized.includes(`${abbrev} `)) {
+      normalized = normalized.replace(new RegExp(`\\b${abbrev}\\b`, "gi"), full);
+    }
+  }
+
+  // Clean up multiple spaces
+  normalized = normalized.replace(/\s+/g, " ").trim();
+
+  return normalized;
+}
+
+function ValueDelta({ current, prev }: { current: string; prev: string }) {
+  const cn = parseNumeric(current);
+  const cp = parseNumeric(prev);
+  if (cn !== null && cp !== null && cp !== 0) {
+    const pct = ((cn - cp) / cp) * 100;
+    const dir = Math.abs(pct) < 0.1 ? "→" : pct > 0 ? "↑" : "↓";
+    const sign = pct > 0 ? "+" : "";
+    return (
+      <span className="ml-2 tabular-nums text-muted-foreground/60">
+        {dir} {sign}{pct.toFixed(1)}%
+        <span className="opacity-70"> (was {prev})</span>
+      </span>
+    );
+  }
+  if (prev !== current) {
+    return <span className="ml-2 text-muted-foreground/60">→ was {prev}</span>;
+  }
+  return null;
+}
+
 function statusTone(s: string) {
   if (s === "normal") return { dot: "dot-normal", badge: "badge-normal", label: "Normal", color: "text-success" };
   if (s === "low" || s === "high") return { dot: "dot-warn", badge: "badge-warn", label: s.charAt(0).toUpperCase()+s.slice(1), color: "text-warning" };
@@ -61,6 +129,10 @@ function ReportView() {
         {report && (() => {
           const a = report.analysis;
           const flagged = a.values.filter(v => v.status !== "normal").length;
+          const prevReport = reports.find(r => r.created_at < report.created_at) ?? null;
+          const prevMap = new Map<string, string>(
+            (prevReport?.analysis.values ?? []).map(v => [normalizeName(v.name), v.value])
+          );
           return (
             <div className="grid lg:grid-cols-[1fr_320px] gap-8">
               <div>
@@ -95,7 +167,13 @@ function ReportView() {
                           <span className={`dot ${t.dot}`} />
                           <div className="min-w-0 flex-1">
                             <div className="font-medium truncate">{v.name}</div>
-                            <div className="text-xs text-muted-foreground mt-0.5 tabular-nums">{v.value}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5 tabular-nums">
+                              {v.value}
+                              {(() => {
+                                const prev = prevMap.get(normalizeName(v.name));
+                                return prev ? <ValueDelta current={v.value} prev={prev} /> : null;
+                              })()}
+                            </div>
                           </div>
                           <span className={`badge-status ${t.badge}`}>{t.label}</span>
                           <ChevronDown size={16} className={`text-muted-foreground transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}/>
