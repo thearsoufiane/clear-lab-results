@@ -56,6 +56,11 @@ function normalizeName(name: string): string {
   return normalized;
 }
 
+function parseNumeric(s: string): number | null {
+  const m = s.replace(/[<>]/g, "").match(/[\d.]+/);
+  return m ? parseFloat(m[0]) : null;
+}
+
 function ValueDelta({ current, prev }: { current: string; prev: string }) {
   const cn = parseNumeric(current);
   const cp = parseNumeric(prev);
