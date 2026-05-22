@@ -28,7 +28,7 @@ function Landing() {
   useEffect(() => {
     if (!loading && user) nav({ to: "/dashboard" });
   }, [user, loading]);
-
+ 
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Animated mesh background */}
