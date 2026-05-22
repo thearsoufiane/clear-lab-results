@@ -4,7 +4,6 @@ import { supabase, type Report } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/logo";
 import { HistorySidebar } from "@/components/history-sidebar";
-import { generateReportPDF } from "@/lib/pdf-generator";
 import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info, User, Download } from "lucide-react";
 
 export const Route = createFileRoute("/report/$id")({ component: ReportView });
@@ -114,7 +113,10 @@ function ReportView() {
         <div className="flex items-center gap-2">
           {report && user && (
             <button
-              onClick={() => generateReportPDF(report, user.email || "")}
+              onClick={async () => {
+                const { generateReportPDF } = await import("@/lib/pdf-generator");
+                generateReportPDF(report, user.email || "");
+              }}
               className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition"
               title="Download PDF"
             >
