@@ -4,7 +4,8 @@ import { supabase, type Report } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/logo";
 import { HistorySidebar } from "@/components/history-sidebar";
-import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info, User } from "lucide-react";
+import { generateReportPDF } from "@/lib/pdf-generator";
+import { ArrowLeft, ChevronDown, Stethoscope, AlertCircle, Info, User, Download } from "lucide-react";
 
 export const Route = createFileRoute("/report/$id")({ component: ReportView });
 
@@ -111,6 +112,15 @@ function ReportView() {
       <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
         <Logo />
         <div className="flex items-center gap-2">
+          {report && user && (
+            <button
+              onClick={() => generateReportPDF(report, user.email || "")}
+              className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition"
+              title="Download PDF"
+            >
+              <Download size={16}/>
+            </button>
+          )}
           <Link to="/profile" className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="Profile">
             <User size={16}/>
           </Link>
