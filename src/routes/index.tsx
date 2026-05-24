@@ -99,12 +99,12 @@ function Landing() {
         <section className="pb-16 animate-fade-up">
           <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
             <div className="glass glass-glow p-6 rounded-2xl">
-              <p className="text-sm leading-relaxed mb-4 italic text-foreground/90">"Finally understood my cholesterol results after years of confusion."</p>
-              <div className="text-xs text-muted-foreground">&mdash; labread.health user</div>
+              <p className="text-sm leading-relaxed mb-4 text-foreground/90">"Useful and actually explains my blood test in language I can understand."</p>
+              <div className="text-xs text-muted-foreground">&mdash; Alix</div>
             </div>
             <div className="glass glass-glow p-6 rounded-2xl">
-              <p className="text-sm leading-relaxed mb-4 italic text-foreground/90">"Saved me hours of Googling. Got answers in 30 seconds."</p>
-              <div className="text-xs text-muted-foreground">&mdash; labread.health user</div>
+              <p className="text-sm leading-relaxed mb-4 text-foreground/90">"I finally understand my blood test."</p>
+              <div className="text-xs text-muted-foreground">&mdash; Rechi</div>
             </div>
           </div>
         </section>
