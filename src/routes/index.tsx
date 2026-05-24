@@ -28,26 +28,22 @@ function Landing() {
   useEffect(() => {
     if (!loading && user) nav({ to: "/dashboard" });
   }, [user, loading]);
- 
-  return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Animated mesh background */}
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="aurora opacity-70" />
-      </div>
 
-      <header className="px-6 py-5 flex items-center justify-between max-w-6xl mx-auto sticky top-0 z-30 backdrop-blur-md bg-background/40">
+  return (
+    <div className="min-h-screen relative">
+
+      <header className="px-6 py-5 flex items-center justify-between max-w-6xl mx-auto sticky top-0 z-30 bg-background/95">
         <Logo />
         <div className="flex items-center gap-3">
           <Link
             to="/auth"
-            className="text-sm text-muted-foreground hover:text-foreground transition px-3 py-2"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-2"
           >
             Sign in
           </Link>
           <Link
             to="/#pricing"
-            className="text-sm px-4 py-2 rounded-full bg-accent text-accent-foreground font-medium accent-glow hover:scale-[1.02] transition"
+            className="text-sm px-4 py-2 rounded-full bg-accent text-accent-foreground font-medium"
           >
             Get started free
           </Link>
@@ -56,10 +52,7 @@ function Landing() {
 
       {/* Hero */}
       <main className="max-w-6xl mx-auto px-6">
-        <section className="relative pt-20 pb-24 text-center animate-fade-up">
-          <div className="absolute inset-0 -z-10">
-            <div className="animated-gradient" />
-          </div>
+        <section className="relative pt-20 pb-24 text-center">
           <div className="inline-flex items-center gap-2 text-xs text-muted-foreground glass px-3 py-1.5 rounded-full mb-8">
             <Sparkles size={12} className="text-accent" />
             AI-powered medical clarity
@@ -74,13 +67,13 @@ function Landing() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               to="/#pricing"
-              className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-4 rounded-full font-medium accent-glow hover:scale-[1.03] transition text-base"
+              className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-4 rounded-full font-medium text-base"
             >
               Get started free <ArrowRight size={16} />
             </Link>
             <a
               href="#how"
-              className="inline-flex items-center gap-2 px-6 py-4 rounded-full glass hover:bg-white/5 transition text-sm text-muted-foreground hover:text-foreground"
+              className="inline-flex items-center gap-2 px-6 py-4 rounded-full glass hover:bg-white/5 transition-colors text-sm text-muted-foreground hover:text-foreground"
             >
               See how it works
             </a>
@@ -96,13 +89,13 @@ function Landing() {
         </section>
 
         {/* Testimonials */}
-        <section className="pb-16 animate-fade-up">
+        <section className="pb-16">
           <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-            <div className="glass glass-glow p-6 rounded-2xl">
+            <div className="glass p-6 rounded-2xl">
               <p className="text-sm leading-relaxed mb-4 text-foreground/90">"Useful and actually explains my blood test in language I can understand."</p>
               <div className="text-xs text-muted-foreground">&mdash; Alix</div>
             </div>
-            <div className="glass glass-glow p-6 rounded-2xl">
+            <div className="glass p-6 rounded-2xl">
               <p className="text-sm leading-relaxed mb-4 text-foreground/90">"I finally understand my blood test."</p>
               <div className="text-xs text-muted-foreground">&mdash; Rechi</div>
             </div>
@@ -110,15 +103,15 @@ function Landing() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="py-16 animate-fade-up">
+        <section id="pricing" className="py-16">
           <div className="text-center mb-12">
             <div className="text-[11px] uppercase tracking-[0.2em] text-accent mb-3">Pricing</div>
             <h2 className="text-3xl md:text-4xl tracking-tight">Choose your plan.</h2>
             <p className="text-muted-foreground mt-3 max-w-md mx-auto">Simple pricing. Cancel anytime, or own it forever.</p>
           </div>
-          <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto stagger">
+          <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
             {/* Pro */}
-            <div className="glass glass-glow p-8 relative flex flex-col">
+            <div className="glass p-8 relative flex flex-col">
               <div className="badge-status badge-normal absolute -top-3 left-6">Most Popular</div>
               <div className="mb-6">
                 <div className="text-sm text-muted-foreground mb-2">Pro</div>
@@ -147,15 +140,14 @@ function Landing() {
                 href={PRO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-full glass hover:bg-white/5 transition text-sm font-medium border border-accent/30 hover:border-accent/60"
+                className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-full glass hover:bg-white/5 transition-colors text-sm font-medium border border-accent/30 hover:border-accent/60"
               >
                 Start 7-day free trial <ArrowRight size={14} />
               </a>
             </div>
 
             {/* Founding Member */}
-            <div className="glass glow-normal p-8 relative flex flex-col accent-glow">
-              <div className="animated-gradient opacity-50" />
+            <div className="glass p-8 relative flex flex-col border-accent/20">
               <div className="badge-status badge-normal absolute -top-3 left-6">
                 <Crown size={11} /> Limited — 200 spots only
               </div>
@@ -187,7 +179,7 @@ function Landing() {
                 href={FOUNDING_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative z-10 inline-flex items-center justify-center gap-2 w-full bg-accent text-accent-foreground px-6 py-3.5 rounded-full font-medium accent-glow hover:scale-[1.02] transition text-sm"
+                className="relative z-10 inline-flex items-center justify-center gap-2 w-full bg-accent text-accent-foreground px-6 py-3.5 rounded-full font-medium transition-colors text-sm"
               >
                 Get Lifetime Access <ArrowRight size={14} />
               </a>
@@ -196,12 +188,12 @@ function Landing() {
         </section>
 
         {/* Features */}
-        <section className="py-16 animate-fade-up">
+        <section className="py-16">
           <div className="text-center mb-12">
             <div className="text-[11px] uppercase tracking-[0.2em] text-accent mb-3">Why labread</div>
             <h2 className="text-3xl md:text-4xl tracking-tight">Built for clarity. Designed for you.</h2>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { icon: Globe2, t: "Any lab, any country", d: "Bloodwork, panels, hormones — we read them all, in any language." },
               { icon: Brain, t: "Plain-language insights", d: "No jargon. Just what each value means for your body, today." },
@@ -210,7 +202,7 @@ function Landing() {
               { icon: FileText, t: "Beautiful history", d: "Every report saved, searchable, and easy to compare over time." },
               { icon: ShieldCheck, t: "Zero data stored", d: "Your results are processed and immediately deleted. Nothing is saved. HIPAA-compliant." },
             ].map((f, i) => (
-              <div key={i} className="glass glass-glow p-6 hover:-translate-y-0.5 hover:border-accent/30 transition-all duration-300">
+              <div key={i} className="glass p-6">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent/25 to-accent/5 grid place-items-center text-accent mb-4 border border-accent/15">
                   <f.icon size={18} />
                 </div>
@@ -222,18 +214,18 @@ function Landing() {
         </section>
 
         {/* How it works */}
-        <section id="how" className="py-20 animate-fade-up">
+        <section id="how" className="py-20">
           <div className="text-center mb-12">
             <div className="text-[11px] uppercase tracking-[0.2em] text-accent mb-3">How it works</div>
             <h2 className="text-3xl md:text-4xl tracking-tight">Three steps to clarity.</h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-4 relative stagger">
+          <div className="grid md:grid-cols-3 gap-4 relative">
             {[
               { n: "01", icon: Upload, t: "Upload", d: "Drop a PDF or snap a photo of your lab report." },
               { n: "02", icon: Brain, t: "Analyze", d: "Our AI reads every value and references against medical ranges." },
               { n: "03", icon: HeartPulse, t: "Understand", d: "Get plain-language explanations and screening guidance." },
             ].map((s, i) => (
-              <div key={i} className="glass glass-glow p-6 relative">
+              <div key={i} className="glass p-6 relative">
                 <div className="text-[11px] font-mono text-accent mb-4 tracking-wider">{s.n}</div>
                 <s.icon size={22} className="text-accent mb-3" />
                 <div className="font-medium mb-1.5">{s.t}</div>
@@ -244,23 +236,20 @@ function Landing() {
         </section>
 
         {/* CTA */}
-        <section className="py-20 animate-fade-up">
-          <div className="glass glass-glow p-10 md:p-14 text-center relative overflow-hidden rounded-3xl">
-            <div className="animated-gradient" />
-            <div className="relative z-10">
-              <h2 className="text-3xl md:text-5xl mb-4 tracking-tight">
-                Ready to <span className="italic gradient-text">understand</span> your bloodwork?
-              </h2>
-              <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                Join thousands taking control of their health, one lab at a time.
-              </p>
-              <Link
-                to="/#pricing"
-                className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-4 rounded-full font-medium accent-glow hover:scale-[1.03] transition"
-              >
-                Get started free <ArrowRight size={16} />
-              </Link>
-            </div>
+        <section className="py-20">
+          <div className="glass p-10 md:p-14 text-center relative overflow-hidden rounded-3xl">
+            <h2 className="text-3xl md:text-5xl mb-4 tracking-tight">
+              Ready to <span className="italic gradient-text">understand</span> your bloodwork?
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+              Join thousands taking control of their health, one lab at a time.
+            </p>
+            <Link
+              to="/#pricing"
+              className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-4 rounded-full font-medium transition-colors"
+            >
+              Get started free <ArrowRight size={16} />
+            </Link>
           </div>
         </section>
 
