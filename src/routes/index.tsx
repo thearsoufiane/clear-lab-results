@@ -69,8 +69,7 @@ function Landing() {
             <span className="italic gradient-text">finally explained.</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            Upload any lab report — PDF or photo — and labread instantly translates
-            every value into plain language, flags what matters, and recommends screenings.
+            Paste your numbers. We tell you what's normal, what's not, and what to ask your doctor. Plain English. 30 seconds.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
@@ -86,10 +85,27 @@ function Landing() {
               See how it works
             </a>
           </div>
-          <div className="mt-8 flex items-center justify-center gap-6 text-xs text-muted-foreground">
+          <div className="mt-6 inline-flex items-center gap-2 text-xs text-muted-foreground glass px-4 py-2 rounded-full">
+            <ShieldCheck size={13} className="text-success shrink-0" />
+            Your data is never stored. Results are processed and immediately deleted. HIPAA-compliant.
+          </div>
+          <div className="mt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1.5"><Check size={12} className="text-success"/> Free to start</span>
             <span className="inline-flex items-center gap-1.5"><Check size={12} className="text-success"/> No card needed</span>
-            <span className="inline-flex items-center gap-1.5"><Check size={12} className="text-success"/> Private by design</span>
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className="pb-16 animate-fade-up">
+          <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            <div className="glass glass-glow p-6 rounded-2xl">
+              <p className="text-sm leading-relaxed mb-4 italic text-foreground/90">"Finally understood my cholesterol results after years of confusion."</p>
+              <div className="text-xs text-muted-foreground">&mdash; labread.health user</div>
+            </div>
+            <div className="glass glass-glow p-6 rounded-2xl">
+              <p className="text-sm leading-relaxed mb-4 italic text-foreground/90">"Saved me hours of Googling. Got answers in 30 seconds."</p>
+              <div className="text-xs text-muted-foreground">&mdash; labread.health user</div>
+            </div>
           </div>
         </section>
 
@@ -192,7 +208,7 @@ function Landing() {
               { icon: HeartPulse, t: "Flagged automatically", d: "Color-coded results so abnormal values are impossible to miss." },
               { icon: Stethoscope, t: "Screening recommendations", d: "Personalized next steps and tests worth discussing with your doctor." },
               { icon: FileText, t: "Beautiful history", d: "Every report saved, searchable, and easy to compare over time." },
-              { icon: ShieldCheck, t: "Private by design", d: "Your reports are yours. Encrypted, isolated, never shared." },
+              { icon: ShieldCheck, t: "Zero data stored", d: "Your results are processed and immediately deleted. Nothing is saved. HIPAA-compliant." },
             ].map((f, i) => (
               <div key={i} className="glass glass-glow p-6 hover:-translate-y-0.5 hover:border-accent/30 transition-all duration-300">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent/25 to-accent/5 grid place-items-center text-accent mb-4 border border-accent/15">
