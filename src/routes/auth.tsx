@@ -36,7 +36,7 @@ function AuthPage() {
           redirectTo: window.location.origin + "/auth",
         });
         if (error) throw error;
-        setInfo("Password reset link sent! Check your email.");
+        setInfo("Password reset email sent! **Check your spam folder** if you don't see it within 2 minutes.");
       } else if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email, password,
@@ -98,7 +98,13 @@ function AuthPage() {
               />
             )}
             {err && <div className="text-sm text-danger bg-danger/10 border border-danger/30 rounded-lg px-3 py-2">{err}</div>}
-            {info && <div className="text-sm text-accent bg-accent/10 border border-accent/30 rounded-lg px-3 py-2">{info}</div>}
+            {info && (
+              <div className="text-sm text-accent bg-accent/10 border border-accent/30 rounded-lg px-3 py-2">
+                {info.split(/\*\*(.*?)\*\*/).map((part, i) =>
+                  i % 2 === 1 ? <strong key={i} className="font-semibold text-foreground">{part}</strong> : part
+                )}
+              </div>
+            )}
             <button
               type="submit" disabled={loading}
               className="w-full bg-accent text-accent-foreground font-medium rounded-xl py-3 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
