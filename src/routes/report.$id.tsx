@@ -113,7 +113,7 @@ function ReportView() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
+      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
         <Logo />
         <div className="flex items-center gap-2">
           {report && user && (
@@ -139,7 +139,7 @@ function ReportView() {
 
       <div className="flex flex-1 min-h-0">
         <HistorySidebar reports={reports} currentId={id} />
-        <main className="flex-1 min-w-0 px-6 py-10 animate-fade-up max-w-6xl mx-auto w-full">
+        <main className="flex-1 min-w-0 px-6 py-10 max-w-6xl mx-auto w-full">
         {error && <div className="glass p-4 text-danger border-danger/30">{error}</div>}
         {!report && !error && <div className="text-muted-foreground">Loading report…</div>}
 
@@ -154,7 +154,6 @@ function ReportView() {
             <div className="grid lg:grid-cols-[1fr_320px] gap-8">
               <div>
                 <div className="mb-8 relative">
-                  <div className="aurora opacity-60" />
                   <div className="relative z-10">
                     <div className="text-xs text-muted-foreground mb-2 uppercase tracking-[0.18em]">{new Date(report.created_at).toLocaleDateString(undefined, { dateStyle: "long" })}</div>
                     <h1 className="text-5xl mb-3 gradient-text leading-tight">{a.title}</h1>
@@ -162,7 +161,7 @@ function ReportView() {
                   </div>
                 </div>
 
-                <div className="glass glass-glow p-5 mb-6">
+                <div className="glass p-5 mb-6">
                   <div className="text-sm text-muted-foreground mb-3">Summary</div>
                   <div className="grid grid-cols-3 gap-4">
                     <Summary n={a.values.filter(v=>v.status==="normal").length} label="Normal" tone="normal"/>
@@ -171,7 +170,7 @@ function ReportView() {
                   </div>
                 </div>
 
-                <div className="space-y-2 stagger">
+                <div className="space-y-2">
                   {a.values.map((v, i) => {
                     const t = statusTone(v.status);
                     const isOpen = open[i] ?? v.status !== "normal";
@@ -196,7 +195,7 @@ function ReportView() {
                           <ChevronDown size={16} className={`text-muted-foreground transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}/>
                         </button>
                         {isOpen && (
-                          <div className="px-4 pb-4 pt-0 text-sm text-muted-foreground border-t border-border/40 animate-fade-up">
+                          <div className="px-4 pb-4 pt-0 text-sm text-muted-foreground border-t border-border/40">
                             <div className="pt-3 leading-relaxed">{v.explanation}</div>
                           </div>
                         )}
@@ -207,7 +206,7 @@ function ReportView() {
               </div>
 
               <aside className="lg:sticky lg:top-24 self-start space-y-4">
-                <div className="glass glass-glow p-5">
+                <div className="glass p-5">
                   <div className="flex items-center gap-2 mb-4">
                     <Stethoscope size={16} className="text-accent"/>
                     <h3 className="text-base">Recommended screenings</h3>

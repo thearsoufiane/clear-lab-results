@@ -108,8 +108,8 @@ export function UploadModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/70 backdrop-blur-sm animate-fade-up" onClick={onClose}>
-      <div className="glass glass-glow w-full max-w-lg p-6 relative" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/70" onClick={onClose}>
+      <div className="glass w-full max-w-lg p-6 relative" onClick={(e) => e.stopPropagation()}>
         <button onClick={onClose} className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"><X size={18} /></button>
 
         {phase === "idle" && (
@@ -147,7 +147,7 @@ export function UploadModal({
             <button
               disabled={!file}
               onClick={submit}
-              className="w-full mt-5 bg-accent text-accent-foreground font-medium rounded-full py-3 accent-glow hover:scale-[1.01] transition disabled:opacity-40 disabled:hover:scale-100"
+              className="w-full mt-5 bg-accent text-accent-foreground font-medium rounded-full py-3 transition-colors disabled:opacity-40"
             >
               Analyze report
             </button>

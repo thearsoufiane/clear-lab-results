@@ -21,14 +21,14 @@ export function HistorySidebar({ reports, currentId }: { reports: Report[]; curr
       {/* Mobile trigger */}
       <button
         onClick={() => setOpen(true)}
-        className="lg:hidden fixed left-4 bottom-4 z-40 glass glass-glow rounded-full px-4 py-2.5 text-sm flex items-center gap-2 hover:bg-white/5 transition"
+        className="lg:hidden fixed left-4 bottom-4 z-40 glass rounded-full px-4 py-2.5 text-sm flex items-center gap-2 hover:bg-white/5 transition-colors"
       >
         <History size={14} className="text-accent" /> History
       </button>
 
       {/* Mobile overlay */}
       {open && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm animate-fade-up" onClick={() => setOpen(false)}>
+        <div className="lg:hidden fixed inset-0 z-50 bg-black/70" onClick={() => setOpen(false)}>
           <aside
             className="absolute left-0 top-0 bottom-0 w-[280px] bg-background border-r border-border/60 p-4 overflow-y-auto animate-slide-in-left"
             onClick={(e) => e.stopPropagation()}
@@ -44,7 +44,7 @@ export function HistorySidebar({ reports, currentId }: { reports: Report[]; curr
 
       {/* Desktop sidebar */}
       <aside
-        className={`hidden lg:flex flex-col shrink-0 border-r border-border/60 transition-all duration-300 sticky top-[69px] self-start max-h-[calc(100vh-69px)] ${collapsed ? "w-14" : "w-[260px]"}`}
+        className={`hidden lg:flex flex-col shrink-0 border-r border-border/60 sticky top-[69px] self-start max-h-[calc(100vh-69px)] ${collapsed ? "w-14" : "w-[260px]"}`}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           {!collapsed && (
@@ -73,7 +73,7 @@ function Items({ reports, currentId, onPick }: { reports: Report[]; currentId?: 
     return <p className="text-xs text-muted-foreground px-2">No reports yet.</p>;
   }
   return (
-    <div className="space-y-1 stagger">
+    <div className="space-y-1">
       {reports.map((r) => {
         const flagged = r.analysis?.values?.filter(v => v.status !== "normal").length ?? 0;
         const active = r.id === currentId;
@@ -110,7 +110,7 @@ function Items({ reports, currentId, onPick }: { reports: Report[]; currentId?: 
 
 function ItemsCollapsed({ reports, currentId }: { reports: Report[]; currentId?: string }) {
   return (
-    <div className="space-y-1 stagger">
+    <div className="space-y-1">
       {reports.slice(0, 20).map((r) => {
         const active = r.id === currentId;
         const flagged = r.analysis?.values?.filter(v => v.status !== "normal").length ?? 0;

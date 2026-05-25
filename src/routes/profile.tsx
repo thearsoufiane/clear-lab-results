@@ -76,14 +76,14 @@ function ProfilePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
+      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
         <Logo />
         <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5">
           <ArrowLeft size={14}/> Dashboard
         </Link>
       </header>
 
-      <main className="flex-1 px-6 py-10 animate-fade-up">
+      <main className="flex-1 px-6 py-10">
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl tracking-tight mb-2">Your <span className="italic gradient-text">profile</span></h1>
@@ -109,7 +109,7 @@ function ProfilePage() {
                       <button key={s} type="button" onClick={() => setSex(s)}
                         className={`px-4 py-2 rounded-full text-sm border transition capitalize ${
                           sex === s
-                            ? "bg-accent text-accent-foreground border-accent accent-glow"
+                            ? "bg-accent text-accent-foreground border-accent"
                             : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
                         }`}>
                         {s}
@@ -152,7 +152,7 @@ function ProfilePage() {
 
               <div className="flex items-center gap-3">
                 <button onClick={save} disabled={saving}
-                  className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-5 py-2.5 rounded-full text-sm font-medium accent-glow hover:scale-[1.02] transition disabled:opacity-60">
+                  className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-5 py-2.5 rounded-full text-sm font-medium transition-colors disabled:opacity-60">
                   <Save size={14}/> {saving ? "Saving…" : "Save profile"}
                 </button>
                 {saved && <span className="text-sm text-success inline-flex items-center gap-1.5"><Check size={14}/> Saved</span>}

@@ -42,7 +42,7 @@ function Landing() {
             Sign in
           </Link>
           <Link
-            to="/#pricing"
+            to="/auth" search={{ mode: "signup" }}
             className="text-sm px-4 py-2 rounded-full bg-accent text-accent-foreground font-medium"
           >
             Get started free
@@ -66,7 +66,7 @@ function Landing() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              to="/#pricing"
+              to="/auth" search={{ mode: "signup" }}
               className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-4 rounded-full font-medium text-base"
             >
               Get started free <ArrowRight size={16} />
@@ -245,7 +245,7 @@ function Landing() {
               Join thousands taking control of their health, one lab at a time.
             </p>
             <Link
-              to="/#pricing"
+              to="/auth" search={{ mode: "signup" }}
               className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-4 rounded-full font-medium transition-colors"
             >
               Get started free <ArrowRight size={16} />

@@ -46,11 +46,11 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
+      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
         <Logo />
         <div className="flex items-center gap-3">
           <button onClick={() => setOpen(true)}
-            className="hidden sm:inline-flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2 rounded-full text-sm font-medium accent-glow hover:scale-[1.02] transition">
+            className="hidden sm:inline-flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2 rounded-full text-sm font-medium transition-colors">
             <Plus size={14}/> New report
           </button>
           <Link to="/history"
@@ -71,13 +71,12 @@ function Dashboard() {
       <div className="flex flex-1 min-h-0">
         <HistorySidebar reports={reports} />
 
-        <main className="flex-1 min-w-0 px-6 py-10 animate-fade-up">
+        <main className="flex-1 min-w-0 px-6 py-10">
           <div className="max-w-4xl mx-auto">
             <div className="relative mb-10 rounded-3xl overflow-hidden p-8 md:p-10 border border-border/40">
-              <div className="animated-gradient" />
-              <div className="relative z-10 animate-fade-up">
+              <div className="relative z-10">
                 <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent accent-glow" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                   labread.health
                 </div>
                 <h1 className="text-4xl md:text-6xl mb-3 leading-[1.05] tracking-tight">
@@ -88,7 +87,7 @@ function Dashboard() {
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-4 mb-10 stagger">
+            <div className="grid sm:grid-cols-3 gap-4 mb-10">
               <Stat icon={FileText} label="Reports" value={reports.length} tone={reports.length > 0 ? "normal" : "neutral"} />
               <Stat icon={AlertTriangle} label="Flagged values"
                 value={flagged}
@@ -119,12 +118,12 @@ function Dashboard() {
                   No reports yet. Upload your first lab to get started.
                 </div>
               )}
-              <div className="space-y-3 stagger">
+              <div className="space-y-3">
                 {reports.map((r) => {
                   const flagCount = r.analysis?.values?.filter(v => v.status !== "normal").length ?? 0;
                   return (
                     <Link key={r.id} to="/report/$id" params={{ id: r.id }}
-                      className="glass glass-glow p-4 flex items-center gap-4 hover:bg-white/[0.04] hover:-translate-y-0.5 hover:border-accent/30 transition-all duration-300 group">
+                      className="glass p-4 flex items-center gap-4 hover:bg-white/[0.04] hover:border-accent/30 transition-colors group">
                       <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent/25 to-accent/5 grid place-items-center text-accent shrink-0 border border-accent/15">
                         <FileText size={18}/>
                       </div>
@@ -157,7 +156,7 @@ function Stat({ icon: Icon, label, value, tone = "normal" }: { icon: any; label:
   const glow = tone === "bad" ? "glow-bad" : tone === "warn" ? "glow-warn" : tone === "normal" ? "glow-normal" : "";
   const numColor = tone === "bad" ? "text-danger" : tone === "warn" ? "text-warning" : tone === "normal" ? "text-success" : "";
   return (
-    <div className={`glass p-5 hover:-translate-y-0.5 transition-all duration-300 group relative overflow-hidden ${glow}`}>
+    <div className={`glass p-5 group relative overflow-hidden ${glow}`}>
       <div className="relative">
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
           <Icon size={14} className={iconColor} />
@@ -172,11 +171,11 @@ function Stat({ icon: Icon, label, value, tone = "normal" }: { icon: any; label:
 function UploadZone({ onClick }: { onClick: () => void }) {
   return (
     <button onClick={onClick}
-      className="w-full glass glass-glow border-dashed border-2 border-border/80 hover:border-accent/60 hover:-translate-y-0.5 transition-all duration-300 rounded-2xl p-10 text-center group relative overflow-hidden">
+      className="w-full glass border-dashed border-2 border-border/80 hover:border-accent/60 transition-colors rounded-2xl p-10 text-center group relative overflow-hidden">
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{ background: "radial-gradient(circle at 50% 0%, rgba(200,240,216,0.10), transparent 60%)" }}/>
       <div className="relative">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-accent/30 to-accent/5 text-accent mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 border border-accent/20">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-accent/30 to-accent/5 text-accent mb-3 border border-accent/20">
           <Plus size={22}/>
         </div>
         <div className="font-medium text-base">Upload a new report</div>

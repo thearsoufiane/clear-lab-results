@@ -38,7 +38,7 @@ function HistoryPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/70 backdrop-blur-md z-30">
+      <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
         <Logo />
         <div className="flex items-center gap-2">
           <Link to="/profile" className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="Profile">
@@ -53,7 +53,7 @@ function HistoryPage() {
       <div className="flex flex-1 min-h-0">
         <HistorySidebar reports={reports} />
 
-        <main className="flex-1 min-w-0 px-6 py-10 animate-fade-up">
+        <main className="flex-1 min-w-0 px-6 py-10">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
               <div className="text-xs text-muted-foreground mb-2 uppercase tracking-[0.18em]">Archive</div>
@@ -74,7 +74,7 @@ function HistoryPage() {
               </div>
             )}
 
-            <div className="space-y-3 stagger">
+            <div className="space-y-3">
               {reports.map((r) => {
                 const flagCount = r.analysis?.values?.filter(v => v.status !== "normal").length ?? 0;
                 return (
@@ -82,7 +82,7 @@ function HistoryPage() {
                     key={r.id}
                     to="/report/$id"
                     params={{ id: r.id }}
-                    className="glass glass-glow p-4 flex items-center gap-4 hover:bg-white/[0.04] hover:-translate-y-0.5 hover:border-accent/30 transition-all duration-300 group"
+                    className="glass p-4 flex items-center gap-4 hover:bg-white/[0.04] hover:border-accent/30 transition-colors group"
                   >
                     <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent/25 to-accent/5 grid place-items-center text-accent shrink-0 border border-accent/15">
                       <FileText size={18}/>
