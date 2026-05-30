@@ -4,11 +4,20 @@ import { useEffect } from "react";
 import { Logo } from "@/components/logo";
 import {
   ArrowRight, Sparkles, ShieldCheck, FileText, Stethoscope,
-  Upload, Brain, HeartPulse, Check, Globe2, Crown,
+  Upload, Brain, HeartPulse, Check, Globe2, Crown, BookOpen,
 } from "lucide-react";
 
 const PRO_URL = "https://labread.gumroad.com/l/dfaiip";
 const FOUNDING_URL = "https://labread.gumroad.com/l/lckhjt";
+
+// Educational biomarker guides. Flip `live` to true as each /learn page ships.
+const GUIDES = [
+  { href: "/learn/ferritin", title: "What Does Low Ferritin Mean?", blurb: "Iron deficiency, explained in plain English.", live: true },
+  { href: "/learn/vitamin-d", title: "Vitamin D Deficiency Explained", blurb: "Why “normal” and “optimal” are far apart.", live: true },
+  { href: "/learn/tsh-thyroid", title: "TSH Normal But Still Tired?", blurb: "Why one thyroid number isn’t the whole story.", live: false },
+  { href: "/learn/crp", title: "What Does High CRP Mean?", blurb: "The quiet inflammation marker most people miss.", live: false },
+  { href: "/learn/a1c", title: "What Is Pre-Diabetic A1c?", blurb: "The window where changes matter most.", live: false },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -250,6 +259,48 @@ function Landing() {
             >
               Get started free <ArrowRight size={16} />
             </Link>
+          </div>
+        </section>
+
+        {/* Learn / Resources */}
+        <section id="learn" className="py-16">
+          <div className="text-center mb-12">
+            <div className="text-[11px] uppercase tracking-[0.2em] text-accent mb-3">Learn</div>
+            <h2 className="text-3xl md:text-4xl tracking-tight">Understand your results.</h2>
+            <p className="text-muted-foreground mt-3 max-w-lg mx-auto">
+              Plain-English guides to the biomarkers people ask about most — what the numbers mean, and what to do next.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {GUIDES.map((g) =>
+              g.live ? (
+                <a
+                  key={g.href}
+                  href={g.href}
+                  className="glass p-6 flex flex-col group hover:bg-white/[0.04] hover:border-accent/30 transition-colors"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent/25 to-accent/5 grid place-items-center text-accent mb-4 border border-accent/15">
+                    <BookOpen size={18} />
+                  </div>
+                  <div className="font-medium mb-1.5">{g.title}</div>
+                  <div className="text-sm text-muted-foreground leading-relaxed flex-1">{g.blurb}</div>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm text-accent">
+                    Read guide <ArrowRight size={14} />
+                  </span>
+                </a>
+              ) : (
+                <div key={g.href} className="glass p-6 flex flex-col opacity-55">
+                  <div className="w-11 h-11 rounded-xl bg-white/[0.04] grid place-items-center text-muted-foreground mb-4 border border-border/40">
+                    <BookOpen size={18} />
+                  </div>
+                  <div className="font-medium mb-1.5">{g.title}</div>
+                  <div className="text-sm text-muted-foreground leading-relaxed flex-1">{g.blurb}</div>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted-foreground">
+                    Coming soon
+                  </span>
+                </div>
+              )
+            )}
           </div>
         </section>
 
