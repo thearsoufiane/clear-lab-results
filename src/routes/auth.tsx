@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/logo";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
+import { track, hasGuestAnalysis, clearGuestAnalysis } from "@/lib/analytics";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>): { mode?: "signup" } => ({
+  validateSearch: (search: Record<string, unknown>): { mode?: "signup"; from?: "demo" } => ({
     ...(search.mode === "signup" ? { mode: "signup" as const } : {}),
+    ...(search.from === "demo" ? { from: "demo" as const } : {}),
   }),
   component: AuthPage,
 });
@@ -24,6 +26,12 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const fromDemo = searchParams.from === "demo";
+
+  // A guest who reached signup after running a free analysis.
+  useEffect(() => {
+    if (fromDemo && hasGuestAnalysis()) track("guest_signup_viewed");
+  }, [fromDemo]);
 
   useEffect(() => { if (!authLoading && user) nav({ to: "/dashboard" }); }, [user, authLoading]);
 
@@ -43,6 +51,11 @@ function AuthPage() {
           options: { emailRedirectTo: window.location.origin + "/dashboard" },
         });
         if (error) throw error;
+        // Count guest → signup conversion (they ran a free analysis, then signed up).
+        if (hasGuestAnalysis()) {
+          track("guest_signup_converted");
+          clearGuestAnalysis();
+        }
         setInfo("Check your email to confirm your account, then sign in.");
         setMode("signin");
       } else {
@@ -81,6 +94,14 @@ function AuthPage() {
         style={{ background: "radial-gradient(50% 50% at 50% 30%, rgba(200,240,216,0.10), transparent 60%)" }} />
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8"><Logo size={36} /></div>
+        {fromDemo && (
+          <div className="glass p-4 mb-4 flex items-start gap-3 border-accent/30">
+            <Sparkles size={16} className="text-accent mt-0.5 shrink-0" />
+            <p className="text-sm text-foreground/90">
+              You just ran a free analysis. Create an account to save it as a PDF and run more.
+            </p>
+          </div>
+        )}
         <div className="glass p-8">
           <h2 className="text-2xl mb-1">{title}</h2>
           <p className="text-sm text-muted-foreground mb-6">{subtitle}</p>

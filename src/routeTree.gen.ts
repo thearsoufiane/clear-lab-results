@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TryFreeRouteImport } from './routes/try-free'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -21,6 +22,11 @@ import { Route as LearnFerritinRouteImport } from './routes/learn/ferritin'
 import { Route as LearnCrpRouteImport } from './routes/learn/crp'
 import { Route as LearnA1cRouteImport } from './routes/learn/a1c'
 
+const TryFreeRoute = TryFreeRouteImport.update({
+  id: '/try-free',
+  path: '/try-free',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
+  '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
+  '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
+  '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/profile'
+    | '/try-free'
     | '/learn/a1c'
     | '/learn/crp'
     | '/learn/ferritin'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/profile'
+    | '/try-free'
     | '/learn/a1c'
     | '/learn/crp'
     | '/learn/ferritin'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/profile'
+    | '/try-free'
     | '/learn/a1c'
     | '/learn/crp'
     | '/learn/ferritin'
@@ -165,6 +177,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   HistoryRoute: typeof HistoryRoute
   ProfileRoute: typeof ProfileRoute
+  TryFreeRoute: typeof TryFreeRoute
   LearnA1cRoute: typeof LearnA1cRoute
   LearnCrpRoute: typeof LearnCrpRoute
   LearnFerritinRoute: typeof LearnFerritinRoute
@@ -175,6 +188,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/try-free': {
+      id: '/try-free'
+      path: '/try-free'
+      fullPath: '/try-free'
+      preLoaderRoute: typeof TryFreeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -261,6 +281,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   HistoryRoute: HistoryRoute,
   ProfileRoute: ProfileRoute,
+  TryFreeRoute: TryFreeRoute,
   LearnA1cRoute: LearnA1cRoute,
   LearnCrpRoute: LearnCrpRoute,
   LearnFerritinRoute: LearnFerritinRoute,

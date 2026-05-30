@@ -54,10 +54,10 @@ function Landing() {
             Sign in
           </Link>
           <Link
-            to="/auth" search={{ mode: "signup" }}
+            to="/try-free"
             className="text-sm px-4 py-2 rounded-full bg-accent text-accent-foreground font-medium"
           >
-            Get started free
+            Try for free
           </Link>
         </div>
       </header>
@@ -78,17 +78,17 @@ function Landing() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              to="/auth" search={{ mode: "signup" }}
+              to="/try-free"
               className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-4 rounded-full font-medium text-base"
             >
-              Get started free <ArrowRight size={16} />
+              Try for free <ArrowRight size={16} />
             </Link>
-            <a
-              href="#how"
+            <Link
+              to="/auth" search={{ mode: "signup" }}
               className="inline-flex items-center gap-2 px-6 py-4 rounded-full glass hover:bg-white/5 transition-colors text-sm text-muted-foreground hover:text-foreground"
             >
-              See how it works
-            </a>
+              Sign up to save results
+            </Link>
           </div>
           <div className="mt-6 inline-flex items-center gap-2 text-xs text-muted-foreground glass px-4 py-2 rounded-full">
             <ShieldCheck size={13} className="text-success shrink-0" />
@@ -172,10 +172,10 @@ function Landing() {
               Join thousands taking control of their health, one lab at a time.
             </p>
             <Link
-              to="/auth" search={{ mode: "signup" }}
+              to="/try-free"
               className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-4 rounded-full font-medium transition-colors"
             >
-              Get started free <ArrowRight size={16} />
+              Try for free <ArrowRight size={16} />
             </Link>
           </div>
         </section>
