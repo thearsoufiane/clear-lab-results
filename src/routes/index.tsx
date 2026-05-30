@@ -44,6 +44,12 @@ function Landing() {
       <header className="px-6 py-5 flex items-center justify-between max-w-6xl mx-auto sticky top-0 z-30 bg-background/95">
         <Logo />
         <div className="flex items-center gap-3">
+          <a
+            href="#learn"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-2"
+          >
+            Learn
+          </a>
           <Link
             to="/auth"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-2"
