@@ -16,7 +16,10 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as LearnVitaminDRouteImport } from './routes/learn/vitamin-d'
+import { Route as LearnTshThyroidRouteImport } from './routes/learn/tsh-thyroid'
 import { Route as LearnFerritinRouteImport } from './routes/learn/ferritin'
+import { Route as LearnCrpRouteImport } from './routes/learn/crp'
+import { Route as LearnA1cRouteImport } from './routes/learn/a1c'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
@@ -53,9 +56,24 @@ const LearnVitaminDRoute = LearnVitaminDRouteImport.update({
   path: '/learn/vitamin-d',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnTshThyroidRoute = LearnTshThyroidRouteImport.update({
+  id: '/learn/tsh-thyroid',
+  path: '/learn/tsh-thyroid',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnFerritinRoute = LearnFerritinRouteImport.update({
   id: '/learn/ferritin',
   path: '/learn/ferritin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnCrpRoute = LearnCrpRouteImport.update({
+  id: '/learn/crp',
+  path: '/learn/crp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnA1cRoute = LearnA1cRouteImport.update({
+  id: '/learn/a1c',
+  path: '/learn/a1c',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -65,7 +83,10 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
+  '/learn/a1c': typeof LearnA1cRoute
+  '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
+  '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
 }
@@ -75,7 +96,10 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
+  '/learn/a1c': typeof LearnA1cRoute
+  '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
+  '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
 }
@@ -86,7 +110,10 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
+  '/learn/a1c': typeof LearnA1cRoute
+  '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
+  '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
 }
@@ -98,7 +125,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/profile'
+    | '/learn/a1c'
+    | '/learn/crp'
     | '/learn/ferritin'
+    | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
     | '/report/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -108,7 +138,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/profile'
+    | '/learn/a1c'
+    | '/learn/crp'
     | '/learn/ferritin'
+    | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
     | '/report/$id'
   id:
@@ -118,7 +151,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/profile'
+    | '/learn/a1c'
+    | '/learn/crp'
     | '/learn/ferritin'
+    | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
     | '/report/$id'
   fileRoutesById: FileRoutesById
@@ -129,7 +165,10 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   HistoryRoute: typeof HistoryRoute
   ProfileRoute: typeof ProfileRoute
+  LearnA1cRoute: typeof LearnA1cRoute
+  LearnCrpRoute: typeof LearnCrpRoute
   LearnFerritinRoute: typeof LearnFerritinRoute
+  LearnTshThyroidRoute: typeof LearnTshThyroidRoute
   LearnVitaminDRoute: typeof LearnVitaminDRoute
   ReportIdRoute: typeof ReportIdRoute
 }
@@ -185,11 +224,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnVitaminDRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/tsh-thyroid': {
+      id: '/learn/tsh-thyroid'
+      path: '/learn/tsh-thyroid'
+      fullPath: '/learn/tsh-thyroid'
+      preLoaderRoute: typeof LearnTshThyroidRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/ferritin': {
       id: '/learn/ferritin'
       path: '/learn/ferritin'
       fullPath: '/learn/ferritin'
       preLoaderRoute: typeof LearnFerritinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/crp': {
+      id: '/learn/crp'
+      path: '/learn/crp'
+      fullPath: '/learn/crp'
+      preLoaderRoute: typeof LearnCrpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/a1c': {
+      id: '/learn/a1c'
+      path: '/learn/a1c'
+      fullPath: '/learn/a1c'
+      preLoaderRoute: typeof LearnA1cRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -201,7 +261,10 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   HistoryRoute: HistoryRoute,
   ProfileRoute: ProfileRoute,
+  LearnA1cRoute: LearnA1cRoute,
+  LearnCrpRoute: LearnCrpRoute,
   LearnFerritinRoute: LearnFerritinRoute,
+  LearnTshThyroidRoute: LearnTshThyroidRoute,
   LearnVitaminDRoute: LearnVitaminDRoute,
   ReportIdRoute: ReportIdRoute,
 }

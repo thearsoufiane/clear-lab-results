@@ -14,9 +14,9 @@ const FOUNDING_URL = "https://labread.gumroad.com/l/lckhjt";
 const GUIDES = [
   { href: "/learn/ferritin", title: "What Does Low Ferritin Mean?", blurb: "Iron deficiency, explained in plain English.", live: true },
   { href: "/learn/vitamin-d", title: "Vitamin D Deficiency Explained", blurb: "Why “normal” and “optimal” are far apart.", live: true },
-  { href: "/learn/tsh-thyroid", title: "TSH Normal But Still Tired?", blurb: "Why one thyroid number isn’t the whole story.", live: false },
-  { href: "/learn/crp", title: "What Does High CRP Mean?", blurb: "The quiet inflammation marker most people miss.", live: false },
-  { href: "/learn/a1c", title: "What Is Pre-Diabetic A1c?", blurb: "The window where changes matter most.", live: false },
+  { href: "/learn/tsh-thyroid", title: "TSH Normal But Still Tired?", blurb: "Why one thyroid number isn’t the whole story.", live: true },
+  { href: "/learn/crp", title: "What Does High CRP Mean?", blurb: "The quiet inflammation marker most people miss.", live: true },
+  { href: "/learn/a1c", title: "What Is Pre-Diabetic A1c?", blurb: "The window where changes matter most.", live: true },
 ];
 
 export const Route = createFileRoute("/")({
