@@ -10,6 +10,11 @@
 //   guest_signup_viewed        – a guest reached signup after the free analysis
 //   guest_signup_converted     – a guest who'd run a free analysis created an account
 
+// Google Analytics 4 Measurement ID (looks like "G-XXXXXXXXXX").
+// Set this to your property's ID to activate analytics. While empty, no GA
+// script loads and events fall back to console logging only.
+export const GA_MEASUREMENT_ID = "G-XMJWB1TTT6";
+
 const GUEST_FLAG = "labread_guest_analysis"; // localStorage marker + timestamp
 
 type Props = Record<string, unknown>;

@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { DisclaimerModal } from "@/components/disclaimer-modal";
+import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
 function NotFoundComponent() {
   return (
@@ -101,6 +102,16 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        {GA_MEASUREMENT_ID && (
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_MEASUREMENT_ID}');`,
+              }}
+            />
+          </>
+        )}
       </head>
       <body>
         {children}
