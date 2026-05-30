@@ -15,6 +15,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
+import { Route as LearnVitaminDRouteImport } from './routes/learn/vitamin-d'
 import { Route as LearnFerritinRouteImport } from './routes/learn/ferritin'
 
 const ProfileRoute = ProfileRouteImport.update({
@@ -47,6 +48,11 @@ const ReportIdRoute = ReportIdRouteImport.update({
   path: '/report/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnVitaminDRoute = LearnVitaminDRouteImport.update({
+  id: '/learn/vitamin-d',
+  path: '/learn/vitamin-d',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnFerritinRoute = LearnFerritinRouteImport.update({
   id: '/learn/ferritin',
   path: '/learn/ferritin',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
   '/learn/ferritin': typeof LearnFerritinRoute
+  '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
   '/learn/ferritin': typeof LearnFerritinRoute
+  '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
   '/learn/ferritin': typeof LearnFerritinRoute
+  '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/profile'
     | '/learn/ferritin'
+    | '/learn/vitamin-d'
     | '/report/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/profile'
     | '/learn/ferritin'
+    | '/learn/vitamin-d'
     | '/report/$id'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/profile'
     | '/learn/ferritin'
+    | '/learn/vitamin-d'
     | '/report/$id'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   HistoryRoute: typeof HistoryRoute
   ProfileRoute: typeof ProfileRoute
   LearnFerritinRoute: typeof LearnFerritinRoute
+  LearnVitaminDRoute: typeof LearnVitaminDRoute
   ReportIdRoute: typeof ReportIdRoute
 }
 
@@ -165,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/vitamin-d': {
+      id: '/learn/vitamin-d'
+      path: '/learn/vitamin-d'
+      fullPath: '/learn/vitamin-d'
+      preLoaderRoute: typeof LearnVitaminDRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/ferritin': {
       id: '/learn/ferritin'
       path: '/learn/ferritin'
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   HistoryRoute: HistoryRoute,
   ProfileRoute: ProfileRoute,
   LearnFerritinRoute: LearnFerritinRoute,
+  LearnVitaminDRoute: LearnVitaminDRoute,
   ReportIdRoute: ReportIdRoute,
 }
 export const routeTree = rootRouteImport
