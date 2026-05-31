@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Logo } from "@/components/logo";
 import {
   ArrowRight, Sparkles, ShieldCheck, FileText, Stethoscope,
-  Upload, Brain, HeartPulse, Check, Globe2, BookOpen,
+  Upload, Brain, HeartPulse, Globe2, BookOpen,
 } from "lucide-react";
 
 // Illustrative sample biomarkers for the landing-page report preview.
@@ -101,7 +101,7 @@ function Landing() {
 
       {/* Hero */}
       <main className="max-w-6xl mx-auto px-6">
-        <section className="relative pt-20 pb-24 text-center">
+        <section className="relative pt-20 pb-12 text-center">
           <div className="inline-flex items-center gap-2 text-xs text-muted-foreground glass px-3 py-1.5 rounded-full mb-8">
             <Sparkles size={12} className="text-accent" />
             AI-powered medical clarity
@@ -110,16 +110,9 @@ function Landing() {
             Your blood test,<br />
             <span className="italic gradient-text">finally explained.</span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-7">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
             Paste your numbers. We tell you what's normal, what's not, and what to ask your doctor. Plain English. 30 seconds.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground mb-10">
-            <span>50+ biomarkers explained</span>
-            <span className="hidden sm:block w-px h-4 bg-border/70" aria-hidden="true" />
-            <span>Plain English, no jargon</span>
-            <span className="hidden sm:block w-px h-4 bg-border/70" aria-hidden="true" />
-            <span>30 seconds to your report</span>
-          </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               to="/try-free"
@@ -138,9 +131,24 @@ function Landing() {
             <ShieldCheck size={13} className="text-success shrink-0" />
             Your data is never stored. Results are processed and immediately deleted. HIPAA-compliant.
           </div>
-          <div className="mt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5"><Check size={12} className="text-success"/> Free to start</span>
-            <span className="inline-flex items-center gap-1.5"><Check size={12} className="text-success"/> No card needed</span>
+
+          {/* Bold stats */}
+          <div className="mt-8 pt-8 border-t border-border/40">
+            <div className="grid grid-cols-3 divide-x divide-border/50">
+              {[
+                { v: "50+", suffix: null, label: "biomarkers explained" },
+                { v: "30", suffix: "sec", label: "to your full report" },
+                { v: "Free", suffix: null, label: "no card needed" },
+              ].map((s) => (
+                <div key={s.label} className="px-3 md:px-6">
+                  <div className="font-serif tracking-tight leading-none text-4xl md:text-6xl">
+                    {s.v}
+                    {s.suffix && <span className="text-2xl md:text-3xl text-muted-foreground ml-0.5">{s.suffix}</span>}
+                  </div>
+                  <div className="text-xs md:text-sm text-muted-foreground mt-3">{s.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
