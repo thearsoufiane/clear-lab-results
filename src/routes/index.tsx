@@ -110,9 +110,16 @@ function Landing() {
             Your blood test,<br />
             <span className="italic gradient-text">finally explained.</span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-7">
             Paste your numbers. We tell you what's normal, what's not, and what to ask your doctor. Plain English. 30 seconds.
           </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground mb-10">
+            <span>50+ biomarkers explained</span>
+            <span className="hidden sm:block w-px h-4 bg-border/70" aria-hidden="true" />
+            <span>Plain English, no jargon</span>
+            <span className="hidden sm:block w-px h-4 bg-border/70" aria-hidden="true" />
+            <span>30 seconds to your report</span>
+          </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               to="/try-free"
