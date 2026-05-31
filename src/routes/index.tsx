@@ -7,6 +7,43 @@ import {
   Upload, Brain, HeartPulse, Check, Globe2, BookOpen,
 } from "lucide-react";
 
+// Illustrative sample biomarkers for the landing-page report preview.
+// Uses the same dot/badge classes as the real analysis view.
+const SAMPLE_REPORT = [
+  {
+    name: "Ferritin",
+    value: "18 ng/mL",
+    status: "Low",
+    dot: "dot-warn",
+    badge: "badge-warn",
+    note: "Your iron stores are running low — a common cause of fatigue, brain fog, and feeling cold.",
+  },
+  {
+    name: "Vitamin D",
+    value: "22 ng/mL",
+    status: "Low",
+    dot: "dot-warn",
+    badge: "badge-warn",
+    note: "Below the optimal range, which is often linked to low energy, low mood, and weaker immunity.",
+  },
+  {
+    name: "TSH",
+    value: "2.1 mIU/L",
+    status: "Normal",
+    dot: "dot-normal",
+    badge: "badge-normal",
+    note: "Your thyroid signal is in range — though one number doesn't capture the full thyroid picture.",
+  },
+  {
+    name: "CRP",
+    value: "4.2 mg/L",
+    status: "Elevated",
+    dot: "dot-bad",
+    badge: "badge-bad",
+    note: "A marker of inflammation that's mildly raised — worth understanding what's driving it.",
+  },
+];
+
 // Educational biomarker guides. Flip `live` to true as each /learn page ships.
 const GUIDES = [
   { href: "/learn/ferritin", title: "What Does Low Ferritin Mean?", blurb: "Iron deficiency, explained in plain English.", live: true },
@@ -97,6 +134,37 @@ function Landing() {
           <div className="mt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1.5"><Check size={12} className="text-success"/> Free to start</span>
             <span className="inline-flex items-center gap-1.5"><Check size={12} className="text-success"/> No card needed</span>
+          </div>
+        </section>
+
+        {/* Sample report preview */}
+        <section className="pb-16">
+          <div className="text-center mb-10">
+            <div className="text-[11px] uppercase tracking-[0.2em] text-accent mb-3">Sample report</div>
+            <h2 className="text-3xl md:text-4xl tracking-tight">Here's what your report looks like</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {SAMPLE_REPORT.map((b) => (
+              <div key={b.name} className="glass p-5 flex flex-col">
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className={`dot ${b.dot}`} />
+                    <span className="font-medium truncate">{b.name}</span>
+                  </div>
+                  <span className={`badge-status ${b.badge}`}>{b.status}</span>
+                </div>
+                <div className="text-sm text-muted-foreground tabular-nums mb-2">{b.value}</div>
+                <div className="text-sm text-muted-foreground leading-relaxed">{b.note}</div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link
+              to="/auth" search={{ mode: "signup" }}
+              className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-4 rounded-full font-medium transition-colors"
+            >
+              Get yours free <ArrowRight size={16} />
+            </Link>
           </div>
         </section>
 
