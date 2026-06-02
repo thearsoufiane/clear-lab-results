@@ -5,7 +5,19 @@ import { supabase } from "@/lib/supabase";
 import { Logo } from "@/components/logo";
 import { ArrowLeft, Save, Check } from "lucide-react";
 
-export const Route = createFileRoute("/profile")({ component: ProfilePage });
+export const Route = createFileRoute("/profile")({
+  head: () => ({
+    meta: [
+      { title: "Your profile | labread.health" },
+      { name: "description", content: "Manage your labread account settings and health information." },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://labread.health/profile" },
+    ],
+  }),
+  component: ProfilePage,
+});
 
 const CONDITIONS = [
   { key: "diabetes", label: "Diabetes" },
@@ -78,7 +90,7 @@ function ProfilePage() {
     <div className="min-h-screen flex flex-col">
       <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
         <Logo />
-        <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5">
+        <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md min-h-[44px]">
           <ArrowLeft size={14}/> Dashboard
         </Link>
       </header>
@@ -107,7 +119,7 @@ function ProfilePage() {
                   <div className="flex gap-2">
                     {(["male","female"] as const).map((s) => (
                       <button key={s} type="button" onClick={() => setSex(s)}
-                        className={`px-4 py-2 rounded-full text-sm border transition capitalize ${
+                        className={`px-5 py-2.5 rounded-full text-sm border transition capitalize min-h-[44px] flex items-center ${
                           sex === s
                             ? "bg-accent text-accent-foreground border-accent"
                             : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"

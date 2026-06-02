@@ -7,7 +7,19 @@ import { HistorySidebar } from "@/components/history-sidebar";
 import { AnalysisView, normalizeName } from "@/components/analysis-view";
 import { ArrowLeft, User, Download } from "lucide-react";
 
-export const Route = createFileRoute("/report/$id")({ component: ReportView });
+export const Route = createFileRoute("/report/$id")({
+  head: () => ({
+    meta: [
+      { title: "Your blood test report | labread.health" },
+      { name: "description", content: "View your personalized blood test analysis and recommendations." },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://labread.health/report" },
+    ],
+  }),
+  component: ReportView,
+});
 
 function ReportView() {
   const { id } = Route.useParams();
@@ -36,23 +48,23 @@ function ReportView() {
     <div className="min-h-screen flex flex-col">
       <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
         <Logo />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           {report && user && (
             <button
               onClick={async () => {
                 const { generateReportPDF } = await import("@/lib/pdf-generator");
                 generateReportPDF(report, user.email || "");
               }}
-              className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition"
+              className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
               title="Download PDF"
             >
               <Download size={16}/>
             </button>
           )}
-          <Link to="/profile" className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="Profile">
+          <Link to="/profile" className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="Profile">
             <User size={16}/>
           </Link>
-          <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 px-2">
+          <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md min-h-[44px]">
             <ArrowLeft size={14}/> Dashboard
           </Link>
         </div>

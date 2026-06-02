@@ -110,7 +110,7 @@ export function UploadModal({
   return (
     <div className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/70" onClick={onClose}>
       <div className="glass w-full max-w-lg p-6 relative" onClick={(e) => e.stopPropagation()}>
-        <button onClick={onClose} className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"><X size={18} /></button>
+        <button onClick={onClose} className="absolute right-2 top-2 text-muted-foreground hover:text-foreground p-2 rounded min-h-[44px] min-w-[44px] flex items-center justify-center"><X size={18} /></button>
 
         {phase === "idle" && (
           <>

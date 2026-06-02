@@ -7,7 +7,19 @@ import { UploadModal } from "@/components/upload-modal";
 import { HistorySidebar } from "@/components/history-sidebar";
 import { FileText, AlertTriangle, Stethoscope, Plus, LogOut, ChevronRight, User, History } from "lucide-react";
 
-export const Route = createFileRoute("/dashboard")({ component: Dashboard });
+export const Route = createFileRoute("/dashboard")({
+  head: () => ({
+    meta: [
+      { title: "Your reports | labread.health" },
+      { name: "description", content: "View and manage your saved blood test analyses." },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://labread.health/dashboard" },
+    ],
+  }),
+  component: Dashboard,
+});
 
 function Dashboard() {
   const { user, loading } = useAuth();
@@ -48,21 +60,21 @@ function Dashboard() {
     <div className="min-h-screen flex flex-col">
       <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
         <Logo />
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1">
           <button onClick={() => setOpen(true)}
-            className="hidden sm:inline-flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2 rounded-full text-sm font-medium transition-colors">
+            className="hidden sm:inline-flex items-center gap-2 bg-accent text-accent-foreground px-5 py-2.5 rounded-full text-sm font-medium transition-colors min-h-[44px]">
             <Plus size={14}/> New report
           </button>
           <Link to="/history"
-            className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="History">
+            className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="History">
             <History size={16}/>
           </Link>
           <Link to="/profile"
-            className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="Profile">
+            className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="Profile">
             <User size={16}/>
           </Link>
           <button onClick={() => supabase.auth.signOut()}
-            className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-white/5 transition" title="Sign out">
+            className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="Sign out">
             <LogOut size={16}/>
           </button>
         </div>

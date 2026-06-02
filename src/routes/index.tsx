@@ -61,6 +61,9 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "labread.health — Your blood test, finally explained." },
       { property: "og:description", content: "AI-powered medical clarity for your bloodwork." },
     ],
+    links: [
+      { rel: "canonical", href: "https://labread.health" },
+    ],
   }),
   component: Landing,
 });
@@ -75,24 +78,24 @@ function Landing() {
   return (
     <div className="min-h-screen relative">
 
-      <header className="px-6 py-5 flex items-center justify-between max-w-6xl mx-auto sticky top-0 z-30 bg-background/95">
+      <header className="px-6 py-4 flex items-center justify-between max-w-6xl mx-auto sticky top-0 z-30 bg-background/95">
         <Logo />
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <a
             href="#learn"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-2"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 rounded-md min-h-[44px] flex items-center"
           >
             Learn
           </a>
           <Link
             to="/auth"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-2"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 rounded-md min-h-[44px] flex items-center"
           >
             Sign in
           </Link>
           <Link
             to="/try-free"
-            className="text-sm px-4 py-2 rounded-full bg-accent text-accent-foreground font-medium"
+            className="text-sm px-5 py-2.5 rounded-full bg-accent text-accent-foreground font-medium min-h-[44px] flex items-center"
           >
             Try for free
           </Link>

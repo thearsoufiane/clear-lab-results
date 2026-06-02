@@ -11,6 +11,15 @@ export const Route = createFileRoute("/auth")({
     ...(search.mode === "signup" ? { mode: "signup" as const } : {}),
     ...(search.from === "demo" ? { from: "demo" as const } : {}),
   }),
+  head: () => ({
+    meta: [
+      { title: "Sign in or create account | labread.health" },
+      { name: "description", content: "Sign in to your labread account or create a new one to save and track your blood test analyses." },
+    ],
+    links: [
+      { rel: "canonical", href: "https://labread.health/auth" },
+    ],
+  }),
   component: AuthPage,
 });
 

@@ -17,6 +17,9 @@ export const Route = createFileRoute("/try-free")({
           "Upload one blood test and get a full plain-English explanation of every value instantly — free, no signup required.",
       },
     ],
+    links: [
+      { rel: "canonical", href: "https://labread.health/try-free" },
+    ],
   }),
   component: GuestDemo,
 });
@@ -93,14 +96,14 @@ function GuestDemo() {
     <div className="min-h-screen flex flex-col">
       <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
         <Link to="/" className="no-underline"><Logo /></Link>
-        <div className="flex items-center gap-3">
-          <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-2">
+        <div className="flex items-center gap-2">
+          <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 rounded-md min-h-[44px] flex items-center">
             Sign in
           </Link>
           <Link
             to="/auth"
             search={{ mode: "signup", from: "demo" }}
-            className="text-sm px-4 py-2 rounded-full bg-accent text-accent-foreground font-medium"
+            className="text-sm px-5 py-2.5 rounded-full bg-accent text-accent-foreground font-medium min-h-[44px] flex items-center"
           >
             Sign up to save results
           </Link>

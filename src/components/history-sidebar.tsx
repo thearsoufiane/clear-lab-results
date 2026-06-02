@@ -35,7 +35,7 @@ export function HistorySidebar({ reports, currentId }: { reports: Report[]; curr
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm uppercase tracking-[0.2em] text-muted-foreground">History</h3>
-              <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground"><X size={16}/></button>
+              <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground p-2 rounded min-h-[44px] min-w-[44px] flex items-center justify-center"><X size={16}/></button>
             </div>
             <Items reports={reports} currentId={currentId} onPick={() => setOpen(false)} />
           </aside>
@@ -54,7 +54,7 @@ export function HistorySidebar({ reports, currentId }: { reports: Report[]; curr
           )}
           <button
             onClick={() => setCollapsed(c => !c)}
-            className={`text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-white/5 transition ${collapsed ? "mx-auto" : ""}`}
+            className={`text-muted-foreground hover:text-foreground p-2.5 rounded-lg hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center ${collapsed ? "mx-auto" : ""}`}
             title={collapsed ? "Expand" : "Collapse"}
           >
             <ChevronLeft size={14} className={`transition-transform ${collapsed ? "rotate-180" : ""}`} />
@@ -120,7 +120,7 @@ function ItemsCollapsed({ reports, currentId }: { reports: Report[]; currentId?:
             to="/report/$id"
             params={{ id: r.id }}
             title={r.title || r.file_name}
-            className={`grid place-items-center w-10 h-10 mx-auto rounded-xl transition relative ${active ? "bg-accent/15 text-accent" : "text-muted-foreground hover:bg-white/5 hover:text-foreground"}`}
+            className={`grid place-items-center w-11 h-11 mx-auto rounded-xl transition relative min-h-[44px] min-w-[44px] ${active ? "bg-accent/15 text-accent" : "text-muted-foreground hover:bg-white/5 hover:text-foreground"}`}
           >
             <FileText size={14}/>
             {flagged > 0 && <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-warning"/>}
