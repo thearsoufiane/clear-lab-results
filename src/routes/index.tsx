@@ -83,19 +83,19 @@ function Landing() {
         <div className="flex items-center gap-2">
           <a
             href="#learn"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 rounded-md min-h-[44px] flex items-center"
+            className="hidden sm:flex text-sm text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 rounded-md min-h-[44px] items-center"
           >
             Learn
           </a>
           <Link
             to="/auth"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 rounded-md min-h-[44px] flex items-center"
+            className="hidden sm:flex text-sm text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 rounded-md min-h-[44px] items-center"
           >
             Sign in
           </Link>
           <Link
             to="/try-free"
-            className="text-sm px-5 py-2.5 rounded-full bg-accent text-accent-foreground font-medium min-h-[44px] flex items-center"
+            className="text-sm px-5 py-2.5 rounded-full bg-accent text-accent-foreground font-medium min-h-[44px] flex items-center whitespace-nowrap"
           >
             Try for free
           </Link>
@@ -308,9 +308,9 @@ function Landing() {
           </div>
         </section>
 
-        <footer className="py-10 border-t border-border/40 mt-10 flex items-center justify-between text-xs text-muted-foreground">
+        <footer className="py-10 border-t border-border/40 mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-xs text-muted-foreground">
           <Logo />
-          <div>© {new Date().getFullYear()} labread.health · Not medical advice.</div>
+          <div className="text-center sm:text-right">© {new Date().getFullYear()} labread.health · Not medical advice.</div>
         </footer>
       </main>
     </div>
