@@ -95,7 +95,7 @@ function Landing() {
           </Link>
           <Link
             to="/try-free"
-            className="text-sm px-5 py-2.5 rounded-full bg-accent text-accent-foreground font-medium min-h-[44px] flex items-center whitespace-nowrap"
+            className="text-[13px] sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5 rounded-full bg-accent text-accent-foreground font-medium min-h-[44px] flex items-center whitespace-nowrap max-w-[140px] sm:max-w-none"
           >
             Try for free
           </Link>
