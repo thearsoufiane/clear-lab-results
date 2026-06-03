@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>labread.health — Your blood test, finally explained.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(180deg, #020203 0%, #0a0a0c 50%, #020203 100%);
+            color: #EDEDEF;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 80px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Fade-in Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            font-size: clamp(48px, 8vw, 96px);
+            line-height: 1.1;
+            color: #EDEDEF;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: clamp(36px, 6vw, 64px);
+            line-height: 1.2;
+            color: #EDEDEF;
+            margin-bottom: 40px;
+        }
+
+        h3 {
+            font-size: 18px;
+            color: #EDEDEF;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #8A8F98;
+        }
+
+        .label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #0891B2;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .glass:hover {
+            border-color: rgba(8, 145, 178, 0.4);
+            box-shadow: 0 0 40px rgba(8, 145, 178, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 24px;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            backdrop-filter: blur(20px);
+            background: rgba(2, 2, 3, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #EDEDEF;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #8A8F98;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #0891B2;
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #0891B2 0%, #059669 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(8, 145, 178, 0.2);
+        }
+
+        .nav-btn:hover {
+            box-shadow: 0 0 40px rgba(8, 145, 178, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(8, 145, 178, 0.15);
+            border: 1px solid rgba(8, 145, 178, 0.3);
+            border-radius: 50px;
+            margin-bottom: 32px;
+            font-size: 13px;
+            color: #22D3EE;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            background: linear-gradient(135deg, #EDEDEF 0%, #8A8F98 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-accent {
+            color: #0891B2;
+            font-style: italic;
+        }
+
+        .hero-subheading {
+            max-width: 560px;
+            margin: 0 auto 48px;
+            font-size: 18px;
+            color: #8A8F98;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0891B2 0%, #059669 100%);
+            color: #FFFFFF;
+            box-shadow: 0 0 20px rgba(8, 145, 178, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 40px rgba(8, 145, 178, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #8A8F98;
+            border: 1px solid rgba(160, 160, 160, 0.3);
+        }
+
+        .btn-secondary:hover {
+            color: #0891B2;
+            border-color: #0891B2;
+            box-shadow: 0 0 20px rgba(8, 145, 178, 0.2);
+        }
+
+        .trust-line {
+            font-size: 13px;
+            color: #64748B;
+            margin-bottom: 60px;
+        }
+
+        /* Counter Stats */
+        .counter-stats {
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 56px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0891B2 0%, #22D3EE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        /* Bento Grid Section */
+        .sample-report {
+            background: rgba(15, 15, 15, 0.4);
+        }
+
+        .section-label {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .biomarker-card {
+            padding: 24px;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .biomarker-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(8, 145, 178, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .biomarker-card.low {
+            border-left-color: #F59E0B;
+        }
+
+        .biomarker-card.elevated {
+            border-left-color: #EF4444;
+        }
+
+        .biomarker-card.normal {
+            border-left-color: #10B981;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .biomarker-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #EDEDEF;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .status-badge.low {
+            background: rgba(245, 158, 11, 0.15);
+            color: #F59E0B;
+        }
+
+        .status-badge.elevated {
+            background: rgba(239, 68, 68, 0.15);
+            color: #EF4444;
+        }
+
+        .status-badge.normal {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10B981;
+        }
+
+        .biomarker-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #8A8F98;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .biomarker-description {
+            font-size: 14px;
+            color: #64748B;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features Bento Grid */
+        .features-bento {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            padding: 40px;
+            text-align: left;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(8, 145, 178, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(8, 145, 178, 0.2);
+        }
+
+        .feature-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #0891B2;
+            fill: none;
+            stroke-width: 1.5;
+            transition: stroke 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon svg {
+            stroke: #059669;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: rgba(15, 15, 15, 0.4);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .steps-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .steps-container::before {
+                content: '';
+                position: absolute;
+                top: 80px;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: url('data:image/svg+xml,<svg width="100" height="2" viewBox="0 0 100 2" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="1" x2="100" y2="1" stroke="%23404040" stroke-dasharray="5,5"/></svg>');
+                z-index: 0;
+            }
+        }
+
+        .step {
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number-bg {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 160px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.03);
+            z-index: 0;
+            line-height: 1;
+        }
+
+        .step-content {
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #0891B2;
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .step-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #EDEDEF;
+            margin-bottom: 12px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #8A8F98;
+            line-height: 1.6;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: rgba(15, 15, 15, 0.4);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            padding: 32px;
+        }
+
+        .quote-mark {
+            font-size: 48px;
+            color: #0891B2;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            font-style: italic;
+            color: #EDEDEF;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            font-size: 14px;
+            font-weight: 600;
+            color: #EDEDEF;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(8, 145, 178, 0.2);
+        }
+
+        /* Final CTA */
+        .final-cta {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(8, 145, 178, 0.08) 0%, rgba(5, 150, 105, 0.04) 50%, transparent 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .final-cta-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            margin-bottom: 32px;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(2, 2, 3, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #64748B;
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 48px;
+            }
+
+            h2 {
+                font-size: 36px;
+            }
+
+            .nav-links {
+                gap: 16px;
+                font-size: 12px;
+            }
+
+            .counter-stats {
+                gap: 40px;
+                flex-wrap: wrap;
+                padding-top: 40px;
+            }
+
+            .stat-number {
+                font-size: 40px;
+            }
+
+            .cta-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .steps-container::before {
+                display: none;
+            }
+
+            .step-number-bg {
+                font-size: 100px;
+                top: -20px;
+            }
+
+            .hero {
+                margin-top: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav id="navbar">
+        <div class="container">
+            <div class="nav-logo">labread.health</div>
+            <div class="nav-links">
+                <a href="#features">Learn</a>
+                <a href="#how">How it works</a>
+                <a href="#testimonials">Testimonials</a>
+                <button class="nav-btn">Try for free</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <canvas id="particleCanvas"></canvas>
+        <div class="hero-content fade-in">
+            <div class="badge">✦ AI-powered medical clarity</div>
+            <h1>Your blood test,<br><span class="hero-accent">finally explained.</span></h1>
+            <p class="hero-subheading">Upload any blood test from any lab. Get instant, plain-English explanations and personalized screening recommendations. 100% free. HIPAA-compliant.</p>
+            <div class="cta-group">
+                <button class="btn btn-primary">Try for free →</button>
+                <button class="btn btn-secondary">Sign up to save results</button>
+            </div>
+            <div class="trust-line">🔒 HIPAA-compliant · Zero data stored · Processed & deleted instantly</div>
+            <div class="counter-stats">
+                <div class="stat fade-in"><div class="stat-number">50+</div><div class="stat-label">Biomarkers</div></div>
+                <div class="stat fade-in"><div class="stat-number">30<span style="font-size: 32px;">sec</span></div><div class="stat-label">To Your Report</div></div>
+                <div class="stat fade-in"><div class="stat-number">Free</div><div class="stat-label">No Card Needed</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Report -->
+    <section class="section sample-report">
+        <div class="container fade-in">
+            <div class="section-label">
+                <p class="label">SAMPLE REPORT</p>
+                <h2>See what your report looks like</h2>
+            </div>
+            <div class="bento-grid">
+                <div class="biomarker-card glass low fade-in">
+                    <div class="card-header">
+                        <div class="biomarker-name">Ferritin</div>
+                        <div class="status-badge low">Low</div>
+                    </div>
+                    <div class="biomarker-value">18 ng/mL</div>
+                    <div class="biomarker-description">Your iron stores are running low — a common cause of fatigue and brain fog.</div>
+                </div>
+                <div class="biomarker-card glass low fade-in">
+                    <div class="card-header">
+                        <div class="biomarker-name">Vitamin D</div>
+                        <div class="status-badge low">Low</div>
+                    </div>
+                    <div class="biomarker-value">22 ng/mL</div>
+                    <div class="biomarker-description">Below optimal range, often linked to low energy and weaker immunity.</div>
+                </div>
+                <div class="biomarker-card glass normal fade-in">
+                    <div class="card-header">
+                        <div class="biomarker-name">TSH</div>
+                        <div class="status-badge normal">Normal</div>
+                    </div>
+                    <div class="biomarker-value">2.1 mIU/L</div>
+                    <div class="biomarker-description">Your thyroid signal is in range — though one number doesn't capture the full picture.</div>
+                </div>
+                <div class="biomarker-card glass elevated fade-in">
+                    <div class="card-header">
+                        <div class="biomarker-name">CRP</div>
+                        <div class="status-badge elevated">Elevated</div>
+                    </div>
+                    <div class="biomarker-value">4.2 mg/L</div>
+                    <div class="biomarker-description">Inflammation marker. Elevated can indicate immune activity or metabolic issues.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features (Bento Grid) -->
+    <section class="section" id="features">
+        <div class="container fade-in">
+            <div class="section-label">
+                <p class="label">WHY LABREAD</p>
+                <h2>Built for clarity</h2>
+            </div>
+            <div class="features-bento">
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="1"/><path d="M6 17h12M8 20h8"/></svg></div>
+                    <h3>Any lab, any format</h3>
+                    <p>Upload PDFs or images from any lab in the world. We support 100+ formats.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></div>
+                    <h3>Plain English</h3>
+                    <p>No medical jargon. No cryptic abbreviations. Just clear, honest explanations.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                    <h3>Instant insights</h3>
+                    <p>30 seconds from upload to full analysis. AI handles the heavy lifting.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M12 2a10 10 0 110 20 10 10 0 010-20z"/></svg></div>
+                    <h3>Flagged automatically</h3>
+                    <p>Know exactly which values are off. Color-coded status is impossible to miss.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12.5 7H11v6l5.2 3.2.8-1.3-4.5-2.7z"/></svg></div>
+                    <h3>Beautiful history</h3>
+                    <p>Every report saved, searchable, and easy to compare over time.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 1C5.92 1 1 5.92 1 12s4.92 11 11 11 11-4.92 11-11S18.08 1 12 1zm0 20c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9zm0-16.5c-4.14 0-7.5 3.36-7.5 7.5S7.86 19.5 12 19.5s7.5-3.36 7.5-7.5-3.36-7.5-7.5-7.5z"/></svg></div>
+                    <h3>HIPAA-compliant</h3>
+                    <p>Zero data stored. Results processed and immediately deleted. Bank-level security.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section how-it-works">
+        <div class="container fade-in">
+            <div class="section-label">
+                <p class="label">HOW IT WORKS</p>
+                <h2>Three steps to clarity</h2>
+            </div>
+            <div class="steps-container">
+                <div class="step fade-in">
+                    <div class="step-number-bg">01</div>
+                    <div class="step-content glass">
+                        <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-1-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
+                        <div class="step-title">Upload</div>
+                        <div class="step-description">Drop a PDF or snap a photo of your lab report from any lab, in any language.</div>
+                    </div>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number-bg">02</div>
+                    <div class="step-content glass">
+                        <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M21 16v-2h-3V9h2V7h-2V4h-2v3h-2.5V4h-2v3H9V4H7v3H4v2h3v5H4v2h3v3h2v-3h2.5v3h2v-3h3v-2h-3V9h3V7h-3v3h-2.5V9h2.5V7h-2v2H9v5h2.5v-3H14v3h2v-3h3v2z"/></svg></div>
+                        <div class="step-title">Analyze</div>
+                        <div class="step-description">Our AI extracts every value and references them against clinical and optimal ranges.</div>
+                    </div>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number-bg">03</div>
+                    <div class="step-content glass">
+                        <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+                        <div class="step-title">Understand</div>
+                        <div class="step-description">Get plain-language explanations and personalized screening recommendations.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials">
+        <div class="container fade-in">
+            <div class="section-label">
+                <p class="label">LOVED BY USERS</p>
+                <h2>Real stories</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card glass fade-in">
+                    <div class="quote-mark">"</div>
+                    <div class="testimonial-text">Useful and actually explains my blood test in language I can understand, instead of medical jargon.</div>
+                    <div class="testimonial-author">Alix</div>
+                </div>
+                <div class="testimonial-card glass fade-in">
+                    <div class="quote-mark">"</div>
+                    <div class="testimonial-text">I finally understand what my blood test actually means. Worth more than its weight in gold.</div>
+                    <div class="testimonial-author">Rechi</div>
+                </div>
+                <div class="testimonial-card glass fade-in">
+                    <div class="quote-mark">"</div>
+                    <div class="testimonial-text">This is incredibly well-made. Been hoping something like this existed for years.</div>
+                    <div class="testimonial-author">Jordan</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="section final-cta">
+        <div class="final-cta-content fade-in">
+            <div class="container">
+                <h2>Ready to understand your bloodwork?</h2>
+                <p style="max-width: 600px; margin: 0 auto 48px; font-size: 18px;">Upload any blood test and get instant, plain-English explanations. 100% free. No card needed.</p>
+                <button class="btn btn-primary">Try for free →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-text">© 2026 labread.health · Not medical advice</div>
+            <div class="footer-text">Your data is never stored. Results are processed and immediately deleted. HIPAA-compliant.</div>
+        </div>
+    </footer>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // NAVBAR SCROLL EFFECT
+        // ═══════════════════════════════════════════════════════════════════════════════
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // PARTICLE CANVAS ANIMATION
+        // ═══════════════════════════════════════════════════════════════════════════════
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor(x, y, radius, color) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.color = color;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.originalX = x;
+                this.originalY = y;
+            }
+
+            update(mouseX, mouseY) {
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                // Repel from mouse (100px range, 0.3 strength)
+                if (distance < 100) {
+                    const angle = Math.atan2(dy, dx);
+                    const repelForce = (100 - distance) / 100 * 0.3;
+                    this.vx -= Math.cos(angle) * repelForce;
+                    this.vy -= Math.sin(angle) * repelForce;
+                }
+
+                // Slow drift
+                this.x += this.vx * 0.05;
+                this.y += this.vy * 0.05;
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+
+                // Soft bounce at boundaries
+                const margin = 50;
+                if (this.x < margin) {
+                    this.x = margin;
+                    this.vx = Math.abs(this.vx) * 0.5;
+                }
+                if (this.x > canvas.width - margin) {
+                    this.x = canvas.width - margin;
+                    this.vx = -Math.abs(this.vx) * 0.5;
+                }
+                if (this.y < margin) {
+                    this.y = margin;
+                    this.vy = Math.abs(this.vy) * 0.5;
+                }
+                if (this.y > canvas.height - margin) {
+                    this.y = canvas.height - margin;
+                    this.vy = -Math.abs(this.vy) * 0.5;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        // Create particles
+        const particles = [];
+        for (let i = 0; i < 40; i++) {
+            particles.push(new Particle(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height,
+                Math.random() * 2 + 2,
+                'rgba(255, 255, 255, 0.4)'
+            ));
+        }
+        for (let i = 0; i < 40; i++) {
+            particles.push(new Particle(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height,
+                Math.random() * 3 + 5,
+                'rgba(34, 211, 238, 0.3)'
+            ));
+        }
+
+        let mouseX = canvas.width / 2;
+        let mouseY = canvas.height / 2;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function drawConnections() {
+            const connectionDistance = 150;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        const opacity = 0.15 * (1 - distance / connectionDistance);
+                        ctx.strokeStyle = `rgba(0, 217, 192, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function drawGlowOverlay() {
+            const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 300);
+            gradient.addColorStop(0, 'rgba(79, 110, 247, 0.08)');
+            gradient.addColorStop(1, 'rgba(79, 110, 247, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => p.update(mouseX, mouseY));
+            drawConnections();
+            particles.forEach(p => p.draw());
+            drawGlowOverlay();
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // SCROLL FADE-IN ANIMATION
+        // ═══════════════════════════════════════════════════════════════════════════════
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // BUTTON EVENT HANDLING
+        // ═══════════════════════════════════════════════════════════════════════════════
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.location.href = '/try-free';
+            });
+        });
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.location.href = '/try-free';
+            });
+        });
+    </script>
+</body>
+</html>
