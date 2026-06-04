@@ -91,11 +91,12 @@ Use the patient's age, biological sex and existing conditions to:
 - Tailor each explanation to what the value means for THIS patient given their conditions
 - Prioritize screenings that are specifically recommended for their age, sex and risk factors (e.g. mammography, colonoscopy, lipid panel cadence, A1c monitoring for diabetics, BP follow-up for hypertensives, lung cancer screening for smokers, cardiac workup for heart disease history)
 
-ALSO generate 3-5 specific questions the user should ask their doctor. Each question should:
+REQUIRED: Generate 3-5 specific questions the user should ask their doctor. ALWAYS include this field. Each question should:
 - Reference specific biomarker values from their results
 - Be phrased as a direct question they can read aloud
 - Suggest specific follow-up tests by name (not generic "get more tests")
 - Be ordered by urgency (most important first)
+- If no specific concerns, ask about monitoring intervals and next checkup timing
 
 CANCER SCREENING FLAGS - Cross-reference biomarker combinations:
 Look for these patterns that could indicate early cancer risk:
