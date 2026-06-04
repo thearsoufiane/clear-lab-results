@@ -34,6 +34,7 @@ export type Analysis = {
     value: string;
     status: "normal" | "low" | "high" | "elevated" | "deficient";
     explanation: string;
+    action_steps?: string[];
   }>;
   screenings: Array<{
     name: string;

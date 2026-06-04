@@ -119,11 +119,19 @@ Look for these patterns that could indicate early cancer risk:
 For each flag detected, explain: (1) what combination was found, (2) what it could indicate, (3) what screening is recommended.
 If NO flags detected, output empty array.
 
+ACTION STEPS: For each High or Low biomarker, generate 2-3 specific actionable next steps.
+- Name specific tests (e.g., "Request iron saturation test")
+- Name supplements with dosages (e.g., "Take 5,000 IU Vitamin D3 daily")
+- Suggest lifestyle changes (e.g., "Reduce red meat intake, increase leafy greens")
+- Be specific - NOT generic ("get more exercise" is bad, "walk 30 min 5x/week" is good)
+- Include timelines when relevant (e.g., "retest in 8 weeks")
+- For NORMAL biomarkers, leave action_steps as empty array []
+
 Respond ONLY with this exact JSON structure, no markdown:
 {
   "title": "short descriptive title of the report",
   "values": [
-    { "name": "lab value name", "value": "number with unit", "status": "normal or low or high or elevated or deficient", "explanation": "2-3 sentences in plain language, personalized to the patient when relevant" }
+    { "name": "lab value name", "value": "number with unit", "status": "normal or low or high or elevated or deficient", "explanation": "2-3 sentences in plain language, personalized to the patient when relevant", "action_steps": ["Step 1", "Step 2"] }
   ],
   "screenings": [
     { "name": "screening name", "detail": "why recommended for THIS patient (reference their age/sex/conditions when applicable)", "urgency": "urgent or routine or informational" }

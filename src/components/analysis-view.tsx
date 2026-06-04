@@ -161,6 +161,16 @@ export function AnalysisView({
                 {isOpen && (
                   <div className="px-4 pb-4 pt-0 text-sm text-muted-foreground border-t border-border/40">
                     <div className="pt-3 leading-relaxed">{v.explanation}</div>
+                    {v.action_steps && v.action_steps.length > 0 && (
+                      <div className="mt-4 space-y-2">
+                        {v.action_steps.map((step, idx) => (
+                          <div key={idx} className="text-xs leading-relaxed flex gap-2">
+                            <span style={{ color: "#7dd4a3" }} className="shrink-0">→</span>
+                            <span style={{ color: "#a3b5a9" }}>{step}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
