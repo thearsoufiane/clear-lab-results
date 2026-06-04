@@ -29,12 +29,17 @@ export type Report = {
 
 export type Analysis = {
   title: string;
+  summary?: string;
+  health_score?: number;
   values: Array<{
     name: string;
     value: string;
     status: "normal" | "low" | "high" | "elevated" | "deficient";
     explanation: string;
     action_steps?: string[];
+    references?: string[];
+    normal_range?: { min: number; max: number };
+    optimal_range?: { min: number; max: number };
   }>;
   screenings: Array<{
     name: string;
@@ -45,5 +50,7 @@ export type Analysis = {
   cancer_screening_flags?: Array<{
     title: string;
     explanation: string;
+    action_steps?: string[];
+    references?: string[];
   }>;
 };
