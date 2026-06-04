@@ -40,4 +40,5 @@ export type Analysis = {
     detail: string;
     urgency: "urgent" | "routine" | "informational";
   }>;
+  doctor_questions?: string[];
 };

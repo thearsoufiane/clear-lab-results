@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Stethoscope, AlertCircle, Info } from "lucide-react";
+import { ChevronDown, Stethoscope, AlertCircle, Info, MessageSquare } from "lucide-react";
 import type { Analysis } from "@/lib/supabase";
 
 // Map of common medical abbreviations to full names (used for trend matching)
@@ -167,6 +167,32 @@ export function AnalysisView({
             );
           })}
         </div>
+
+        {/* Questions for Your Doctor */}
+        {a.doctor_questions && a.doctor_questions.length > 0 && (
+          <div className="mt-8">
+            <div className="flex items-center gap-2 mb-4">
+              <MessageSquare size={18} className="text-[#64a0ff]" />
+              <h2 className="text-lg font-medium">Questions for Your Doctor</h2>
+            </div>
+            <div className="space-y-3">
+              {a.doctor_questions.map((question, i) => (
+                <div
+                  key={i}
+                  className="glass overflow-hidden border-l-4"
+                  style={{ borderLeftColor: "#64a0ff" }}
+                >
+                  <div className="p-4 flex gap-3">
+                    <div className="w-6 h-6 rounded-md bg-[#64a0ff]/20 flex items-center justify-center text-[#64a0ff] text-xs font-medium shrink-0">
+                      {i + 1}
+                    </div>
+                    <p className="text-sm leading-relaxed">{question}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <aside className="lg:sticky lg:top-24 self-start space-y-4">
