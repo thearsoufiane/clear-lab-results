@@ -203,12 +203,12 @@ export function AnalysisView({
         )}
 
         {/* Questions for Your Doctor */}
-        {a.doctor_questions && a.doctor_questions.length > 0 && (
-          <div className="mt-8">
-            <div className="flex items-center gap-2 mb-4">
-              <MessageSquare size={18} className="text-[#64a0ff]" />
-              <h2 className="text-lg font-medium">Questions for Your Doctor</h2>
-            </div>
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-4">
+            <MessageSquare size={18} className="text-[#64a0ff]" />
+            <h2 className="text-lg font-medium">Questions for Your Doctor</h2>
+          </div>
+          {a.doctor_questions && a.doctor_questions.length > 0 ? (
             <div className="space-y-3">
               {a.doctor_questions.map((question, i) => (
                 <div
@@ -225,8 +225,14 @@ export function AnalysisView({
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="glass p-4 border-l-4" style={{ borderLeftColor: "#64a0ff" }}>
+              <p className="text-sm text-muted-foreground">
+                All your values are normal. Ask your doctor about: (1) monitoring frequency for your age and risk factors, (2) when to retest, and (3) any preventive measures specific to your health history.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       <aside className="lg:sticky lg:top-24 self-start space-y-4">
