@@ -41,4 +41,8 @@ export type Analysis = {
     urgency: "urgent" | "routine" | "informational";
   }>;
   doctor_questions?: string[];
+  cancer_screening_flags?: Array<{
+    title: string;
+    explanation: string;
+  }>;
 };

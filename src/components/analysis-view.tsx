@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Stethoscope, AlertCircle, Info, MessageSquare } from "lucide-react";
+import { ChevronDown, Stethoscope, AlertCircle, Info, MessageSquare, Beaker } from "lucide-react";
 import type { Analysis } from "@/lib/supabase";
 
 // Map of common medical abbreviations to full names (used for trend matching)
@@ -167,6 +167,40 @@ export function AnalysisView({
             );
           })}
         </div>
+
+        {/* Cancer Screening Flags */}
+        {a.cancer_screening_flags && a.cancer_screening_flags.length > 0 ? (
+          <div className="mt-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Beaker size={18} className="text-danger" />
+              <h2 className="text-lg font-medium">
+                🔬 Cancer Screening Flags
+              </h2>
+            </div>
+            <div className="space-y-3">
+              {a.cancer_screening_flags.map((flag, i) => (
+                <div
+                  key={i}
+                  className="glass overflow-hidden border-l-4"
+                  style={{ borderLeftColor: "#e85d5d" }}
+                >
+                  <div className="p-4">
+                    <h3 className="font-medium text-sm mb-2">{flag.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {flag.explanation}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="mt-8 glass p-4">
+            <p className="text-sm text-muted-foreground">
+              ✓ No cancer screening flags detected based on your current panel.
+            </p>
+          </div>
+        )}
 
         {/* Questions for Your Doctor */}
         {a.doctor_questions && a.doctor_questions.length > 0 && (

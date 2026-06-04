@@ -97,6 +97,19 @@ ALSO generate 3-5 specific questions the user should ask their doctor. Each ques
 - Suggest specific follow-up tests by name (not generic "get more tests")
 - Be ordered by urgency (most important first)
 
+CANCER SCREENING FLAGS - Cross-reference biomarker combinations:
+Look for these patterns that could indicate early cancer risk:
+- Elevated ferritin (>250) + elevated LDH → lymphoma, liver disease, hemolytic conditions
+- Iron deficiency anemia in males or post-menopausal females → GI malignancy screen (colonoscopy)
+- Elevated calcium + elevated PTH → parathyroid adenoma or malignancy-related hypercalcemia
+- PSA > 4.0 ng/mL in any male → prostate screening referral
+- Elevated GGT + elevated ALP + normal ALT → biliary obstruction or pancreatic cancer screen
+- Elevated ESR + elevated CRP + unexplained weight loss → malignancy workup
+- Very high ferritin (>1000) → urgent workup for hemochromatosis, liver disease, or hematologic malignancy
+
+For each flag detected, explain: (1) what combination was found, (2) what it could indicate, (3) what screening is recommended.
+If NO flags detected, output empty array.
+
 Respond ONLY with this exact JSON structure, no markdown:
 {
   "title": "short descriptive title of the report",
@@ -109,6 +122,9 @@ Respond ONLY with this exact JSON structure, no markdown:
   "doctor_questions": [
     "Question 1 referencing specific values?",
     "Question 2?"
+  ],
+  "cancer_screening_flags": [
+    { "title": "Flag Title", "explanation": "What was detected and what screening is recommended" }
   ]
 }`;
 
