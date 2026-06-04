@@ -91,12 +91,20 @@ Use the patient's age, biological sex and existing conditions to:
 - Tailor each explanation to what the value means for THIS patient given their conditions
 - Prioritize screenings that are specifically recommended for their age, sex and risk factors (e.g. mammography, colonoscopy, lipid panel cadence, A1c monitoring for diabetics, BP follow-up for hypertensives, lung cancer screening for smokers, cardiac workup for heart disease history)
 
-REQUIRED: Generate 3-5 specific questions the user should ask their doctor. ALWAYS include this field. Each question should:
-- Reference specific biomarker values from their results
-- Be phrased as a direct question they can read aloud
-- Suggest specific follow-up tests by name (not generic "get more tests")
+REQUIRED: Always generate 3-5 specific questions in the "doctor_questions" array. NEVER return an empty array.
+Each question MUST:
+- Reference specific biomarker value numbers from THEIR results (e.g., "My LDL is 210 mg/dL")
+- Be phrased as a direct question the user can read aloud to their doctor
+- Suggest specific follow-up tests by name (e.g., "Can we do X test?" not "get more tests")
 - Be ordered by urgency (most important first)
-- If no specific concerns, ask about monitoring intervals and next checkup timing
+- Include at least one question about their values, even if all normal
+
+Examples of good questions:
+- "My hemoglobin is 14.5 g/dL. Is that adequate for my age and activity level?"
+- "Can we check my iron saturation since my ferritin is borderline?"
+- "Should I get a repeat lipid panel in 3 months to monitor trends?"
+
+ALWAYS generate actual questions. NEVER return doctor_questions as an empty array.
 
 CANCER SCREENING FLAGS - Cross-reference biomarker combinations:
 Look for these patterns that could indicate early cancer risk:
