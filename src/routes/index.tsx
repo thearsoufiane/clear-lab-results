@@ -137,7 +137,7 @@ function HomePage() {
   .lr-landing .chip:nth-child(3){ top:58%; left:58%;  animation-delay:2.0s; }
   .lr-landing .chip:nth-child(4){ top:70%; left:74%;  animation-delay:0.6s; }
   .lr-landing .chip:nth-child(5){ top:34%; left:84%;  animation-delay:1.6s; }
-  @media (max-width:720px){ .lr-landing .bio-field{ opacity:0.5; } .lr-landing .chip{ font-size:0.85rem; padding:8px 12px; } }
+  /* mobile chip styling is consolidated into the responsive blocks at the end */
 
   .lr-landing .hero-content { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px 44px 0; max-width: 760px; }
   .lr-landing .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: .95rem; color: var(--text-dim); margin-bottom: 22px; opacity: 0; animation: rise .7s ease forwards .1s; }
@@ -245,18 +245,63 @@ function HomePage() {
     .lr-landing .report-grid, .lr-landing .feat-grid, .lr-landing .steps, .lr-landing .learn-grid { grid-template-columns: 1fr 1fr; }
     .lr-landing .quotes { grid-template-columns: 1fr; }
   }
-  @media (max-width: 720px) {
+  /* ===== MOBILE (≤768px): stack the hero, contain the orb, reflow chips ===== */
+  @media (max-width: 768px) {
+    /* shell horizontal padding */
     .lr-landing .wrap, .lr-landing nav, .lr-landing .hero-content, .lr-landing .final, .lr-landing footer { padding-left: 22px; padding-right: 22px; }
+
+    /* nav: hide secondary links, keep the CTA pill — no overflow */
+    .lr-landing nav { padding: 16px 22px; }
+    .lr-landing .nav-right { gap: 0; }
     .lr-landing .nav-right a:not(.btn-pill) { display: none; }
-    .lr-landing .glow { left: 50%; top: 36%; width: 120vw; height: 120vw; }
-    .lr-landing .portrait, .lr-landing .portrait-ph { right: 50%; transform: translateX(50%); opacity: 0.45; height: 56%; }
-    .lr-landing .cta-row { flex-direction: column; align-items: stretch; }
-    .lr-landing .btn { justify-content: center; }
-    .lr-landing .stats { flex-direction: column; }
-    .lr-landing .stat { border-right: none; border-bottom: 1px solid var(--hairline); padding: 32px; }
-    .lr-landing .stat:last-child { border-bottom: none; }
-    .lr-landing .report-grid, .lr-landing .feat-grid, .lr-landing .steps, .lr-landing .learn-grid { grid-template-columns: 1fr; }
-    .lr-landing section.block { padding: 80px 0; }
+    .lr-landing .btn-pill { padding: 10px 18px; font-size: 0.95rem; }
+    .lr-landing .brand .name { font-size: 1.2rem; }
+
+    /* hero: single column, sized to content (order forces text → chips → stats) */
+    .lr-landing .hero { min-height: auto; padding-bottom: 12px; }
+    .lr-landing .hero-content { order: 0; flex: initial; max-width: 100%; padding: 44px 22px 0; }
+    .lr-landing .eyebrow { order: 0; margin-bottom: 16px; font-size: 0.9rem; }
+    .lr-landing h1.hero-h { font-size: clamp(1.9rem, 8vw, 3rem); line-height: 1.05; margin-bottom: 18px; }
+    .lr-landing .hero .sub { font-size: 1.05rem; line-height: 1.55; max-width: 100%; margin-bottom: 26px; }
+
+    /* CTAs: full-width stacked, comfortable 48px tap targets */
+    .lr-landing .cta-row { flex-direction: column; align-items: stretch; gap: 12px; width: 100%; }
+    .lr-landing .btn { justify-content: center; width: 100%; min-height: 48px; padding: 15px 24px; }
+    .lr-landing .privacy-note { margin-top: 20px; font-size: 0.86rem; align-items: flex-start; }
+
+    /* orb: contained + dimmed, sits behind the text — never causes horizontal scroll */
+    .lr-landing .glow { top: 30%; left: 50%; width: min(86vw, 420px); height: min(86vw, 420px); max-width: 86vw; max-height: 86vw; opacity: 0.5; }
+
+    /* biomarker chips: drop the scattered absolute layout, show a clean centered row below the copy */
+    .lr-landing .bio-field { position: static; inset: auto; order: 1; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; padding: 22px 22px 4px; opacity: 1; }
+    .lr-landing .heme { display: none; }
+    .lr-landing .chip { position: static; transform: none; animation: none; font-size: 0.9rem; padding: 9px 14px; }
+    .lr-landing .chip:nth-child(3), .lr-landing .chip:nth-child(6) { display: none; } /* show 3 of 5: Vitamin D ↓, TSH ✓, CRP ↑ */
+
+    /* stats: compact single row that fits (keeps vertical dividers) */
+    .lr-landing .stats { order: 2; margin-top: 18px; }
+    .lr-landing .stat { padding: 22px 8px; }
+    .lr-landing .stat .big { font-size: 1.9rem; }
+    .lr-landing .stat .big sub { font-size: 0.85rem; }
+    .lr-landing .stat .lbl { font-size: 0.78rem; margin-top: 6px; }
+
+    /* sections: single column + tighter rhythm */
+    .lr-landing .report-grid, .lr-landing .feat-grid, .lr-landing .steps, .lr-landing .learn-grid, .lr-landing .quotes { grid-template-columns: 1fr; }
+    .lr-landing section.block { padding: 72px 0; }
+    .lr-landing .final { padding: 84px 0; }
+  }
+
+  /* ===== SMALL PHONES (≤480px): finer typography + stat tuning ===== */
+  @media (max-width: 480px) {
+    .lr-landing .hero-content { padding-top: 36px; }
+    .lr-landing h1.hero-h { font-size: clamp(1.6rem, 7.2vw, 1.95rem); }
+    .lr-landing .hero .sub { font-size: 1rem; }
+    .lr-landing .stat { padding: 18px 5px; }
+    .lr-landing .stat .big { font-size: 1.55rem; }
+    .lr-landing .stat .big sub { font-size: 0.75rem; }
+    .lr-landing .stat .lbl { font-size: 0.72rem; }
+    .lr-landing .chip { font-size: 0.84rem; padding: 8px 12px; }
+    .lr-landing section.block { padding: 56px 0; }
   }
 </style>
 
