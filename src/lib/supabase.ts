@@ -32,6 +32,7 @@ export type Analysis = {
   title: string;
   summary?: string;
   health_score?: number;
+  is_paid?: boolean;
   values: Array<{
     name: string;
     value: string;
