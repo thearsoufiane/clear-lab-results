@@ -60,7 +60,9 @@ export function PaywallModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="lr-paywall-title"
-      onClick={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose(); // only close if clicking backdrop, not children
+      }}
       style={{
         position: "fixed",
         inset: 0,
