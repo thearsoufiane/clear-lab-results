@@ -25,6 +25,7 @@ export type Report = {
   analysis: Analysis;
   file_name: string;
   created_at: string;
+  is_paid?: boolean;
 };
 
 export type Analysis = {

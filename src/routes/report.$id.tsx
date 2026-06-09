@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/logo";
 import { HistorySidebar } from "@/components/history-sidebar";
 import { AnalysisView, normalizeName } from "@/components/analysis-view";
+import { PaywallModal } from "@/components/paywall-modal";
 import { ArrowLeft, User, Download } from "lucide-react";
 
 export const Route = createFileRoute("/report/$id")({
@@ -28,8 +29,12 @@ function ReportView() {
   const [report, setReport] = useState<Report | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   useEffect(() => { if (!loading && !user) nav({ to: "/auth" }); }, [user, loading]);
+
+  // Open the paywall once the report loads, unless it's already unlocked.
+  useEffect(() => { if (report) setShowPaywall(!report.is_paid); }, [report]);
 
   useEffect(() => {
     if (!user) return;
@@ -82,10 +87,23 @@ function ReportView() {
             (prevReport?.analysis.values ?? []).map(v => [normalizeName(v.name), v.value])
           );
           const dateLabel = new Date(report.created_at).toLocaleDateString(undefined, { dateStyle: "long" });
-          return <AnalysisView analysis={report.analysis} dateLabel={dateLabel} prevValues={prevMap} />;
+          return <AnalysisView analysis={report.analysis} dateLabel={dateLabel} prevValues={prevMap} isPaid={report.is_paid} />;
         })()}
         </main>
       </div>
+
+      {report && (
+        <PaywallModal
+          open={showPaywall}
+          onClose={() => setShowPaywall(false)}
+          reportId={report.id}
+          onUnlock={() => {
+            // reveal paid sections immediately without a reload
+            setReport((r) => (r ? { ...r, is_paid: true } : r));
+            setShowPaywall(false);
+          }}
+        />
+      )}
     </div>
   );
 }

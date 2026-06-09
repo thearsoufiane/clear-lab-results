@@ -82,13 +82,17 @@ export function AnalysisView({
   analysis: a,
   dateLabel,
   prevValues,
+  isPaid,
 }: {
   analysis: Analysis;
   dateLabel?: string;
   prevValues?: Map<string, string>;
+  isPaid?: boolean;
 }) {
   const needsAttention = a.values.filter(v => ["low", "high", "elevated", "deficient"].includes(v.status));
   const lookingGood = a.values.filter(v => v.status === "normal");
+  // Trends ("was X") are a paid feature — only surface previous values when unlocked.
+  const trendValues = isPaid ? prevValues : undefined;
   const reportDate = dateLabel || new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
   const title = a.title || "Your blood test, explained";
 
@@ -147,7 +151,7 @@ export function AnalysisView({
         <div style={{ marginBottom: "10px" }}>
           <SectionHead icon="!" title="Needs attention" count={needsAttention.length} tint={C.low} />
           <div className="lr-stagger">
-            {needsAttention.map((v, i) => <BiomarkerCard key={i} value={v} prevValues={prevValues} />)}
+            {needsAttention.map((v, i) => <BiomarkerCard key={i} value={v} prevValues={trendValues} />)}
           </div>
           <hr style={{ border: "none", borderTop: `1px solid ${C.hairline}`, margin: "30px 0" }} />
         </div>
@@ -157,7 +161,7 @@ export function AnalysisView({
         <div style={{ marginBottom: "10px" }}>
           <SectionHead icon="✓" title="Looking good" count={lookingGood.length} tint={C.normal} />
           <div className="lr-stagger">
-            {lookingGood.map((v, i) => <BiomarkerCard key={i} value={v} prevValues={prevValues} />)}
+            {lookingGood.map((v, i) => <BiomarkerCard key={i} value={v} prevValues={trendValues} />)}
           </div>
           <hr style={{ border: "none", borderTop: `1px solid ${C.hairline}`, margin: "30px 0" }} />
         </div>
@@ -185,7 +189,7 @@ export function AnalysisView({
         </div>
       )}
 
-      {a.cancer_screening_flags && a.cancer_screening_flags.length > 0 && (
+      {isPaid && a.cancer_screening_flags && a.cancer_screening_flags.length > 0 && (
         <div style={{ marginBottom: "10px" }}>
           <SectionHead icon="🔬" title="Worth discussing with a doctor" tint={C.elevated} />
           <div style={{ fontSize: "13px", color: C.textDim, lineHeight: 1.6, marginBottom: "16px", marginTop: "-6px" }}>
@@ -220,7 +224,7 @@ export function AnalysisView({
         </div>
       )}
 
-      {a.doctor_questions && a.doctor_questions.length > 0 && (
+      {isPaid && a.doctor_questions && a.doctor_questions.length > 0 && (
         <div style={{ marginBottom: "10px" }}>
           <SectionHead icon="💬" title="Questions for your doctor" tint={C.info} />
           <div style={{ fontSize: "13px", color: C.textDim, lineHeight: 1.6, marginBottom: "16px", marginTop: "-6px" }}>
