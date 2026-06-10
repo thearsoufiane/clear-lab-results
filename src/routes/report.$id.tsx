@@ -87,12 +87,15 @@ function ReportView() {
             (prevReport?.analysis.values ?? []).map(v => [normalizeName(v.name), v.value])
           );
           const dateLabel = new Date(report.created_at).toLocaleDateString(undefined, { dateStyle: "long" });
-          return <AnalysisView analysis={report.analysis} dateLabel={dateLabel} prevValues={prevMap} isPaid={report.is_paid} />;
+          // TEMP: paywall disabled — force isPaid so every section renders for free.
+          // Re-enable later by restoring `isPaid={report.is_paid}`.
+          return <AnalysisView analysis={report.analysis} dateLabel={dateLabel} prevValues={prevMap} isPaid={true} />;
         })()}
         </main>
       </div>
 
-      {report && (
+      {/* TEMP: paywall disabled — all reports free for now. Re-enable by uncommenting. */}
+      {/* {report && (
         <PaywallModal
           open={showPaywall}
           onClose={() => setShowPaywall(false)}
@@ -103,7 +106,7 @@ function ReportView() {
             setShowPaywall(false);
           }}
         />
-      )}
+      )} */}
     </div>
   );
 }
