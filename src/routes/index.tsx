@@ -342,7 +342,7 @@ function HomePage() {
         AI-powered medical clarity
       </div>
       <h1 class="hero-h">Your blood test,<br><em>finally explained.</em></h1>
-      <p class="sub">Paste your numbers. We tell you what's normal, what's not, and what to ask your doctor. Plain English. 30 seconds.</p>
+      <p class="sub">Paste your numbers. We tell you what's normal, what's not, and what to ask your doctor. Plain English. In a minute.</p>
       <div class="cta-row">
         <a href="/try-free" class="btn btn-primary">Try for free <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a href="/auth" class="btn btn-ghost">Sign up to save results</a>
@@ -356,7 +356,7 @@ function HomePage() {
     <!-- stats -->
     <div class="stats">
       <div class="stat"><div class="big">50+</div><div class="lbl">biomarkers explained</div></div>
-      <div class="stat"><div class="big">30<sub>sec</sub></div><div class="lbl">to your full report</div></div>
+      <div class="stat"><div class="big">Minute</div><div class="lbl">to your full report</div></div>
       <div class="stat"><div class="big">Free</div><div class="lbl">no card needed</div></div>
     </div>
   </section>
