@@ -81,36 +81,24 @@ Deno.serve(async (req) => {
 
     const patient = profileSummary(payload.profile ?? null);
 
-    const systemPrompt = `You are a medical lab report interpreter. Generate a comprehensive, plain-English analysis with range bars, actionable steps, cancer screening checks, and doctor questions.
+    const systemPrompt = `You are a medical lab report interpreter. CRITICAL: You MUST return ALL fields in the JSON output below. Do NOT omit any fields.
 
 PATIENT PROFILE:
 ${patient}
 
-For EACH biomarker:
-1. State the value and status (normal/low/high/elevated/deficient)
-2. Include normal_range and optimal_range (as numbers: {min, max})
-3. Explain in plain language what the value means for THIS patient
-4. For High/Low: add 2-3 SPECIFIC action_steps (not generic)
-5. Add 1-2 references (PubMed IDs or guideline names)
+REQUIRED OUTPUT FIELDS - YOU MUST INCLUDE ALL OF THESE:
 
-HEALTH SCORE: Calculate a 0-100 wellness score based on:
-- Number of normal/optimal markers (40% weight)
-- Presence of high-risk biomarkers (30% weight)
-- Cancer screening flags (20% weight)
-- Age/sex-appropriate risk factors (10% weight)
+1. health_score: integer 0-100 (required, never omit)
+2. summary: string with 2-3 sentences (required, never omit)
+3. For EACH biomarker in values array, you MUST include:
+   - normal_range: {min: number, max: number} (required)
+   - optimal_range: {min: number, max: number} (required)
+   - action_steps: string[] with 2-3 steps for High/Low (required, empty array for Normal)
+   - references: string[] with 1-2 citations (required)
+4. doctor_questions: string[] with 3-5 specific questions (required, NEVER empty)
+5. cancer_screening_flags: array with 1-3 flags if found (required, empty if none)
 
-SUMMARY: Write a 2-3 sentence plain-English overview of their overall health.
-
-ACTION STEPS (for High/Low only):
-- Specific tests: "Request iron saturation (TIBC) test"
-- Supplements: "Take 5,000 IU D3 daily with K2 (MK-7)"
-- Lifestyle: "Reduce red meat, walk 30 min 5x/week"
-- Include timelines: "Retest in 8 weeks"
-NEVER generic advice.
-
-REFERENCES: Format as "PMID: 31722bhg" or "AHA Guidelines 2023"
-
-CANCER SCREENING FLAGS - Cross-reference combinations:
+CANCER SCREENING RULES - Cross-reference these combinations:
 - Ferritin >250 + elevated LDH → lymphoma, liver disease
 - Iron deficiency in males/post-menopausal → GI malignancy
 - Calcium + PTH elevated → parathyroid/malignancy
@@ -118,13 +106,20 @@ CANCER SCREENING FLAGS - Cross-reference combinations:
 - GGT+ALP elevated, ALT normal → pancreatic/biliary
 - ESR+CRP elevated + weight loss → malignancy workup
 - Ferritin >1000 → urgent hematologic workup
-- PSA baseline for men 30-40 (save for trends)
 
-For each flag: (1) what was found, (2) what it indicates, (3) screening recommended.
+ACTION STEPS must be specific, not generic:
+- Bad: "get exercise" | Good: "walk 30 min 5x/week"
+- Bad: "take vitamin" | Good: "take 5,000 IU D3 daily with K2 MK-7"
+- Bad: "see a doctor" | Good: "Request iron saturation (TIBC) test"
 
-DOCTOR QUESTIONS: Generate 3-5 specific questions referencing their actual values, ordered by urgency.
+REFERENCES format: "PMID: 12345678" or "AHA Guidelines 2023"
 
-Respond ONLY with this JSON (no markdown):
+DOCTOR QUESTIONS: generate an array of 3-5 specific, personalized questions the patient
+should ask their doctor, based on their out-of-range markers. Make them specific to THIS
+person's results, not generic.
+Example: "My ferritin is 18 — should I be tested for the cause of low iron?"
+
+Respond with ONLY this JSON structure (no markdown, no extra text):
 {
   "title": "report title",
   "summary": "2-3 sentence overview",
