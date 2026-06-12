@@ -422,7 +422,10 @@ footer{border-top:2px solid var(--ink);background:var(--paper-2);padding:50px 0 
   .learn-grid{grid-template-columns:repeat(2,1fr)}
   .quotes-grid{grid-template-columns:1fr}
   .t-row{grid-template-columns:1fr;}
-  .t-arrow{border:none;border-top:1.5px dashed #3A352C;border-bottom:1.5px dashed #3A352C;padding:8px 0;transform:rotate(90deg) scale(.9)}
+  .t-cell{padding:20px 22px}
+  .t-cell.to{display:block}
+  .t-arrow{border:none;border-top:1.5px dashed #3A352C;border-bottom:1.5px dashed #3A352C;padding:10px 0;transform:none;font-size:0}
+  .t-arrow::before{content:"↓";font-size:20px;color:var(--hi)}
 }
 @media(max-width:680px){
   section{padding:88px 0}
@@ -432,9 +435,15 @@ footer{border-top:2px solid var(--ink);background:var(--paper-2);padding:50px 0 
   .doc-head{flex-direction:column;gap:18px}
   .doc-table{padding:8px 18px 22px}
   .doc-row{grid-template-columns:1.4fr .9fr auto;font-size:13px}
+  .doc-row .nm{font-size:14.5px}
   .doc-row .rng{display:none}
   .note{display:none}
-  .stamp{right:14px;bottom:-26px;font-size:15px;padding:9px 18px 9px 22px}
+  .anno{display:none}
+  .doc-caption{display:none}
+  .stamp{right:50%;bottom:14px;transform:translateX(50%) rotate(-6deg) scale(1);font-size:16px;padding:9px 18px 9px 22px}
+  .desk .doc.played .stamp{animation:none;opacity:1;transform:translateX(50%) rotate(-6deg) scale(1)}
+  .hero h1{font-size:clamp(40px,11vw,70px)}
+  .specimen{font-size:10.5px;letter-spacing:.1em}
   .q blockquote{font-size:22px}
 }
 @media(prefers-reduced-motion:reduce){
