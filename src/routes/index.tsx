@@ -1,460 +1,849 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "labread.health — Your blood test, finally explained." },
-      { name: "description", content: "Upload any blood test, in any language, from any lab. Get instant, plain-language explanations and personalized screening recommendations." },
-      { property: "og:title", content: "labread.health — Your blood test, finally explained." },
+      {
+        title:
+          "labread.health — We explain your blood test like a friend who went to med school",
+      },
+      {
+        name: "description",
+        content:
+          "Upload your lab report. labread circles what matters, explains it in plain English, and tells you what to ask your doctor.",
+      },
+      {
+        property: "og:title",
+        content: "labread.health — Your blood test, finally explained.",
+      },
       { property: "og:description", content: "AI-powered medical clarity for your bloodwork." },
     ],
     links: [
       { rel: "canonical", href: "https://labread.health" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;600&display=swap",
+      },
     ],
   }),
   component: HomePage,
 });
 
-function HomePage() {
-  const html = `
+const html = `
 <style>
-  /* ============================================================
-     THEME — change these to recolor the whole page.
-     ============================================================ */
-  :root {
-    --bg:           #0b0a09;
-    --bg-card:      #141210;
-    --bg-card-2:    #100e0c;
-    --glow-core:    #ffc06a;
-    --glow-mid:     #f5851f;
-    --glow-edge:    #7a3d08;
-    --accent:       #f5a04a;
-    --accent-soft:  rgba(245,160,74,0.14);
+/* ════════════════════════════════════════════════════════════
+   LABREAD — "THE ANNOTATED REPORT"
+   paper · ink · specimen red · marker yellow · stamp green
+   Instrument Serif / Atkinson Hyperlegible / Space Mono / Caveat
+   ════════════════════════════════════════════════════════════ */
+:root{
+  --paper:#FAF6EE;
+  --paper-2:#F3EDE0;
+  --paper-3:#ECE4D2;
+  --ink:#1C1813;
+  --ink-2:#4A443B;
+  --ink-3:#8A8275;
+  --rule:#D9D0BD;
+  --red:#D5402F;
+  --red-deep:#A92A1C;
+  --red-soft:#F3D5CE;
+  --hi:#FFE45E;
+  --green:#1E7A5A;
+  --green-soft:#D9EBDF;
+  --amber:#C97A12;
+  --amber-soft:#F6E7C8;
+  --serif:"Instrument Serif", Georgia, serif;
+  --body:"Atkinson Hyperlegible", -apple-system, sans-serif;
+  --mono:"Space Mono", ui-monospace, monospace;
+  --hand:"Caveat", cursive;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --shadow-paper:0 1px 2px rgba(28,24,19,.06),0 12px 40px -12px rgba(28,24,19,.18);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:17.5px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* paper fiber */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:3000;opacity:.35;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.85 0 0 0 0 0.82 0 0 0 0 0.74 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+::selection{background:var(--hi);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+:focus-visible{outline:2.5px solid var(--red);outline-offset:3px;border-radius:4px}
 
-    --text:         #f7f3ec;
-    --text-dim:     rgba(247,243,236,0.60);
-    --text-faint:   rgba(247,243,236,0.34);
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+section{position:relative;padding:120px 0}
 
-    --btn-bg:       #f7f3ec;
-    --btn-text:     #0b0a09;
-    --btn-ghost:    rgba(247,243,236,0.08);
-    --hairline:     rgba(247,243,236,0.12);
+/* ---------- type system ---------- */
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--red);display:flex;align-items:center;gap:12px;
+}
+.eyebrow .box{width:13px;height:13px;border:1.8px solid var(--red);display:inline-grid;place-items:center;flex:none}
+.eyebrow .box::after{content:"✕";font-size:8px;line-height:1}
+.sec-title{
+  font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.4vw,68px);
+  line-height:1.02;letter-spacing:-.01em;margin:20px 0 18px;
+}
+.sec-title em{font-style:italic;color:var(--red)}
+.sec-sub{color:var(--ink-2);max-width:540px;font-size:18px}
 
-    --low:          #f0a93a;
-    --normal:       #7fd6a3;
-    --elevated:     #f06a5a;
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}
 
-    --font-display: 'Fraunces', serif;
-    --font-body:    'Hanken Grotesk', sans-serif;
-  }
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;padding:15px 28px;
+  font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.04em;text-transform:uppercase;
+  border:2px solid var(--ink);position:relative;background:var(--paper);
+  box-shadow:4px 4px 0 var(--ink);
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease),background .18s;
+}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn-red{background:var(--red);border-color:var(--ink);color:#FFF8EE}
+.btn-red:hover{background:var(--red-deep)}
 
-  .lr-landing * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    background:
-      radial-gradient(1100px 700px at 88% -2%, rgba(245,133,31,0.13), transparent 58%),
-      radial-gradient(900px 800px at 6% 42%, rgba(245,133,31,0.055), transparent 55%),
-      radial-gradient(1000px 760px at 78% 78%, rgba(245,133,31,0.07), transparent 58%),
-      var(--bg);
-    background-attachment: fixed;
-    color: var(--text);
-    font-family: var(--font-body);
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-  .lr-landing .wrap { max-width: 1240px; margin: 0 auto; padding: 0 44px; }
+/* ════════════════════ SPECIMEN TOP STRIP ════════════════════ */
+.specimen{
+  background:var(--ink);color:var(--paper);
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  padding:9px 0;overflow:hidden;white-space:nowrap;
+}
+.specimen .track{display:inline-flex;gap:46px;animation:tick 30s linear infinite;width:max-content}
+@keyframes tick{to{transform:translateX(-50%)}}
+.specimen b{color:var(--hi);font-weight:700}
+.specimen .sep{color:var(--red);font-weight:700}
 
-  /* ---------- nav ---------- */
-  .lr-landing nav {
-    position: sticky; top: 0; z-index: 50;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 22px 44px;
-    background: rgba(11,10,9,0.72);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--hairline);
-  }
-  .lr-landing .brand { display: flex; align-items: center; gap: 11px; }
-  .lr-landing .brand .mark {
-    width: 34px; height: 34px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, var(--glow-core), var(--glow-mid));
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display); font-weight: 600; color: #1a0e02; font-size: 1rem;
-    box-shadow: 0 0 24px rgba(245,133,31,0.5);
-  }
-  .lr-landing .brand .name { font-family: var(--font-display); font-weight: 600; font-size: 1.4rem; letter-spacing: -0.01em; }
-  .lr-landing .brand .name span { color: var(--text-dim); font-weight: 400; }
-  .lr-landing .nav-right { display: flex; align-items: center; gap: 26px; }
-  .lr-landing nav a { color: var(--text); text-decoration: none; font-weight: 500; font-size: 1rem; opacity: 0.85; transition: opacity .2s; }
-  .lr-landing nav a:hover { opacity: 0.55; }
-  .lr-landing .btn-pill {
-    background: linear-gradient(135deg, var(--glow-core), var(--glow-mid));
-    color: #2a1402 !important; padding: 11px 22px; border-radius: 100px;
-    font-weight: 600 !important; opacity: 1 !important; transition: transform .2s, box-shadow .2s;
-  }
-  .lr-landing .btn-pill:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(245,133,31,0.4); }
+/* ════════════════════ NAV ════════════════════ */
+nav{
+  position:sticky;top:0;z-index:100;background:rgba(250,246,238,.92);backdrop-filter:blur(10px);
+  border-bottom:2px solid var(--ink);
+}
+.nav-in{max-width:1180px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{display:inline-flex;align-items:center;gap:14px;font-family:var(--serif);line-height:1;letter-spacing:-.01em;color:var(--ink)}
+.logo .seal{width:46px;height:46px;flex:none;transition:transform .4s var(--ease)}
+.logo:hover .seal{transform:rotate(-8deg)}
+.logo .wm{display:inline-flex;align-items:baseline;gap:4px;font-size:26px;font-weight:400}
+.logo .wm .dropsep{width:10px;height:13px;flex:none;align-self:center;transform:translateY(2px);transition:transform .6s var(--ease)}
+.logo:hover .wm .dropsep{animation:fall .9s var(--ease)}
+@keyframes fall{
+  0%{transform:translateY(2px)}
+  55%{transform:translateY(11px);opacity:0}
+  56%{transform:translateY(-6px);opacity:0}
+  100%{transform:translateY(2px);opacity:1}
+}
+.logo .wm .tld{font-style:italic;color:var(--ink-3);font-weight:400;font-size:.92em;letter-spacing:0}
+.logo.sm .seal{width:36px;height:36px}
+.logo.sm .wm{font-size:21px}
+.logo.sm .wm .dropsep{width:8px;height:10px}
+.nav-links{display:flex;align-items:center;gap:30px;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.nav-links a:not(.btn){border-bottom:2px solid transparent;padding-bottom:2px;transition:border-color .2s}
+.nav-links a:not(.btn):hover{border-color:var(--red)}
+.nav-links .btn{padding:10px 20px;font-size:12.5px;box-shadow:3px 3px 0 var(--ink)}
 
-  /* ---------- hero ---------- */
-  .lr-landing .hero { position: relative; min-height: 92vh; display: flex; flex-direction: column; overflow: hidden; }
-  .lr-landing .glow {
-    position: absolute; top: 46%; left: 62%; transform: translate(-50%,-50%);
-    width: 80vh; height: 80vh; max-width: 880px; max-height: 880px; border-radius: 50%;
-    background: radial-gradient(circle, var(--glow-core) 0%, var(--glow-mid) 32%, var(--glow-edge) 60%, var(--bg) 76%);
-    filter: blur(6px); z-index: 0; animation: breathe 9s ease-in-out infinite;
-  }
-  @keyframes breathe { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1} 50%{transform:translate(-50%,-50%) scale(1.04);opacity:.93} }
-  .lr-landing .portrait { position: absolute; bottom: 0; right: 5%; height: 88%; width: auto; z-index: 1; object-fit: contain; object-position: bottom; filter: drop-shadow(0 0 60px rgba(0,0,0,0.5)); }
-  .lr-landing .portrait-ph {
-    position: absolute; bottom: 0; right: 11%; height: 74%; width: 26%; z-index: 1;
-    background: linear-gradient(180deg, rgba(11,10,9,0.05), rgba(11,10,9,0.85));
-    border-radius: 50% 50% 0 0 / 32% 32% 0 0; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 36px;
-  }
-  .lr-landing .portrait-ph span { color: var(--text-faint); font-size: .85rem; text-align: center; line-height: 1.5; max-width: 190px; }
+/* ════════════════════ HERO ════════════════════ */
+.hero{padding:96px 0 70px;text-align:center}
+.hero h1{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(54px,8.2vw,118px);line-height:.96;letter-spacing:-.015em;
+  max-width:1050px;margin:26px auto 0;
+}
+.hero h1 .row{display:block;overflow:hidden;padding-bottom:.08em}
+.hero h1 .row span{display:block;transform:translateY(108%);animation:rise 1s var(--ease) forwards}
+.hero h1 .row:nth-child(2) span{animation-delay:.1s}
+.hero h1 .row:nth-child(3) span{animation-delay:.2s}
+@keyframes rise{to{transform:translateY(0)}}
+.hero h1 em{font-style:italic;color:var(--red);position:relative;white-space:nowrap}
+/* hand-drawn underline under "explain" */
+.hero h1 em svg{position:absolute;left:-2%;bottom:-.12em;width:104%;height:.28em;overflow:visible}
+.hero h1 em svg path{
+  fill:none;stroke:var(--red);stroke-width:5;stroke-linecap:round;
+  stroke-dasharray:600;stroke-dashoffset:600;animation:draw 1s var(--ease) 1.05s forwards;
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+.hero .lede{
+  margin:30px auto 0;max-width:560px;font-size:19.5px;color:var(--ink-2);
+  opacity:0;animation:fadeup .8s var(--ease) .55s forwards;
+}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hero-cta{display:flex;gap:18px;justify-content:center;margin-top:38px;flex-wrap:wrap;
+  opacity:0;animation:fadeup .8s var(--ease) .7s forwards;}
+.hero .micro{
+  margin-top:22px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink-3);
+  opacity:0;animation:fadeup .8s var(--ease) .85s forwards;
+}
+.hero .micro b{color:var(--green);font-weight:700}
 
-  /* ---- biomarkers floating inside the glow ---- */
-  .lr-landing .bio-field { position:absolute; inset:0; z-index:1; pointer-events:none; }
-  .lr-landing .heme { position:absolute; top:46%; left:62%; transform:translate(-50%,-50%); width:42vh; max-width:460px; opacity:0.32; animation:spin 60s linear infinite; }
-  .lr-landing .heme path, .lr-landing .heme polygon, .lr-landing .heme circle { stroke:var(--glow-core); stroke-width:1.1; fill:none; }
-  @keyframes spin { to { transform:translate(-50%,-50%) rotate(360deg); } }
-  .lr-landing .chip {
-    position:absolute; display:flex; align-items:center; gap:9px;
-    padding:11px 16px; border-radius:100px;
-    background:rgba(20,16,12,0.55); backdrop-filter:blur(10px);
-    border:1px solid rgba(247,243,236,0.16);
-    font-family:var(--font-body); font-weight:600; font-size:0.98rem; color:var(--text);
-    box-shadow:0 8px 30px rgba(0,0,0,0.35);
-    white-space:nowrap;
-    animation:drift 7s ease-in-out infinite;
-  }
-  .lr-landing .chip .cdot { width:8px; height:8px; border-radius:50%; }
-  .lr-landing .chip .cval { color:var(--text-dim); font-weight:500; }
-  .lr-landing .chip .arrow { font-weight:700; }
-  @keyframes drift { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-14px); } }
-  .lr-landing .chip:nth-child(1){ top:24%; left:55%;  animation-delay:0s;   }
-  .lr-landing .chip:nth-child(2){ top:40%; left:72%;  animation-delay:1.1s; }
-  .lr-landing .chip:nth-child(3){ top:58%; left:58%;  animation-delay:2.0s; }
-  .lr-landing .chip:nth-child(4){ top:70%; left:74%;  animation-delay:0.6s; }
-  .lr-landing .chip:nth-child(5){ top:34%; left:84%;  animation-delay:1.6s; }
-  /* mobile chip styling is consolidated into the responsive blocks at the end */
+/* ════════════════════ THE ANNOTATED REPORT (signature) ════════════════════ */
+.desk{padding:30px 0 130px;position:relative}
+.doc-stage{position:relative;max-width:880px;margin:0 auto;perspective:1600px}
+.doc{
+  position:relative;background:#FFFDF7;
+  border:1.5px solid var(--rule);
+  box-shadow:var(--shadow-paper),0 40px 80px -30px rgba(28,24,19,.25);
+  transform:rotate(-.6deg);
+  padding:0 0 8px;
+}
+/* perforation edge */
+.doc::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:14px;
+  background:radial-gradient(circle at 10px 0px, var(--paper) 5px, transparent 5.5px) repeat-x;
+  background-size:24px 14px;
+}
+.doc-head{
+  display:flex;align-items:stretch;justify-content:space-between;gap:20px;
+  padding:34px 40px 22px;border-bottom:2px solid var(--ink);
+}
+.doc-head .id h2{font-family:var(--serif);font-size:30px;line-height:1.05}
+.doc-head .id p{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.1em;margin-top:6px;text-transform:uppercase}
+.barcode{
+  width:150px;height:46px;align-self:center;flex:none;
+  background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 7px,transparent 7px 9px,var(--ink) 9px 10px,transparent 10px 14px);
+}
+.doc-table{padding:8px 40px 26px}
+.doc-row{
+  display:grid;grid-template-columns:1.3fr .8fr 1fr .9fr;gap:14px;align-items:center;
+  padding:15px 10px;border-bottom:1px dashed var(--rule);
+  font-family:var(--mono);font-size:14.5px;position:relative;
+}
+.doc-row.hd{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);border-bottom:1.5px solid var(--ink);font-weight:700}
+.doc-row .nm{font-family:var(--body);font-weight:700;font-size:16px}
+.doc-row .rng{color:var(--ink-3);font-size:13px}
+.doc-row .flag{justify-self:end;font-weight:700;font-size:12px;letter-spacing:.1em}
+.f-low{color:var(--amber)}.f-high{color:var(--red)}.f-ok{color:var(--green)}
+/* marker highlight sweep */
+.hl{position:relative;z-index:0}
+.hl::before{
+  content:"";position:absolute;inset:4px -6px;background:var(--hi);z-index:-1;
+  transform:scaleX(0);transform-origin:left;border-radius:3px;
+  transition:transform .7s var(--ease);
+}
+.doc.played .hl.h1::before{transform:scaleX(1);transition-delay:.5s}
+.doc.played .hl.h2::before{transform:scaleX(1);transition-delay:1.5s}
+/* ink annotation layer */
+.anno{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.anno path,.anno ellipse{
+  fill:none;stroke:var(--red);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+}
+.anno .seg{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+.doc.played .anno .seg{animation:draw2 .9s var(--ease) forwards;animation-delay:var(--ad,0s)}
+@keyframes draw2{to{stroke-dashoffset:0}}
+.note{
+  position:absolute;font-family:var(--hand);font-weight:600;color:var(--red);
+  font-size:clamp(17px,2.3vw,23px);line-height:1.15;width:190px;
+  opacity:0;transform:rotate(var(--rot,-2deg)) translateY(8px);
+  transition:opacity .6s var(--ease),transform .6s var(--ease);
+}
+.doc.played .note{opacity:1;transform:rotate(var(--rot,-2deg)) translateY(0);transition-delay:var(--nd,1s)}
+.note.green{color:var(--green)}
+/* rubber stamp */
+.stamp{
+  position:absolute;right:30px;bottom:-34px;
+  font-family:var(--mono);font-weight:700;font-size:21px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--green);border:4px double var(--green);padding:12px 26px 12px 30px;
+  transform:rotate(-8deg) scale(2.4);opacity:0;border-radius:8px;
+  background:rgba(250,246,238,.6);
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 80'%3E%3Cfilter id='r'%3E%3CfeTurbulence baseFrequency='.55' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 .1'/%3E%3CfeComposite operator='in' in2='SourceGraphic'/%3E%3C/filter%3E%3Crect width='200' height='80' filter='url(%23r)'/%3E%3C/svg%3E");
+  mask-size:cover;
+}
+.doc.played .stamp{animation:stampIn .45s cubic-bezier(.34,1.4,.64,1) 2.5s forwards}
+@keyframes stampIn{
+  0%{opacity:0;transform:rotate(-8deg) scale(2.4)}
+  60%{opacity:1;transform:rotate(-8deg) scale(.94)}
+  100%{opacity:1;transform:rotate(-8deg) scale(1)}
+}
+/* paper tape on corners */
+.tape{
+  position:absolute;width:120px;height:34px;background:rgba(214,200,160,.45);
+  border-left:1px dashed rgba(28,24,19,.15);border-right:1px dashed rgba(28,24,19,.15);
+  backdrop-filter:blur(1px);
+}
+.tape.t1{top:-16px;left:60px;transform:rotate(-5deg)}
+.tape.t2{top:-14px;right:80px;transform:rotate(4deg)}
+.doc-caption{
+  text-align:center;margin-top:64px;font-family:var(--hand);font-size:24px;color:var(--ink-2);
+  transform:rotate(-1deg);
+}
+.doc-caption b{color:var(--red)}
 
-  .lr-landing .hero-content { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px 44px 0; max-width: 760px; }
-  .lr-landing .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: .95rem; color: var(--text-dim); margin-bottom: 22px; opacity: 0; animation: rise .7s ease forwards .1s; }
-  .lr-landing .eyebrow svg { width: 16px; height: 16px; color: var(--accent); }
-  .lr-landing h1.hero-h {
-    font-family: var(--font-display); font-weight: 600; font-size: clamp(3rem, 7vw, 6rem);
-    line-height: 0.96; letter-spacing: -0.02em; margin-bottom: 26px; opacity: 0; animation: rise .8s ease forwards .22s;
-  }
-  .lr-landing h1.hero-h em { font-style: italic; font-weight: 500; background: linear-gradient(100deg, var(--text), var(--glow-core) 60%, #9fd3ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-  .lr-landing .hero .sub { font-size: 1.22rem; line-height: 1.5; color: var(--text-dim); max-width: 480px; margin-bottom: 38px; opacity: 0; animation: rise .8s ease forwards .36s; }
-  .lr-landing .cta-row { display: flex; gap: 14px; align-items: center; opacity: 0; animation: rise .8s ease forwards .5s; }
-  .lr-landing .btn { padding: 17px 32px; border-radius: 100px; font-weight: 600; font-size: 1.05rem; text-decoration: none; cursor: pointer; border: none; transition: transform .2s, box-shadow .2s, background .2s; display: inline-flex; align-items: center; gap: 9px; }
-  .lr-landing .btn-primary { background: linear-gradient(135deg, var(--glow-core), var(--glow-mid)); color: #2a1402; }
-  .lr-landing .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(245,133,31,0.4); }
-  .lr-landing .btn-ghost { background: var(--btn-ghost); color: var(--text); backdrop-filter: blur(6px); border: 1px solid var(--hairline); }
-  .lr-landing .btn-ghost:hover { background: rgba(247,243,236,0.14); transform: translateY(-2px); }
-  .lr-landing .privacy-note { margin-top: 26px; display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px; border: 1px solid var(--hairline); border-radius: 100px; font-size: .92rem; color: var(--text-dim); opacity: 0; animation: rise .9s ease forwards .62s; }
-  .lr-landing .privacy-note svg { width: 16px; height: 16px; color: var(--normal); }
+/* ════════════════════ TRANSLATE (before/after rows) ════════════════════ */
+.translate{background:var(--ink);color:var(--paper);padding:130px 0}
+.translate .eyebrow{color:var(--hi)}
+.translate .eyebrow .box{border-color:var(--hi)}
+.translate .sec-title em{color:var(--hi)}
+.translate .sec-sub{color:#B8B0A0}
+.t-list{margin-top:62px;display:flex;flex-direction:column;gap:14px}
+.t-row{
+  display:grid;grid-template-columns:1fr 64px 1fr;align-items:stretch;gap:0;
+  border:1.5px solid #3A352C;background:#232019;
+  transition:border-color .3s,transform .3s var(--ease);
+}
+.t-row:hover{border-color:var(--hi);transform:translateX(6px)}
+.t-cell{padding:24px 28px}
+.t-cell.from{font-family:var(--mono);font-size:14.5px;color:#9A917E;display:flex;flex-direction:column;gap:6px;justify-content:center}
+.t-cell.from .code{font-size:16px;color:#CFC6B2;font-weight:700}
+.t-arrow{
+  display:grid;place-items:center;border-left:1.5px dashed #3A352C;border-right:1.5px dashed #3A352C;
+  color:var(--hi);font-size:22px;font-family:var(--mono);
+}
+.t-cell.to{display:flex;align-items:center;font-size:17px;line-height:1.55;color:#F0EADC}
+.t-cell.to b{color:var(--hi);font-weight:700}
+.t-footnote{margin-top:34px;text-align:center;font-family:var(--hand);font-size:23px;color:#9A917E;transform:rotate(-.5deg)}
+.t-footnote b{color:var(--hi)}
 
-  @keyframes rise { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+/* ════════════════════ PROCESS (stamped workflow) ════════════════════ */
+.process .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:64px;counter-reset:step}
+.p-card{
+  border:2px solid var(--ink);background:#FFFDF7;padding:36px 32px 32px;position:relative;
+  box-shadow:5px 5px 0 var(--paper-3);
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease);
+}
+.p-card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--paper-3)}
+.p-card::before{
+  counter-increment:step;content:"0" counter(step);
+  position:absolute;top:-19px;left:26px;background:var(--red);color:#FFF8EE;
+  font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.1em;
+  padding:7px 14px;border:2px solid var(--ink);
+}
+.p-card .pic{height:96px;display:flex;align-items:center;margin-bottom:20px}
+.p-card .pic svg{width:74px;height:74px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.p-card .pic .accent{stroke:var(--red)}
+.p-card h3{font-family:var(--serif);font-size:30px;margin-bottom:10px}
+.p-card p{color:var(--ink-2);font-size:16px}
+.p-card .hand{margin-top:16px;font-family:var(--hand);font-size:20px;color:var(--red);transform:rotate(-1.5deg);display:inline-block}
 
-  /* Fallback: if animations are disabled (reduced-motion / screenshot engines),
-     the opacity:0 entrance elements must still be visible. No effect on the
-     normal animated experience. */
-  @media (prefers-reduced-motion: reduce) {
-    .lr-landing .eyebrow,
-    .lr-landing h1.hero-h,
-    .lr-landing .hero .sub,
-    .lr-landing .cta-row,
-    .lr-landing .privacy-note { opacity: 1 !important; animation: none !important; transform: none !important; }
-  }
+/* ════════════════════ CHECKLIST FEATURES ════════════════════ */
+.features{background:var(--paper-2);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:60px;border:2px solid var(--ink);background:#FFFDF7}
+.feat{
+  padding:36px 38px;border-bottom:1.5px solid var(--rule);position:relative;
+  display:flex;gap:20px;align-items:flex-start;transition:background .25s;
+}
+.feat:nth-child(odd){border-right:1.5px solid var(--rule)}
+.feat:nth-last-child(-n+2){border-bottom:none}
+.feat:hover{background:#FFF9EA}
+.check{
+  width:30px;height:30px;border:2.5px solid var(--ink);flex:none;margin-top:3px;position:relative;background:#fff;
+}
+.check svg{position:absolute;inset:-6px -8px auto -2px;width:38px;height:34px;overflow:visible}
+.check svg path{
+  fill:none;stroke:var(--green);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:60;stroke-dashoffset:60;
+}
+.feat.in .check svg path{animation:draw2 .55s var(--ease) forwards;animation-delay:var(--cd,.2s)}
+.feat h3{font-family:var(--serif);font-size:25px;margin-bottom:6px}
+.feat p{color:var(--ink-2);font-size:15.5px}
 
-  /* ---------- stats bar ---------- */
-  .lr-landing .stats { display: flex; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); margin-top: 30px; }
-  .lr-landing .stat { flex: 1; padding: 46px 30px; text-align: center; border-right: 1px solid var(--hairline); }
-  .lr-landing .stat:last-child { border-right: none; }
-  .lr-landing .stat .big { font-family: var(--font-display); font-weight: 600; font-size: 3.4rem; line-height: 1; letter-spacing: -0.02em; }
-  .lr-landing .stat .big sub { font-size: 1.3rem; font-weight: 500; vertical-align: baseline; color: var(--text-dim); }
-  .lr-landing .stat .lbl { color: var(--text-dim); font-size: 1rem; margin-top: 12px; }
+/* ════════════════════ QUOTES (taped notes) ════════════════════ */
+.quotes-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:64px}
+.q{
+  background:#FFFDF7;border:1.5px solid var(--rule);padding:44px 40px 34px;position:relative;
+  box-shadow:var(--shadow-paper);transform:rotate(var(--qr,-1deg));
+  transition:transform .3s var(--ease);
+}
+.q:hover{transform:rotate(0) translateY(-4px)}
+.q .tape{top:-15px;left:50%;margin-left:-60px;transform:rotate(-2deg)}
+.q blockquote{font-family:var(--serif);font-style:italic;font-size:27px;line-height:1.35;letter-spacing:-.005em}
+.q blockquote .mark{color:var(--red)}
+.q cite{display:block;margin-top:22px;font-style:normal;font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.q cite b{color:var(--ink)}
 
-  /* ---------- section shell ---------- */
-  .lr-landing section.block { padding: 110px 0; }
-  .lr-landing .kicker { text-align: center; color: var(--accent); font-weight: 600; font-size: .85rem; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 18px; }
-  .lr-landing h2.sec { font-family: var(--font-display); font-weight: 600; font-size: clamp(2.2rem, 4.5vw, 3.6rem); text-align: center; letter-spacing: -0.02em; line-height: 1.05; }
-  .lr-landing .sec-sub { text-align: center; color: var(--text-dim); font-size: 1.15rem; line-height: 1.55; max-width: 620px; margin: 20px auto 0; }
+/* ════════════════════ LEARN (index cards) ════════════════════ */
+.learn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:60px}
+.lcard{
+  background:#FFFDF7;border:1.5px solid var(--ink);padding:0;display:flex;flex-direction:column;
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease);
+  box-shadow:4px 4px 0 var(--paper-3);
+}
+.lcard:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--red-soft)}
+.lcard .tab{
+  font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;
+  padding:10px 22px;border-bottom:1.5px solid var(--ink);
+  background:repeating-linear-gradient(-45deg,var(--paper-2) 0 8px,#FFFDF7 8px 16px);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.lcard .tab .no{color:var(--red)}
+.lcard .bd{padding:26px 24px 24px;display:flex;flex-direction:column;gap:10px;flex:1}
+.lcard h3{font-family:var(--serif);font-size:24px;line-height:1.15}
+.lcard p{color:var(--ink-2);font-size:15px;flex:1}
+.lcard .go{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);display:inline-flex;gap:8px;align-items:center}
+.lcard .go .arr{transition:transform .25s var(--ease)}
+.lcard:hover .go .arr{transform:translateX(5px)}
 
-  /* ---------- sample report ---------- */
-  .lr-landing .report-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 56px; }
-  .lr-landing .rep-card { background: var(--bg-card); border: 1px solid var(--hairline); border-radius: 18px; padding: 26px; transition: transform .25s, border-color .25s; }
-  .lr-landing .rep-card:hover { transform: translateY(-4px); border-color: rgba(247,243,236,0.28); }
-  .lr-landing .rep-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-  .lr-landing .rep-name { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 600; }
-  .lr-landing .dot { width: 9px; height: 9px; border-radius: 50%; }
-  .lr-landing .badge { font-size: .8rem; font-weight: 600; padding: 4px 11px; border-radius: 100px; }
-  .lr-landing .b-low { color: var(--low); background: rgba(240,169,58,0.13); border: 1px solid rgba(240,169,58,0.3); }
-  .lr-landing .b-normal { color: var(--normal); background: rgba(127,214,163,0.12); border: 1px solid rgba(127,214,163,0.3); }
-  .lr-landing .b-elevated { color: var(--elevated); background: rgba(240,106,90,0.12); border: 1px solid rgba(240,106,90,0.3); }
-  .lr-landing .rep-val { color: var(--text-dim); font-size: 1rem; margin-bottom: 12px; }
-  .lr-landing .rep-txt { color: var(--text); opacity: 0.82; line-height: 1.5; font-size: .98rem; }
-  .lr-landing .center-cta { text-align: center; margin-top: 52px; }
+/* ════════════════════ FINAL ════════════════════ */
+.final{padding:150px 0 140px;text-align:center;overflow:hidden;position:relative}
+.final h2{
+  font-family:var(--serif);font-size:clamp(48px,7vw,100px);line-height:.98;letter-spacing:-.015em;
+  max-width:900px;margin:22px auto;font-weight:400;
+}
+.final h2 em{font-style:italic;color:var(--red)}
+.final p{color:var(--ink-2);font-size:19px;max-width:480px;margin:0 auto 42px}
+.final .micro{margin-top:24px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--ink-3)}
+.big-stamp{
+  position:absolute;font-family:var(--mono);font-weight:700;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--red);border:5px double var(--red);padding:16px 34px 16px 40px;border-radius:10px;
+  font-size:clamp(16px,2vw,24px);opacity:.16;pointer-events:none;
+}
+.big-stamp.s1{top:70px;left:4%;transform:rotate(-14deg)}
+.big-stamp.s2{bottom:60px;right:4%;transform:rotate(9deg);color:var(--green);border-color:var(--green)}
 
-  /* ---------- testimonials ---------- */
-  .lr-landing .quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 980px; margin: 56px auto 0; }
-  .lr-landing .quote { background: var(--bg-card-2); border: 1px solid var(--hairline); border-radius: 18px; padding: 32px; }
-  .lr-landing .quote p { font-size: 1.18rem; line-height: 1.5; margin-bottom: 16px; }
-  .lr-landing .quote .who { color: var(--text-dim); font-size: .98rem; }
+/* ════════════════════ FOOTER ════════════════════ */
+footer{border-top:2px solid var(--ink);background:var(--paper-2);padding:50px 0 40px}
+.f-in{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.f-links{display:flex;gap:28px;font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.f-links a:hover{color:var(--red)}
+.f-note{
+  width:100%;margin-top:28px;padding-top:24px;border-top:1.5px dashed var(--rule);
+  font-size:13px;color:var(--ink-3);line-height:1.7;max-width:760px;
+}
 
-  /* ---------- features ---------- */
-  .lr-landing .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
-  .lr-landing .feat { background: var(--bg-card-2); border: 1px solid var(--hairline); border-radius: 18px; padding: 30px; transition: transform .25s, border-color .25s; }
-  .lr-landing .feat:hover { transform: translateY(-4px); border-color: rgba(247,243,236,0.24); }
-  .lr-landing .feat .ic { width: 46px; height: 46px; border-radius: 12px; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
-  .lr-landing .feat .ic svg { width: 22px; height: 22px; color: var(--accent); }
-  .lr-landing .feat h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 10px; }
-  .lr-landing .feat p { color: var(--text-dim); line-height: 1.55; }
-
-  /* ---------- how it works ---------- */
-  .lr-landing .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
-  .lr-landing .step { background: var(--bg-card-2); border: 1px solid var(--hairline); border-radius: 18px; padding: 34px; position: relative; }
-  .lr-landing .step .num { font-family: var(--font-body); color: var(--accent); font-weight: 600; font-size: .95rem; margin-bottom: 22px; }
-  .lr-landing .step .ic svg { width: 28px; height: 28px; color: var(--accent); margin-bottom: 18px; }
-  .lr-landing .step h3 { font-size: 1.35rem; font-weight: 600; margin-bottom: 10px; }
-  .lr-landing .step p { color: var(--text-dim); line-height: 1.55; }
-
-  /* ---------- learn ---------- */
-  .lr-landing .learn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
-  .lr-landing .learn-card { background: var(--bg-card-2); border: 1px solid var(--hairline); border-radius: 18px; padding: 30px; transition: transform .25s, border-color .25s; text-decoration: none; color: var(--text); display: block; }
-  .lr-landing .learn-card:hover { transform: translateY(-4px); border-color: rgba(247,243,236,0.24); }
-  .lr-landing .learn-card .ic { width: 46px; height: 46px; border-radius: 12px; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
-  .lr-landing .learn-card .ic svg { width: 22px; height: 22px; color: var(--accent); }
-  .lr-landing .learn-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 10px; }
-  .lr-landing .learn-card p { color: var(--text-dim); line-height: 1.5; margin-bottom: 20px; }
-  .lr-landing .read { color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; gap: 7px; }
-
-  /* ---------- final cta ---------- */
-  .lr-landing .final { background: radial-gradient(ellipse at 50% 120%, rgba(245,133,31,0.18), transparent 60%); border-top: 1px solid var(--hairline); padding: 120px 0; text-align: center; }
-  .lr-landing .final h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: -0.02em; line-height: 1.04; }
-  .lr-landing .final h2 em { font-style: italic; font-weight: 500; background: linear-gradient(100deg, var(--text), var(--glow-core) 60%, #9fd3ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-  .lr-landing .final p { color: var(--text-dim); font-size: 1.18rem; margin: 22px auto 38px; max-width: 520px; }
-
-  .lr-landing footer { border-top: 1px solid var(--hairline); padding: 40px 44px; text-align: center; color: var(--text-faint); font-size: .92rem; }
-
-  /* ---------- responsive ---------- */
-  @media (max-width: 980px) {
-    .lr-landing .report-grid, .lr-landing .feat-grid, .lr-landing .steps, .lr-landing .learn-grid { grid-template-columns: 1fr 1fr; }
-    .lr-landing .quotes { grid-template-columns: 1fr; }
-  }
-  /* ===== MOBILE (≤768px): stack the hero, contain the orb, reflow chips ===== */
-  @media (max-width: 768px) {
-    /* shell horizontal padding */
-    .lr-landing .wrap, .lr-landing nav, .lr-landing .hero-content, .lr-landing .final, .lr-landing footer { padding-left: 22px; padding-right: 22px; }
-
-    /* nav: hide secondary links, keep the CTA pill — no overflow */
-    .lr-landing nav { padding: 16px 22px; }
-    .lr-landing .nav-right { gap: 0; }
-    .lr-landing .nav-right a:not(.btn-pill) { display: none; }
-    .lr-landing .btn-pill { padding: 10px 18px; font-size: 0.95rem; }
-    .lr-landing .brand .name { font-size: 1.2rem; }
-
-    /* hero: single column, sized to content (order forces text → chips → stats) */
-    .lr-landing .hero { min-height: auto; padding-bottom: 12px; }
-    .lr-landing .hero-content { order: 0; flex: initial; max-width: 100%; padding: 44px 22px 0; }
-    .lr-landing .eyebrow { order: 0; margin-bottom: 16px; font-size: 0.9rem; }
-    .lr-landing h1.hero-h { font-size: clamp(1.9rem, 8vw, 3rem); line-height: 1.05; margin-bottom: 18px; }
-    .lr-landing .hero .sub { font-size: 1.05rem; line-height: 1.55; max-width: 100%; margin-bottom: 26px; }
-
-    /* CTAs: full-width stacked, comfortable 48px tap targets */
-    .lr-landing .cta-row { flex-direction: column; align-items: stretch; gap: 12px; width: 100%; }
-    .lr-landing .btn { justify-content: center; width: 100%; min-height: 48px; padding: 15px 24px; }
-    .lr-landing .privacy-note { margin-top: 20px; font-size: 0.86rem; align-items: flex-start; }
-
-    /* orb: contained + dimmed, sits behind the text — never causes horizontal scroll */
-    .lr-landing .glow { top: 30%; left: 50%; width: min(86vw, 420px); height: min(86vw, 420px); max-width: 86vw; max-height: 86vw; opacity: 0.5; }
-
-    /* biomarker chips: drop the scattered absolute layout, show a clean centered row below the copy */
-    .lr-landing .bio-field { position: static; inset: auto; order: 1; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; padding: 22px 22px 4px; opacity: 1; }
-    .lr-landing .heme { display: none; }
-    .lr-landing .chip { position: static; transform: none; animation: none; font-size: 0.9rem; padding: 9px 14px; }
-    .lr-landing .chip:nth-child(3), .lr-landing .chip:nth-child(6) { display: none; } /* show 3 of 5: Vitamin D ↓, TSH ✓, CRP ↑ */
-
-    /* stats: compact single row that fits (keeps vertical dividers) */
-    .lr-landing .stats { order: 2; margin-top: 18px; }
-    .lr-landing .stat { padding: 22px 8px; }
-    .lr-landing .stat .big { font-size: 1.9rem; }
-    .lr-landing .stat .big sub { font-size: 0.85rem; }
-    .lr-landing .stat .lbl { font-size: 0.78rem; margin-top: 6px; }
-
-    /* sections: single column + tighter rhythm */
-    .lr-landing .report-grid, .lr-landing .feat-grid, .lr-landing .steps, .lr-landing .learn-grid, .lr-landing .quotes { grid-template-columns: 1fr; }
-    .lr-landing section.block { padding: 72px 0; }
-    .lr-landing .final { padding: 84px 0; }
-  }
-
-  /* ===== SMALL PHONES (≤480px): finer typography + stat tuning ===== */
-  @media (max-width: 480px) {
-    .lr-landing .hero-content { padding-top: 36px; }
-    .lr-landing h1.hero-h { font-size: clamp(1.6rem, 7.2vw, 1.95rem); }
-    .lr-landing .hero .sub { font-size: 1rem; }
-    .lr-landing .stat { padding: 18px 5px; }
-    .lr-landing .stat .big { font-size: 1.55rem; }
-    .lr-landing .stat .big sub { font-size: 0.75rem; }
-    .lr-landing .stat .lbl { font-size: 0.72rem; }
-    .lr-landing .chip { font-size: 0.84rem; padding: 8px 12px; }
-    .lr-landing section.block { padding: 56px 0; }
-  }
+/* ════════════════════ RESPONSIVE ════════════════════ */
+@media(max-width:1020px){
+  .feat-grid{grid-template-columns:1fr}
+  .feat:nth-child(odd){border-right:none}
+  .feat:nth-last-child(-n+2){border-bottom:1.5px solid var(--rule)}
+  .feat:last-child{border-bottom:none}
+  .process .steps{grid-template-columns:1fr;gap:40px}
+  .learn-grid{grid-template-columns:repeat(2,1fr)}
+  .quotes-grid{grid-template-columns:1fr}
+  .t-row{grid-template-columns:1fr;}
+  .t-arrow{border:none;border-top:1.5px dashed #3A352C;border-bottom:1.5px dashed #3A352C;padding:8px 0;transform:rotate(90deg) scale(.9)}
+}
+@media(max-width:680px){
+  section{padding:88px 0}
+  .wrap{padding:0 20px}
+  .nav-links a:not(.btn){display:none}
+  .learn-grid{grid-template-columns:1fr}
+  .doc-head{flex-direction:column;gap:18px}
+  .doc-table{padding:8px 18px 22px}
+  .doc-row{grid-template-columns:1.4fr .9fr auto;font-size:13px}
+  .doc-row .rng{display:none}
+  .note{display:none}
+  .stamp{right:14px;bottom:-26px;font-size:15px;padding:9px 18px 9px 22px}
+  .q blockquote{font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .hero h1 .row span{transform:none}
+  .hero .lede,.hero-cta,.hero .micro{opacity:1}
+  .rv{opacity:1;transform:none}
+  .doc.played .anno .seg{stroke-dashoffset:0}
+  .doc.played .note{opacity:1}
+  .doc.played .stamp{opacity:1;transform:rotate(-8deg) scale(1)}
+  .hl::before{transform:scaleX(1)!important}
+  .feat .check svg path{stroke-dashoffset:0}
+}
 </style>
 
-<div class="lr-landing">
-  <!-- nav -->
-  <nav>
-    <div class="brand">
-      <div class="mark">l</div>
-      <div class="name">labread<span>.health</span></div>
-    </div>
-    <div class="nav-right">
+<!-- ══════════ specimen ticker ══════════ -->
+<div class="specimen" aria-hidden="true">
+  <div class="track" id="spec">
+    <span>Specimen: <b>whole blood</b></span><span class="sep">●</span>
+    <span>Patient: <b>you</b></span><span class="sep">●</span>
+    <span>Collected: <b>this morning</b></span><span class="sep">●</span>
+    <span>Status: <b>finally understood</b></span><span class="sep">●</span>
+    <span>Panels read: <b>50+</b></span><span class="sep">●</span>
+    <span>Jargon detected: <b>0</b></span><span class="sep">●</span>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="/" aria-label="labread.health home">
+      <svg class="seal" viewBox="0 0 80 80" aria-hidden="true">
+        <defs>
+          <path id="arcTop" d="M 40 40 m -30 0 a 30 30 0 0 1 60 0"/>
+          <path id="arcBot" d="M 12 48 a 30 30 0 0 0 56 0"/>
+        </defs>
+        <g class="ring">
+          <circle cx="40" cy="40" r="37" fill="#1C1813"/>
+          <circle cx="40" cy="40" r="32.5" fill="none" stroke="#FAF6EE" stroke-width=".7" stroke-dasharray=".7 2.4" opacity=".55"/>
+          <g stroke="#FAF6EE" stroke-width="1.1" opacity=".75" stroke-linecap="round">
+            <line x1="40" y1="4.5" x2="40" y2="9"/>
+            <line x1="40" y1="71" x2="40" y2="75.5"/>
+            <line x1="4.5" y1="40" x2="9" y2="40"/>
+            <line x1="71" y1="40" x2="75.5" y2="40"/>
+          </g>
+          <text font-family="'Space Mono', monospace" font-size="5.2" font-weight="700" fill="#FAF6EE" letter-spacing="2.4">
+            <textPath href="#arcTop" startOffset="50%" text-anchor="middle">LABREAD · HEALTH</textPath>
+          </text>
+          <text font-family="'Space Mono', monospace" font-size="4.6" font-weight="700" fill="#FAF6EE" letter-spacing="2" opacity=".75">
+            <textPath href="#arcBot" startOffset="50%" text-anchor="middle">№ 001 · MMXXVI</textPath>
+          </text>
+        </g>
+        <text x="40" y="57" font-family="'Instrument Serif', serif" font-style="italic" font-size="46" fill="#FAF6EE" text-anchor="middle">l</text>
+        <path d="M 49.5 43 C 46 49.5, 46 56, 49.5 56 C 53 56, 53 49.5, 49.5 43 Z" fill="#D5402F"/>
+        <ellipse cx="48" cy="51.5" rx=".75" ry="1.8" fill="rgba(255,255,255,.55)"/>
+      </svg>
+      <span class="wm">
+        <span class="word">labread</span>
+        <svg class="dropsep" viewBox="0 0 12 14" aria-hidden="true">
+          <path d="M6 1 C 1.8 6.5, 1.8 13, 6 13 C 10.2 13, 10.2 6.5, 6 1 Z" fill="#D5402F"/>
+          <ellipse cx="5" cy="9.5" rx=".7" ry="1.7" fill="rgba(255,255,255,.55)"/>
+        </svg>
+        <span class="tld">health</span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="#how">Process</a>
       <a href="#learn">Learn</a>
       <a href="/auth">Sign in</a>
-      <a href="/try-free" class="btn-pill">Try for free</a>
+      <a href="/try-free" class="btn btn-red">Try free</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- hero -->
-  <section class="hero">
-    <div class="glow"></div>
-    <div class="bio-field">
-      <svg class="heme" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="100,28 150,57 150,114 100,143 50,114 50,57"/>
-        <polygon points="100,55 128,71 128,103 100,119 72,103 72,71"/>
-        <circle cx="100" cy="87" r="9"/>
-        <path d="M100,28 L100,8 M150,57 L168,47 M150,114 L168,124 M100,143 L100,163 M50,114 L32,124 M50,57 L32,47"/>
-      </svg>
-      <div class="chip"><span class="cdot" style="background:var(--low)"></span>Vitamin D <span class="cval">22</span><span class="arrow" style="color:var(--low)">↓</span></div>
-      <div class="chip"><span class="cdot" style="background:var(--low)"></span>Ferritin <span class="cval">18</span><span class="arrow" style="color:var(--low)">↓</span></div>
-      <div class="chip"><span class="cdot" style="background:var(--normal)"></span>TSH <span class="cval">2.1</span><span class="arrow" style="color:var(--normal)">✓</span></div>
-      <div class="chip"><span class="cdot" style="background:var(--elevated)"></span>CRP <span class="cval">4.2</span><span class="arrow" style="color:var(--elevated)">↑</span></div>
-      <div class="chip"><span class="cdot" style="background:var(--normal)"></span>B12 <span class="cval">540</span><span class="arrow" style="color:var(--normal)">✓</span></div>
+<!-- ══════════ HERO ══════════ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow" style="justify-content:center"><span class="box"></span>Lab report № 001 — yours</div>
+    <h1>
+      <span class="row"><span>We read your</span></span>
+      <span class="row"><span>blood test. Then we</span></span>
+      <span class="row"><span><em>explain it<svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16 C 60 8, 120 20, 170 12 S 270 10, 296 14"/></svg></em> like a friend.</span></span>
+    </h1>
+    <p class="lede">A friend who went to med school. Upload your results — we circle what matters, translate the jargon, and tell you what to ask your doctor.</p>
+    <div class="hero-cta">
+      <a href="/try-free" class="btn btn-red">Read my labs — free</a>
+      <a href="#doc" class="btn">See it work ↓</a>
     </div>
+    <p class="micro">No card · minutes · <b>data deleted after processing</b></p>
+  </div>
+</header>
 
-    <div class="hero-content">
-      <div class="eyebrow">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        AI-powered medical clarity
-      </div>
-      <h1 class="hero-h">Your blood test,<br><em>finally explained.</em></h1>
-      <p class="sub">Paste your numbers. We tell you what's normal, what's not, and what to ask your doctor. Plain English. In a minute.</p>
-      <div class="cta-row">
-        <a href="/try-free" class="btn btn-primary">Try for free <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <a href="/auth" class="btn btn-ghost">Sign up to save results</a>
-      </div>
-      <div class="privacy-note">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-        Your data is never stored. Results are processed and immediately deleted. HIPAA-compliant.
-      </div>
-    </div>
-
-    <!-- stats -->
-    <div class="stats">
-      <div class="stat"><div class="big">50+</div><div class="lbl">biomarkers explained</div></div>
-      <div class="stat"><div class="big">Minute</div><div class="lbl">to your full report</div></div>
-      <div class="stat"><div class="big">Free</div><div class="lbl">no card needed</div></div>
-    </div>
-  </section>
-
-  <!-- sample report -->
-  <section class="block">
-    <div class="wrap">
-      <div class="kicker">Sample report</div>
-      <h2 class="sec">Here's what your report looks like</h2>
-      <div class="report-grid">
-        <div class="rep-card">
-          <div class="rep-head"><div class="rep-name"><span class="dot" style="background:var(--low)"></span>Ferritin</div><span class="badge b-low">Low</span></div>
-          <div class="rep-val">18 ng/mL</div>
-          <div class="rep-txt">Your iron stores are running low — a common cause of fatigue, brain fog, and feeling cold.</div>
+<!-- ══════════ THE ANNOTATED REPORT ══════════ -->
+<div class="desk" id="doc">
+  <div class="wrap">
+    <div class="doc-stage">
+      <div class="doc" id="docEl">
+        <span class="tape t1"></span><span class="tape t2"></span>
+        <div class="doc-head">
+          <div class="id">
+            <h2>Comprehensive Metabolic Panel</h2>
+            <p>ACC № 26-58-2210 · Drawn 06:48 · Fasting</p>
+          </div>
+          <div class="barcode" aria-hidden="true"></div>
         </div>
-        <div class="rep-card">
-          <div class="rep-head"><div class="rep-name"><span class="dot" style="background:var(--low)"></span>Vitamin D</div><span class="badge b-low">Low</span></div>
-          <div class="rep-val">22 ng/mL</div>
-          <div class="rep-txt">Below the optimal range, which is often linked to low energy, low mood, and weaker immunity.</div>
+        <div class="doc-table">
+          <div class="doc-row hd"><span>Test</span><span>Result</span><span class="rng">Reference</span><span class="flag">Flag</span></div>
+          <div class="doc-row">
+            <span class="nm">Ferritin</span>
+            <span class="hl h1"><b>18</b> ng/mL</span>
+            <span class="rng">30 – 150</span>
+            <span class="flag f-low">LOW ▾</span>
+          </div>
+          <div class="doc-row">
+            <span class="nm">Vitamin D, 25-OH</span>
+            <span><b>22</b> ng/mL</span>
+            <span class="rng">30 – 60</span>
+            <span class="flag f-low">LOW ▾</span>
+          </div>
+          <div class="doc-row">
+            <span class="nm">TSH</span>
+            <span><b>2.1</b> mIU/L</span>
+            <span class="rng">0.4 – 4.0</span>
+            <span class="flag f-ok">OK ✓</span>
+          </div>
+          <div class="doc-row">
+            <span class="nm">hs-CRP</span>
+            <span class="hl h2"><b>4.2</b> mg/L</span>
+            <span class="rng">&lt; 3.0</span>
+            <span class="flag f-high">HIGH ▴</span>
+          </div>
+          <div class="doc-row" style="border-bottom:none">
+            <span class="nm">Vitamin B12</span>
+            <span><b>540</b> pg/mL</span>
+            <span class="rng">200 – 900</span>
+            <span class="flag f-ok">OK ✓</span>
+          </div>
         </div>
-        <div class="rep-card">
-          <div class="rep-head"><div class="rep-name"><span class="dot" style="background:var(--normal)"></span>TSH</div><span class="badge b-normal">Normal</span></div>
-          <div class="rep-val">2.1 mIU/L</div>
-          <div class="rep-txt">Your thyroid signal is in range — though one number doesn't capture the full thyroid picture.</div>
-        </div>
-        <div class="rep-card">
-          <div class="rep-head"><div class="rep-name"><span class="dot" style="background:var(--elevated)"></span>CRP</div><span class="badge b-elevated">Elevated</span></div>
-          <div class="rep-val">4.2 mg/L</div>
-          <div class="rep-txt">A marker of inflammation that's mildly raised — worth understanding what's driving it.</div>
-        </div>
-      </div>
-      <div class="center-cta">
-        <a href="/try-free" class="btn btn-primary">Get yours free <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
 
-      <div class="quotes">
-        <div class="quote"><p>"Useful and actually explains my blood test in language I can understand."</p><div class="who">— Alix</div></div>
-        <div class="quote"><p>"I finally understand my blood test."</p><div class="who">— Rechi</div></div>
+        <!-- ink annotations -->
+        <svg class="anno" viewBox="0 0 880 460" preserveAspectRatio="none" aria-hidden="true">
+          <!-- circle around ferritin 18 -->
+          <ellipse class="seg" cx="318" cy="208" rx="58" ry="22" style="--len:260;--ad:.7s"/>
+          <!-- arrow ferritin -> left margin -->
+          <path class="seg" d="M256 206 C 190 200, 150 216, 108 248" style="--len:170;--ad:1.1s"/>
+          <path class="seg" d="M120 238 L 106 250 L 122 256" style="--len:46;--ad:1.35s"/>
+          <!-- circle around CRP 4.2 -->
+          <ellipse class="seg" cx="312" cy="352" rx="52" ry="21" style="--len:240;--ad:1.7s"/>
+          <!-- arrow CRP -> right margin -->
+          <path class="seg" d="M366 352 C 470 366, 560 350, 700 372" style="--len:350;--ad:2s"/>
+          <path class="seg" d="M686 362 L 702 372 L 684 380" style="--len:48;--ad:2.25s"/>
+        </svg>
+
+        <!-- margin notes -->
+        <span class="note" style="left:-128px;top:252px;--rot:-3deg;--nd:1.35s">iron stores low — this explains the tiredness</span>
+        <span class="note" style="right:-150px;top:300px;--rot:2deg;--nd:2.3s;text-align:left">mild inflammation. worth asking what's driving it</span>
+        <span class="note green" style="right:-138px;top:120px;--rot:1.5deg;--nd:2.7s">thyroid looks fine ✓</span>
+
+        <span class="stamp">Explained</span>
       </div>
+      <p class="doc-caption">↑ this is what we do to your report. <b>every value, no jargon.</b></p>
     </div>
-  </section>
-
-  <!-- features -->
-  <section class="block">
-    <div class="wrap">
-      <div class="kicker">Why labread</div>
-      <h2 class="sec">Built for clarity. Designed for you.</h2>
-      <div class="feat-grid">
-        <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg></div><h3>Any lab, any country</h3><p>Bloodwork, panels, hormones — we read them all, in any language.</p></div>
-        <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44A2.5 2.5 0 0 1 4 17.5v-1a2.5 2.5 0 0 1-1.98-3A2.5 2.5 0 0 1 3 9.5 2.5 2.5 0 0 1 5.5 7 2.5 2.5 0 0 1 7 2.5 2.5 2.5 0 0 1 9.5 2zM14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44A2.5 2.5 0 0 0 20 17.5v-1a2.5 2.5 0 0 0 1.98-3A2.5 2.5 0 0 0 21 9.5 2.5 2.5 0 0 0 18.5 7 2.5 2.5 0 0 0 17 2.5 2.5 2.5 0 0 0 14.5 2z"/></svg></div><h3>Plain-language insights</h3><p>No jargon. Just what each value means for your body, today.</p></div>
-        <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>Flagged automatically</h3><p>Color-coded results so abnormal values are impossible to miss.</p></div>
-        <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v6a4 4 0 0 0 4 4 4 4 0 0 0 4-4V2"/><path d="M12 12v4a4 4 0 0 0 4 4 4 4 0 0 0 4-4"/><circle cx="20" cy="20" r="2"/></svg></div><h3>Screening recommendations</h3><p>Personalized next steps and tests worth discussing with your doctor.</p></div>
-        <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div><h3>Beautiful history</h3><p>Every report saved, searchable, and easy to compare over time.</p></div>
-        <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Zero data stored</h3><p>Your results are processed and immediately deleted. Nothing is saved. HIPAA-compliant.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- how it works -->
-  <section class="block">
-    <div class="wrap">
-      <div class="kicker">How it works</div>
-      <h2 class="sec">Three steps to clarity.</h2>
-      <div class="steps">
-        <div class="step"><div class="num">01</div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div><h3>Upload</h3><p>Drop a PDF or snap a photo of your lab report.</p></div>
-        <div class="step"><div class="num">02</div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44A2.5 2.5 0 0 1 4 17.5v-1a2.5 2.5 0 0 1-1.98-3A2.5 2.5 0 0 1 3 9.5 2.5 2.5 0 0 1 5.5 7 2.5 2.5 0 0 1 7 2.5 2.5 2.5 0 0 1 9.5 2z"/></svg></div><h3>Analyze</h3><p>Our AI reads every value and references against medical ranges.</p></div>
-        <div class="step"><div class="num">03</div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>Understand</h3><p>Get plain-language explanations and screening guidance.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- learn -->
-  <section class="block" id="learn">
-    <div class="wrap">
-      <div class="kicker">Learn</div>
-      <h2 class="sec">Understand your results.</h2>
-      <p class="sec-sub">Plain-English guides to the biomarkers people ask about most — what the numbers mean, and what to do next.</p>
-      <div class="learn-grid">
-        <a class="learn-card" href="/learn/ferritin"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><h3>What Does Low Ferritin Mean?</h3><p>Iron deficiency, explained in plain English.</p><span class="read">Read guide <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
-        <a class="learn-card" href="/learn/vitamin-d"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><h3>Vitamin D Deficiency Explained</h3><p>Why "normal" and "optimal" are far apart.</p><span class="read">Read guide <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
-        <a class="learn-card" href="/learn/tsh-thyroid"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><h3>TSH Normal But Still Tired?</h3><p>Why one thyroid number isn't the whole story.</p><span class="read">Read guide <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
-        <a class="learn-card" href="/learn/crp"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><h3>What Does High CRP Mean?</h3><p>The quiet inflammation marker most people miss.</p><span class="read">Read guide <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
-        <a class="learn-card" href="/learn/a1c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><h3>What Is Pre-Diabetic A1c?</h3><p>The window where changes matter most.</p><span class="read">Read guide <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- final cta -->
-  <section class="final">
-    <div class="wrap">
-      <h2>Ready to <em>understand</em> your bloodwork?</h2>
-      <p>Join thousands taking control of their health, one lab at a time.</p>
-      <a href="/try-free" class="btn btn-primary">Try for free <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-    </div>
-  </section>
-
-  <footer>© 2026 labread.health — Your blood test, finally explained.</footer>
+  </div>
 </div>
+
+<!-- ══════════ TRANSLATE ══════════ -->
+<section class="translate">
+  <div class="wrap">
+    <div class="eyebrow"><span class="box"></span>The translation layer</div>
+    <h2 class="sec-title rv">Lab language, <em>human language.</em></h2>
+    <p class="sec-sub rv d1">Labs write for doctors. We rewrite for you — every abbreviation, every range, every flag.</p>
+
+    <div class="t-list">
+      <div class="t-row rv">
+        <div class="t-cell from"><span class="code">FERRITIN 18 ng/mL [L]</span><span>REF: 30–150 · METHOD: CMIA</span></div>
+        <div class="t-arrow">→</div>
+        <div class="t-cell to">Your <b>iron storage is running low</b>. It's the most common reason for feeling tired, foggy, and cold — and it's very fixable.</div>
+      </div>
+      <div class="t-row rv d1">
+        <div class="t-cell from"><span class="code">25-OH VIT D 22 ng/mL [L]</span><span>REF: 30–60 · LC-MS/MS</span></div>
+        <div class="t-arrow">→</div>
+        <div class="t-cell to"><b>Below optimal vitamin D</b> — linked to low energy, low mood, and weaker immunity. Common, and worth correcting.</div>
+      </div>
+      <div class="t-row rv d2">
+        <div class="t-cell from"><span class="code">HS-CRP 4.2 mg/L [H]</span><span>REF: &lt;3.0 · NEPHELOMETRY</span></div>
+        <div class="t-arrow">→</div>
+        <div class="t-cell to">There's <b>mild inflammation somewhere</b> in your body. One number can't say where — a good question to bring to your doctor.</div>
+      </div>
+    </div>
+    <p class="t-footnote">…and <b>50+ more biomarkers</b>, translated the same way.</p>
+  </div>
+</section>
+
+<!-- ══════════ PROCESS ══════════ -->
+<section class="process" id="how">
+  <div class="wrap">
+    <div class="eyebrow"><span class="box"></span>Standard procedure</div>
+    <h2 class="sec-title rv">From PDF to <em>plain English</em><br>in minutes.</h2>
+
+    <div class="steps">
+      <div class="p-card rv">
+        <div class="pic">
+          <svg viewBox="0 0 80 80"><rect x="16" y="10" width="48" height="60" rx="3"/><path d="M26 24h28M26 34h28M26 44h16"/><path class="accent" d="M40 70V50m0 0-8 8m8-8 8 8" transform="rotate(180 40 60)"/></svg>
+        </div>
+        <h3>Upload</h3>
+        <p>Drop a PDF or snap a photo of your lab report. Any lab, any country, any language.</p>
+        <span class="hand">even the blurry ones</span>
+      </div>
+      <div class="p-card rv d1">
+        <div class="pic">
+          <svg viewBox="0 0 80 80"><circle cx="34" cy="34" r="20"/><path d="M48 48 66 66" class="accent"/><path d="M26 34h16M34 26v16"/></svg>
+        </div>
+        <h3>Analyze</h3>
+        <p>Our AI reads every value and checks it against real medical reference ranges.</p>
+        <span class="hand">all 50+ markers, not just the flagged ones</span>
+      </div>
+      <div class="p-card rv d2">
+        <div class="pic">
+          <svg viewBox="0 0 80 80"><path d="M14 58c8-2 12-10 14-22 2 14 6 20 12 20s10-6 12-20c2 12 6 20 14 22" class="accent"/><path d="M10 68h60"/></svg>
+        </div>
+        <h3>Understand</h3>
+        <p>Get plain-language explanations, flags you can't miss, and questions worth asking your doctor.</p>
+        <span class="hand">like the note in the margin ↑</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FEATURES CHECKLIST ══════════ -->
+<section class="features">
+  <div class="wrap">
+    <div class="eyebrow"><span class="box"></span>Requisition form</div>
+    <h2 class="sec-title rv">Everything checked. <em>Nothing stored.</em></h2>
+
+    <div class="feat-grid">
+      <div class="feat rv" style="--cd:.15s">
+        <span class="check"><svg viewBox="0 0 38 34"><path d="M6 18 L15 27 L34 4"/></svg></span>
+        <div><h3>Any lab, any country</h3><p>Bloodwork, panels, hormones — we read them all, in any language and any unit system.</p></div>
+      </div>
+      <div class="feat rv" style="--cd:.3s">
+        <span class="check"><svg viewBox="0 0 38 34"><path d="M6 18 L15 27 L34 4"/></svg></span>
+        <div><h3>Plain-language insights</h3><p>No jargon. Just what each value means for your body, today.</p></div>
+      </div>
+      <div class="feat rv" style="--cd:.45s">
+        <span class="check"><svg viewBox="0 0 38 34"><path d="M6 18 L15 27 L34 4"/></svg></span>
+        <div><h3>Flagged automatically</h3><p>Color-coded results so abnormal values are impossible to miss.</p></div>
+      </div>
+      <div class="feat rv" style="--cd:.6s">
+        <span class="check"><svg viewBox="0 0 38 34"><path d="M6 18 L15 27 L34 4"/></svg></span>
+        <div><h3>Screening recommendations</h3><p>Personalized next steps and tests worth discussing with your doctor.</p></div>
+      </div>
+      <div class="feat rv" style="--cd:.75s">
+        <span class="check"><svg viewBox="0 0 38 34"><path d="M6 18 L15 27 L34 4"/></svg></span>
+        <div><h3>History you can compare</h3><p>Every report saved, searchable, and easy to track over time.</p></div>
+      </div>
+      <div class="feat rv" style="--cd:.9s">
+        <span class="check"><svg viewBox="0 0 38 34"><path d="M6 18 L15 27 L34 4"/></svg></span>
+        <div><h3>Zero data stored</h3><p>Results are processed and immediately deleted. Nothing saved. HIPAA-compliant.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ QUOTES ══════════ -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="box"></span>Field notes</div>
+    <div class="quotes-grid">
+      <div class="q rv" style="--qr:-1.2deg">
+        <span class="tape"></span>
+        <blockquote><span class="mark">“</span>Useful and actually explains my blood test in language I can understand.<span class="mark">”</span></blockquote>
+        <cite>— <b>Alix</b> · early user</cite>
+      </div>
+      <div class="q rv d1" style="--qr:1deg">
+        <span class="tape"></span>
+        <blockquote><span class="mark">“</span>I finally understand my blood test.<span class="mark">”</span></blockquote>
+        <cite>— <b>Rechi</b> · early user</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LEARN ══════════ -->
+<section id="learn" style="padding-top:40px">
+  <div class="wrap">
+    <div class="eyebrow"><span class="box"></span>The library</div>
+    <h2 class="sec-title rv">Understand your <em>results.</em></h2>
+    <p class="sec-sub rv d1">Plain-English guides to the biomarkers people ask about most — what the numbers mean, and what to do next.</p>
+
+    <div class="learn-grid">
+      <a href="/learn/ferritin" class="lcard rv"><span class="tab">Iron <span class="no">FE-01</span></span>
+        <div class="bd"><h3>What Does Low Ferritin Mean?</h3><p>Iron deficiency, explained in plain English.</p><span class="go">Read guide <span class="arr">→</span></span></div></a>
+      <a href="/learn/vitamin-d" class="lcard rv d1"><span class="tab">Vitamins <span class="no">VD-02</span></span>
+        <div class="bd"><h3>Vitamin D Deficiency Explained</h3><p>Why “normal” and “optimal” are far apart.</p><span class="go">Read guide <span class="arr">→</span></span></div></a>
+      <a href="/learn/tsh-thyroid" class="lcard rv d2"><span class="tab">Thyroid <span class="no">TS-03</span></span>
+        <div class="bd"><h3>TSH Normal But Still Tired?</h3><p>Why one thyroid number isn’t the whole story.</p><span class="go">Read guide <span class="arr">→</span></span></div></a>
+      <a href="/learn/crp" class="lcard rv"><span class="tab">Inflammation <span class="no">CR-04</span></span>
+        <div class="bd"><h3>What Does High CRP Mean?</h3><p>The quiet inflammation marker most people overlook.</p><span class="go">Read guide <span class="arr">→</span></span></div></a>
+      <a href="/learn/a1c" class="lcard rv d1"><span class="tab">Metabolic <span class="no">A1-05</span></span>
+        <div class="bd"><h3>What Is Pre-Diabetic A1c?</h3><p>The window where changes matter most.</p><span class="go">Read guide <span class="arr">→</span></span></div></a>
+      <a href="#learn" class="lcard rv d2"><span class="tab">Index <span class="no">∞</span></span>
+        <div class="bd"><h3>50+ more biomarkers</h3><p>New plain-English guides every week.</p><span class="go">Browse all <span class="arr">→</span></span></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FINAL ══════════ -->
+<section class="final">
+  <span class="big-stamp s1">No jargon</span>
+  <span class="big-stamp s2">Understood</span>
+  <div class="wrap">
+    <div class="eyebrow" style="justify-content:center"><span class="box"></span>Free · no card needed</div>
+    <h2 class="rv">Stop nodding at numbers<br>you <em>don’t understand.</em></h2>
+    <p class="rv d1">Your next blood test doesn’t have to be a mystery. First report in minutes.</p>
+    <div class="rv d2"><a href="/try-free" class="btn btn-red" style="padding:19px 38px;font-size:15.5px">Read my labs — free</a></div>
+    <p class="micro rv d3" style="font-family:var(--mono);color:var(--ink-3);font-size:12px;letter-spacing:.1em;margin-top:26px">50+ biomarkers · any lab · data deleted after processing</p>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="wrap f-in">
+    <a class="logo sm" href="/" aria-label="labread.health home">
+      <svg class="seal" viewBox="0 0 80 80" aria-hidden="true">
+        <defs>
+          <path id="arcTopF" d="M 40 40 m -30 0 a 30 30 0 0 1 60 0"/>
+          <path id="arcBotF" d="M 12 48 a 30 30 0 0 0 56 0"/>
+        </defs>
+        <g class="ring">
+          <circle cx="40" cy="40" r="37" fill="#1C1813"/>
+          <circle cx="40" cy="40" r="32.5" fill="none" stroke="#FAF6EE" stroke-width=".7" stroke-dasharray=".7 2.4" opacity=".55"/>
+          <g stroke="#FAF6EE" stroke-width="1.1" opacity=".75" stroke-linecap="round">
+            <line x1="40" y1="4.5" x2="40" y2="9"/>
+            <line x1="40" y1="71" x2="40" y2="75.5"/>
+            <line x1="4.5" y1="40" x2="9" y2="40"/>
+            <line x1="71" y1="40" x2="75.5" y2="40"/>
+          </g>
+          <text font-family="'Space Mono', monospace" font-size="5.2" font-weight="700" fill="#FAF6EE" letter-spacing="2.4">
+            <textPath href="#arcTopF" startOffset="50%" text-anchor="middle">LABREAD · HEALTH</textPath>
+          </text>
+          <text font-family="'Space Mono', monospace" font-size="4.6" font-weight="700" fill="#FAF6EE" letter-spacing="2" opacity=".75">
+            <textPath href="#arcBotF" startOffset="50%" text-anchor="middle">№ 001 · MMXXVI</textPath>
+          </text>
+        </g>
+        <text x="40" y="57" font-family="'Instrument Serif', serif" font-style="italic" font-size="46" fill="#FAF6EE" text-anchor="middle">l</text>
+        <path d="M 49.5 43 C 46 49.5, 46 56, 49.5 56 C 53 56, 53 49.5, 49.5 43 Z" fill="#D5402F"/>
+        <ellipse cx="48" cy="51.5" rx=".75" ry="1.8" fill="rgba(255,255,255,.55)"/>
+      </svg>
+      <span class="wm">
+        <span class="word">labread</span>
+        <svg class="dropsep" viewBox="0 0 12 14" aria-hidden="true">
+          <path d="M6 1 C 1.8 6.5, 1.8 13, 6 13 C 10.2 13, 10.2 6.5, 6 1 Z" fill="#D5402F"/>
+          <ellipse cx="5" cy="9.5" rx=".7" ry="1.7" fill="rgba(255,255,255,.55)"/>
+        </svg>
+        <span class="tld">health</span>
+      </span>
+    </a>
+    <div class="f-links">
+      <a href="#how">Process</a><a href="#learn">Learn</a><a href="#">Privacy</a><a href="#">Terms</a>
+      <a href="https://x.com/labread_health" target="_blank" rel="noopener">X / Twitter</a>
+    </div>
+    <p class="f-note">labread.health provides educational information about laboratory values and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult your doctor about your results. © 2026 labread.health</p>
+  </div>
+</footer>
 `;
+
+function HomePage() {
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+
+    /* ---------- duplicate ticker for seamless loop (idempotent) ---------- */
+    const spec = document.getElementById("spec");
+    if (spec && !spec.dataset.duplicated) {
+      spec.innerHTML += spec.innerHTML;
+      spec.dataset.duplicated = "1";
+    }
+
+    /* ---------- reveals ---------- */
+    const io = new IntersectionObserver(
+      (es) =>
+        es.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }),
+      { threshold: 0.16, rootMargin: "0px 0px -36px 0px" }
+    );
+    document.querySelectorAll(".rv,.feat").forEach((el) => io.observe(el));
+    observers.push(io);
+
+    /* ---------- annotated report sequence ---------- */
+    const doc = document.getElementById("docEl");
+    if (doc) {
+      const ro = new IntersectionObserver(
+        (es, o) => {
+          if (es[0].isIntersecting) {
+            doc.classList.add("played");
+            o.disconnect();
+          }
+        },
+        { threshold: 0.45 }
+      );
+      ro.observe(doc);
+      observers.push(ro);
+    }
+
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }
