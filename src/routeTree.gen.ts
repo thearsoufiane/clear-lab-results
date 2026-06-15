@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TryFreeRouteImport } from './routes/try-free'
+import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -26,6 +27,11 @@ import { Route as LearnA1cRouteImport } from './routes/learn/a1c'
 const TryFreeRoute = TryFreeRouteImport.update({
   id: '/try-free',
   path: '/try-free',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
+  '/progress': typeof ProgressRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
+  '/progress': typeof ProgressRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
@@ -127,6 +135,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
+  '/progress': typeof ProgressRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/profile'
+    | '/progress'
     | '/try-free'
     | '/learn/a1c'
     | '/learn/crp'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/profile'
+    | '/progress'
     | '/try-free'
     | '/learn/a1c'
     | '/learn/crp'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/profile'
+    | '/progress'
     | '/try-free'
     | '/learn/a1c'
     | '/learn/crp'
@@ -190,6 +202,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   HistoryRoute: typeof HistoryRoute
   ProfileRoute: typeof ProfileRoute
+  ProgressRoute: typeof ProgressRoute
   TryFreeRoute: typeof TryFreeRoute
   LearnA1cRoute: typeof LearnA1cRoute
   LearnCrpRoute: typeof LearnCrpRoute
@@ -206,6 +219,13 @@ declare module '@tanstack/react-router' {
       path: '/try-free'
       fullPath: '/try-free'
       preLoaderRoute: typeof TryFreeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -302,6 +322,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   HistoryRoute: HistoryRoute,
   ProfileRoute: ProfileRoute,
+  ProgressRoute: ProgressRoute,
   TryFreeRoute: TryFreeRoute,
   LearnA1cRoute: LearnA1cRoute,
   LearnCrpRoute: LearnCrpRoute,

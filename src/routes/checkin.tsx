@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/logo";
-import { ArrowLeft, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, Check, Loader2, TrendingUp } from "lucide-react";
 
 export const Route = createFileRoute("/checkin")({
   head: () => ({
@@ -222,12 +222,20 @@ function CheckinPage() {
     <div className="min-h-screen flex flex-col">
       <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
         <Logo />
-        <Link
-          to="/dashboard"
-          className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md min-h-[44px]"
-        >
-          <ArrowLeft size={14} /> Dashboard
-        </Link>
+        <div className="flex items-center gap-1">
+          <Link
+            to="/progress"
+            className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md min-h-[44px]"
+          >
+            <TrendingUp size={14} /> Progress
+          </Link>
+          <Link
+            to="/dashboard"
+            className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md min-h-[44px]"
+          >
+            <ArrowLeft size={14} /> Dashboard
+          </Link>
+        </div>
       </header>
 
       <main className="flex-1 px-5 py-8">
