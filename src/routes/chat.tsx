@@ -64,7 +64,15 @@ function ChatPage() {
         .limit(1)
         .maybeSingle();
       if (!active) return;
-      setMessages(((rows as Msg[]) ?? []).slice().reverse());
+      // Most-recent-20 come back newest-first; sort to chronological order.
+      // On a created_at tie (a user+assistant pair saved together), keep the
+      // user turn before the assistant turn.
+      const ordered = ((rows as Msg[]) ?? []).slice().sort((a, b) => {
+        if (a.created_at !== b.created_at) return a.created_at < b.created_at ? -1 : 1;
+        if (a.role === b.role) return 0;
+        return a.role === "user" ? -1 : 1;
+      });
+      setMessages(ordered);
       setFocusAreas(Array.isArray(proto?.focus_areas) ? (proto.focus_areas as FocusArea[]) : []);
       setHistoryLoaded(true);
     })();

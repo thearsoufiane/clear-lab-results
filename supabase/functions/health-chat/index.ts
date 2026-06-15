@@ -56,7 +56,7 @@ Rules:
 - Be encouraging but honest
 - Never diagnose — recommend they discuss clinical concerns with their doctor
 - If asked something unrelated to health, gently redirect
-- Sign off as Lab Coach, never as Claude or an AI assistant`;
+- Never add a sign-off or closing. End your response naturally with the last sentence of your answer.`;
 }
 
 Deno.serve(async (req) => {
@@ -94,6 +94,7 @@ Deno.serve(async (req) => {
     const message = (body.message ?? "").trim();
     if (!message) return jsonError("Missing 'message'.", 400);
     const history = Array.isArray(body.conversationHistory) ? body.conversationHistory : [];
+    const userCreatedAt = new Date().toISOString();
 
     const apiKey = Deno.env.get("OPENAI_API_KEY");
     if (!apiKey) return jsonError("OPENAI_API_KEY is not configured in Supabase secrets.", 500);
@@ -200,11 +201,14 @@ Deno.serve(async (req) => {
           // streaming interrupted — still persist whatever we have
         }
 
-        // Persist both turns after streaming completes.
+        // Persist both turns after streaming completes. Explicit timestamps
+        // (user captured at request time, assistant after streaming) keep the
+        // user turn strictly before the assistant turn on reload.
+        const assistantCreatedAt = new Date().toISOString();
         try {
           await admin.from("health_chat_messages").insert([
-            { user_id: ownerId, role: "user", content: message, context_type: "general" },
-            { user_id: ownerId, role: "assistant", content: assistantText, context_type: "general" },
+            { user_id: ownerId, role: "user", content: message, context_type: "general", created_at: userCreatedAt },
+            { user_id: ownerId, role: "assistant", content: assistantText, context_type: "general", created_at: assistantCreatedAt },
           ]);
         } catch {
           // best-effort; don't break the response
