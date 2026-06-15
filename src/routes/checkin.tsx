@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/logo";
-import { ArrowLeft, Check, Loader2, TrendingUp } from "lucide-react";
+import { ArrowLeft, Check, Loader2, TrendingUp, MessageCircle } from "lucide-react";
 
 export const Route = createFileRoute("/checkin")({
   head: () => ({
@@ -228,6 +228,12 @@ function CheckinPage() {
             className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md min-h-[44px]"
           >
             <TrendingUp size={14} /> Progress
+          </Link>
+          <Link
+            to="/chat"
+            className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md min-h-[44px]"
+          >
+            <MessageCircle size={14} /> Chat
           </Link>
           <Link
             to="/dashboard"

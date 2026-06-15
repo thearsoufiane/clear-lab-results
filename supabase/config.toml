@@ -3,3 +3,6 @@ verify_jwt = false
 
 [functions.generate-protocol]
 verify_jwt = false
+
+[functions.health-chat]
+verify_jwt = false

@@ -5,7 +5,7 @@ import { supabase, type Report } from "@/lib/supabase";
 import { Logo } from "@/components/logo";
 import { UploadModal } from "@/components/upload-modal";
 import { HistorySidebar } from "@/components/history-sidebar";
-import { FileText, AlertTriangle, Stethoscope, Plus, LogOut, ChevronRight, User, History, TrendingUp } from "lucide-react";
+import { FileText, AlertTriangle, Stethoscope, Plus, LogOut, ChevronRight, User, History, TrendingUp, MessageCircle } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -68,6 +68,10 @@ function Dashboard() {
           <Link to="/progress"
             className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="Progress">
             <TrendingUp size={16}/>
+          </Link>
+          <Link to="/chat"
+            className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="Lab Coach">
+            <MessageCircle size={16}/>
           </Link>
           <Link to="/history"
             className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="History">
