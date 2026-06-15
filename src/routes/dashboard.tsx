@@ -5,7 +5,7 @@ import { supabase, type Report } from "@/lib/supabase";
 import { Logo } from "@/components/logo";
 import { UploadModal } from "@/components/upload-modal";
 import { HistorySidebar } from "@/components/history-sidebar";
-import { FileText, AlertTriangle, Stethoscope, Plus, LogOut, ChevronRight, User, History, TrendingUp, MessageCircle } from "lucide-react";
+import { FileText, AlertTriangle, Stethoscope, Plus, LogOut, ChevronRight, User, History } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -65,14 +65,6 @@ function Dashboard() {
             className="hidden sm:inline-flex items-center gap-2 bg-accent text-accent-foreground px-5 py-2.5 rounded-full text-sm font-medium transition-colors min-h-[44px]">
             <Plus size={14}/> New report
           </button>
-          <Link to="/progress"
-            className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="Progress">
-            <TrendingUp size={16}/>
-          </Link>
-          <Link to="/chat"
-            className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="Lab Coach">
-            <MessageCircle size={16}/>
-          </Link>
           <Link to="/history"
             className="text-muted-foreground hover:text-foreground p-2.5 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center" title="History">
             <History size={16}/>
@@ -91,7 +83,7 @@ function Dashboard() {
       <div className="flex flex-1 min-h-0">
         <HistorySidebar reports={reports} />
 
-        <main className="flex-1 min-w-0 px-6 py-10">
+        <main className="flex-1 min-w-0 px-6 pt-10 pb-20">
           <div className="max-w-4xl mx-auto">
             <div className="relative mb-10 rounded-3xl overflow-hidden p-8 md:p-10 border border-border/40">
               <div className="relative z-10">

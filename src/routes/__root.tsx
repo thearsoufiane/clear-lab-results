@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { DisclaimerModal } from "@/components/disclaimer-modal";
+import { BottomNav } from "@/components/bottom-nav";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
 function NotFoundComponent() {
@@ -131,6 +132,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      <BottomNav />
       <DisclaimerModal />
     </QueryClientProvider>
   );

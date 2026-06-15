@@ -185,7 +185,7 @@ function ChatPage() {
   const showEmpty = historyLoaded && messages.length === 0;
 
   return (
-    <div className="h-[100dvh] flex flex-col max-w-[480px] mx-auto w-full">
+    <div className="h-[100dvh] flex flex-col max-w-[480px] mx-auto w-full pb-16">
       {/* ===== TOP BAR ===== */}
       <header className="px-4 py-3 border-b border-border/50 bg-background">
         <div className="flex items-center gap-2">
