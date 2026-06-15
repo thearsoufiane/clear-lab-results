@@ -79,10 +79,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "labread.health — your blood test, finally explained" },
       { name: "description", content: "Upload any blood test and get a clear, plain-language explanation of every value, plus screenings tailored to you." },
       { name: "author", content: "labread.health" },
-      { property: "og:title", content: "labread.health" },
-      { property: "og:description", content: "Your blood test, finally explained." },
+      { property: "og:title", content: "labread.health — Your blood test, finally explained." },
+      {
+        property: "og:description",
+        content:
+          "Upload your blood test. Get a 90-day plan to improve your results. Daily habits, AI coaching, progress tracking.",
+      },
+      { property: "og:image", content: "https://labread.health/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:url", content: "https://labread.health" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://labread.health/og-image.png" },
       { name: "twitter:site", content: "@Lovable" },
     ],
     links: [

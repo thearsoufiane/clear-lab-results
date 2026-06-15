@@ -11,7 +11,11 @@ export const Route = createFileRoute("/")({
           "Paste your blood test numbers. We tell you what's normal, what's not, and what to ask your doctor. Plain English. In a minute.",
       },
       { property: "og:title", content: "labread.health — Your blood test, finally explained." },
-      { property: "og:description", content: "AI-powered medical clarity for your bloodwork." },
+      {
+        property: "og:description",
+        content:
+          "Upload your blood test. Get a 90-day plan to improve your results. Daily habits, AI coaching, progress tracking.",
+      },
     ],
     links: [
       { rel: "canonical", href: "https://labread.health" },
