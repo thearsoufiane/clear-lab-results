@@ -209,10 +209,11 @@ function ProgressContent({
 
   // --- Section 1: timeline ---------------------------------------------------
   const rawElapsed = Math.floor((midnight(new Date()).getTime() - midnight(parseDate(startsAt)).getTime()) / DAY_MS);
-  const dayX = Math.max(0, Math.min(90, rawElapsed));
-  const retestDays = Math.max(0, 90 - dayX);
-  const inLast14 = dayX >= 76;
-  const timelinePct = Math.round((dayX / 90) * 100);
+  const elapsed = Math.max(0, Math.min(90, rawElapsed)); // 0-based days elapsed, for bar/retest math
+  const dayX = Math.max(1, Math.min(90, rawElapsed + 1)); // 1-based "Day X of 90" (start day = Day 1)
+  const retestDays = Math.max(0, 90 - elapsed);
+  const inLast14 = elapsed >= 76;
+  const timelinePct = Math.round((elapsed / 90) * 100);
   const retestDate = addDays(parseDate(startsAt), 90);
   const retestDateLabel = retestDate.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 
