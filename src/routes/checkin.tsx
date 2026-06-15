@@ -281,7 +281,7 @@ function CheckinPage() {
                       disabled={readOnly}
                       className={`w-full text-left flex items-center gap-3.5 rounded-2xl border p-3.5 transition-colors duration-150 ${
                         done
-                          ? "border-success/30 bg-success/10"
+                          ? "border-success/45 bg-success/15"
                           : "border-border bg-card hover:border-foreground/30"
                       } ${readOnly ? "cursor-default" : "cursor-pointer"}`}
                     >
