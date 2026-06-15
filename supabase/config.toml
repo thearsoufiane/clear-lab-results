@@ -1,2 +1,5 @@
 [functions.analyze-report]
 verify_jwt = false
+
+[functions.generate-protocol]
+verify_jwt = false

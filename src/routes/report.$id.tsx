@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/logo";
 import { HistorySidebar } from "@/components/history-sidebar";
 import { AnalysisView, normalizeName } from "@/components/analysis-view";
+import { ProtocolCTA } from "@/components/protocol-cta";
 import { PaywallModal } from "@/components/paywall-modal";
 import { ArrowLeft, User, Download } from "lucide-react";
 
@@ -89,7 +90,12 @@ function ReportView() {
           const dateLabel = new Date(report.created_at).toLocaleDateString(undefined, { dateStyle: "long" });
           // TEMP: paywall disabled — force isPaid so every section renders for free.
           // Re-enable later by restoring `isPaid={report.is_paid}`.
-          return <AnalysisView analysis={report.analysis} dateLabel={dateLabel} prevValues={prevMap} isPaid={true} />;
+          return (
+            <>
+              <AnalysisView analysis={report.analysis} dateLabel={dateLabel} prevValues={prevMap} isPaid={true} />
+              <ProtocolCTA userId={user.id} reportId={report.id} analysis={report.analysis} />
+            </>
+          );
         })()}
         </main>
       </div>
