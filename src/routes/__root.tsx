@@ -92,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: "https://labread.health/og-image.png" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@labread_health" },
     ],
     links: [
       {
