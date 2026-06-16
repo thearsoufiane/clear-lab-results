@@ -342,7 +342,7 @@ nav.scrolled{background:rgba(11,9,7,.78);backdrop-filter:blur(18px);border-color
 /* ============================================================ HOW IT WORKS */
 .how{background:
   radial-gradient(800px 400px at 50% 0%, rgba(255,142,43,.05), transparent 70%);}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:72px;position:relative}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:72px;position:relative}
 .steps::before{ /* connective beam */
   content:"";position:absolute;top:43px;left:12%;right:12%;height:1px;z-index:0;
   background:linear-gradient(90deg,transparent,var(--ember) 25%,var(--ember) 75%,transparent);
@@ -369,6 +369,7 @@ nav.scrolled{background:rgba(11,9,7,.78);backdrop-filter:blur(18px);border-color
 
 /* ============================================================ WHY */
 .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:64px}
+.get-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:64px}
 .why-card{
   background:linear-gradient(170deg,var(--surface),var(--bg-2));
   border:1px solid var(--line);border-radius:var(--r-card);
@@ -475,7 +476,7 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
   .wrap{padding:0 22px}
   .hero{padding-top:140px}
   .nav-links a:not(.btn){display:none}
-  .cards-4,.why-grid,.learn-grid,.q-grid{grid-template-columns:1fr}
+  .cards-4,.why-grid,.learn-grid,.q-grid,.get-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr}
   .q-card blockquote{font-size:21px}
   .chip{display:none}
@@ -513,12 +514,12 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
 <header class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <div class="eyebrow">AI-powered medical clarity</div>
+      <div class="eyebrow">Your personal health OS</div>
       <h1>
         <span class="line"><span>Your blood test,</span></span>
         <span class="line"><span><em>finally explained.</em></span></span>
       </h1>
-      <p class="hero-sub">Paste your numbers. We tell you <strong>what's normal, what's not,</strong> and what to ask your doctor. Plain English. In a minute.</p>
+      <p class="hero-sub">Upload your blood test. Get a 90-day plan to <strong>actually improve your numbers.</strong> Daily habits, AI coaching, and progress tracking — built around your specific results.</p>
       <div class="hero-cta">
         <a href="/try-free" class="btn btn-primary">Try for free <span class="arr">→</span></a>
         <a href="#sample" class="btn btn-ghost">See a sample report</a>
@@ -592,9 +593,9 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
 <section class="stats">
   <div class="wrap">
     <div class="stats-grid rv">
-      <div class="stat"><div class="num">50+</div><div class="lbl">biomarkers explained</div></div>
-      <div class="stat"><div class="num">Minutes</div><div class="lbl">to your full report</div></div>
-      <div class="stat"><div class="num">Free</div><div class="lbl">no card needed</div></div>
+      <div class="stat"><div class="num">90-day</div><div class="lbl">protocol</div></div>
+      <div class="stat"><div class="num">Daily</div><div class="lbl">check-ins</div></div>
+      <div class="stat"><div class="num">Free</div><div class="lbl">to start</div></div>
     </div>
   </div>
 </section>
@@ -657,7 +658,7 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
 <section class="how" id="how">
   <div class="wrap">
     <div class="eyebrow rv">How it works</div>
-    <h2 class="sec-title rv d1">Three steps to <em>clarity.</em></h2>
+    <h2 class="sec-title rv d1">Four steps to <em>clarity.</em></h2>
 
     <div class="steps">
       <div class="step rv">
@@ -666,23 +667,63 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
           <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
         </div>
         <h3>Upload</h3>
-        <p>Drop a PDF or snap a photo of your lab report. Any lab, any language.</p>
+        <p>Drop your blood test PDF. Any lab, any country, any language.</p>
       </div>
       <div class="step rv d1">
         <div class="orb">
           <span class="k">02</span>
           <svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-6 6c0 2 .7 3.1 1.6 4.2.7.9 1.4 1.8 1.4 3.3h6c0-1.5.7-2.4 1.4-3.3C17.3 12.1 18 11 18 9a6 6 0 0 0-6-6z"/><path d="M9.5 20.5h5M10.5 23h3"/></svg>
         </div>
-        <h3>Analyze</h3>
-        <p>Our AI reads every value and references it against real medical ranges.</p>
+        <h3>Understand</h3>
+        <p>Every flagged value explained in plain English. No jargon.</p>
       </div>
       <div class="step rv d2">
         <div class="orb">
           <span class="k">03</span>
+          <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-7"/><path d="M17 8h4v4"/></svg>
+        </div>
+        <h3>Improve</h3>
+        <p>Get a 90-day plan with daily habits tied to your specific numbers.</p>
+      </div>
+      <div class="step rv d3">
+        <div class="orb">
+          <span class="k">04</span>
           <svg viewBox="0 0 24 24"><path d="M3 12h4l2.5-7 4 14 2.5-7h5"/></svg>
         </div>
-        <h3>Understand</h3>
-        <p>Get plain-language explanations and screening guidance you can act on.</p>
+        <h3>Track</h3>
+        <p>Check in daily, watch your streak grow, retest in 90 days and see what moved.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== WHAT YOU GET ====================== -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">What you get</div>
+    <h2 class="sec-title rv d1">More than an <em>explainer.</em></h2>
+    <p class="sec-sub rv d2">A system built around your results.</p>
+
+    <div class="get-grid">
+      <div class="why-card rv">
+        <div class="why-icon" style="font-size:22px">🧬</div>
+        <h3>Blood test analysis</h3>
+        <p>Every biomarker explained. Flagged values highlighted. Plain English, not medical jargon.</p>
+      </div>
+      <div class="why-card rv d1">
+        <div class="why-icon" style="font-size:22px">📋</div>
+        <h3>90-day protocol</h3>
+        <p>A personalized plan generated from your flagged results. Supplements, diet, sleep, exercise — all specific to you.</p>
+      </div>
+      <div class="why-card rv d2">
+        <div class="why-icon" style="font-size:22px">✅</div>
+        <h3>Daily check-ins</h3>
+        <p>Track your habits every day. Build streaks. The app knows your numbers and keeps you accountable.</p>
+      </div>
+      <div class="why-card rv d3">
+        <div class="why-icon" style="font-size:22px">🤖</div>
+        <h3>Lab Coach AI</h3>
+        <p>Ask anything about your results. Gets answers that reference your actual values, not generic advice.</p>
       </div>
     </div>
   </div>
@@ -736,12 +777,12 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
     <div class="q-grid">
       <div class="q-card rv">
         <span class="mark">"</span>
-        <blockquote>Useful and actually explains my blood test in language I can understand.</blockquote>
+        <blockquote>I've had my blood test sitting in my email for 6 months because I didn't understand it. Uploaded it here, had a plan in 10 minutes.</blockquote>
         <cite><span class="ava">A</span>Alix</cite>
       </div>
       <div class="q-card rv d1">
         <span class="mark">"</span>
-        <blockquote>I finally understand my blood test.</blockquote>
+        <blockquote>My doctor said everything looks normal. labread showed me my ferritin was low-normal and explained exactly why I've been exhausted.</blockquote>
         <cite><span class="ava">R</span>Rechi</cite>
       </div>
     </div>
@@ -801,8 +842,8 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
   <div class="sun" aria-hidden="true"></div>
   <div class="wrap">
     <div class="eyebrow rv">Free · No card needed</div>
-    <h2 class="rv d1">Stop guessing what your <em>numbers mean.</em></h2>
-    <p class="rv d2">Your next blood test doesn't have to be a mystery. Get your first report in minutes.</p>
+    <h2 class="rv d1">Your blood test is just the <em>beginning.</em></h2>
+    <p class="rv d2">Upload your results and get a 90-day plan to actually improve them. Free to start.</p>
     <div class="rv d3"><a href="/try-free" class="btn btn-primary" style="padding:18px 40px;font-size:17px">Try labread for free <span class="arr">→</span></a></div>
     <div class="micro rv d4">50+ biomarkers · any lab · zero data stored</div>
   </div>
