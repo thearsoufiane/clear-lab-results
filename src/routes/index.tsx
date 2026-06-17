@@ -480,7 +480,11 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
   section{padding:90px 0}
   .wrap{padding:0 22px}
   .hero{padding-top:140px}
-  .nav-left a,.nav-right a:not(.btn){display:none}
+  /* mobile nav: drop the 3-col grid → flex with logo left, CTA right */
+  .nav-in{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 22px}
+  .nav-left{display:none}
+  .nav-in .logo{font-size:24px;justify-self:auto}
+  .nav-right a:not(.btn){display:none}
   .cards-4,.why-grid,.learn-grid,.q-grid,.get-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr}
   .q-card blockquote{font-size:21px}
