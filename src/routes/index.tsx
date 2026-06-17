@@ -500,7 +500,7 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
 <!-- ====================== NAV ====================== -->
 <nav id="nav">
   <div class="nav-in">
-    <a href="/" class="logo"><span class="dot">l</span>labread<span class="tld">.health</span></a>
+    <a href="/" class="logo" style="color:var(--ember)">labread</a>
     <div class="nav-links">
       <a href="#how">How it works</a>
       <a href="#learn">Learn</a>

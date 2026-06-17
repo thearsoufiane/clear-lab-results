@@ -102,7 +102,7 @@ function AuthPage() {
       <div className="absolute inset-0 -z-10"
         style={{ background: "radial-gradient(50% 50% at 50% 30%, rgba(200,240,216,0.10), transparent 60%)" }} />
       <div className="w-full max-w-md">
-        <div className="flex justify-center mb-8"><Logo size={36} /></div>
+        <div className="flex justify-center mb-8"><Logo /></div>
         {fromDemo && (
           <div className="glass p-4 mb-4 flex items-start gap-3 border-accent/30">
             <Sparkles size={16} className="text-accent mt-0.5 shrink-0" />

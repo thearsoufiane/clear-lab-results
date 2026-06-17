@@ -95,7 +95,7 @@ function GuestDemo() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="px-6 py-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-30">
-        <Link to="/" className="no-underline"><Logo /></Link>
+        <Logo />
         <div className="flex items-center gap-2">
           <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 rounded-md min-h-[44px] flex items-center">
             Sign in
