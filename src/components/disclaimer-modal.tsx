@@ -20,10 +20,22 @@ export function DisclaimerModal() {
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) return; setOpen(v); }}>
-      <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+      {/*
+        - Width is viewport-relative (calc(100% - 2rem)) so the modal always
+          leaves a 1rem margin on small screens instead of going edge-to-edge.
+        - Padding is set inline because the landing page injects an unlayered
+          global `* { padding: 0 }` reset; unlayered author styles override
+          Tailwind's layered `p-6`, so the inline style is what survives.
+      */}
+      <DialogContent
+        className="w-[calc(100%-2rem)] max-w-md"
+        style={{ padding: "1.5rem" }}
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Before you continue</DialogTitle>
-          <DialogDescription className="pt-2 text-sm leading-relaxed">
+          <DialogDescription className="pt-2 text-sm leading-relaxed break-words">
             labread.health provides AI-powered explanations of lab results for informational purposes only.
             This is <strong>NOT a medical diagnosis</strong> and should <strong>NOT replace professional medical advice</strong>.
             By continuing, you agree to our{" "}
@@ -33,7 +45,7 @@ export function DisclaimerModal() {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={accept} className="w-full sm:w-auto">I Understand</Button>
+          <Button onClick={accept} className="w-full sm:w-auto min-h-[44px]">I Understand</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
