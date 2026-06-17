@@ -137,7 +137,8 @@ nav{
   border-bottom:1px solid transparent;
 }
 nav.scrolled{background:rgba(11,9,7,.78);backdrop-filter:blur(18px);border-color:var(--line)}
-.nav-in{max-width:1240px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between}
+.nav-in{max-width:1240px;margin:0 auto;padding:18px 32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
+.nav-in .logo{font-size:32px;justify-self:center}
 .logo{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-size:21px;font-weight:500;letter-spacing:-.01em}
 .logo .dot{
   width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
@@ -146,9 +147,10 @@ nav.scrolled{background:rgba(11,9,7,.78);backdrop-filter:blur(18px);border-color
   font-size:14px;color:#2A1404;font-weight:600;font-family:var(--font-display);
 }
 .logo .tld{color:var(--cream-mute);font-weight:300}
-.nav-links{display:flex;align-items:center;gap:34px;font-size:15px;font-weight:500}
-.nav-links a:not(.btn){color:var(--cream-dim);transition:color .25s}
-.nav-links a:not(.btn):hover{color:var(--cream)}
+.nav-left{display:flex;align-items:center;gap:28px;font-size:15px;font-weight:500;justify-self:start}
+.nav-right{display:flex;align-items:center;gap:22px;font-size:15px;font-weight:500;justify-self:end}
+.nav-left a,.nav-right a:not(.btn){color:var(--cream-dim);transition:color .25s}
+.nav-left a:hover,.nav-right a:not(.btn):hover{color:var(--cream)}
 
 /* ---------- buttons ---------- */
 .btn{
@@ -166,6 +168,9 @@ nav.scrolled{background:rgba(11,9,7,.78);backdrop-filter:blur(18px);border-color
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 18px 48px -8px rgba(255,142,43,.7)}
 .btn-primary .arr{transition:transform .3s var(--ease)}
 .btn-primary:hover .arr{transform:translateX(4px)}
+/* flat solid pill for the nav CTA — no gradient, no glow */
+#nav .btn-primary{background:var(--ember);color:#2A1404;box-shadow:none;transition:background .25s,filter .25s}
+#nav .btn-primary:hover{background:var(--ember);transform:none;box-shadow:none;filter:brightness(.92)}
 .btn-ghost{
   border:1px solid var(--line-2);color:var(--cream);
   background:rgba(255,180,110,.03);
@@ -475,7 +480,7 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
   section{padding:90px 0}
   .wrap{padding:0 22px}
   .hero{padding-top:140px}
-  .nav-links a:not(.btn){display:none}
+  .nav-left a,.nav-right a:not(.btn){display:none}
   .cards-4,.why-grid,.learn-grid,.q-grid,.get-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr}
   .q-card blockquote{font-size:21px}
@@ -500,10 +505,12 @@ footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,
 <!-- ====================== NAV ====================== -->
 <nav id="nav">
   <div class="nav-in">
-    <a href="/" class="logo" style="color:var(--ember)">labread</a>
-    <div class="nav-links">
+    <div class="nav-left">
       <a href="#how">How it works</a>
       <a href="#learn">Learn</a>
+    </div>
+    <a href="/" class="logo" style="color:var(--ember)">labread</a>
+    <div class="nav-right">
       <a href="/auth">Sign in</a>
       <a href="/try-free" class="btn btn-primary btn-sm">Try for free</a>
     </div>
