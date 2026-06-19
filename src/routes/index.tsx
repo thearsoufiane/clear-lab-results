@@ -19,972 +19,890 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://labread.health" },
+      {
+        rel: "icon",
+        href: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FFC069'/%3E%3Cstop offset='1' stop-color='%23E8743B'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='36' y='24' width='13' height='62' rx='3.5' fill='url(%23g)'/%3E%3Crect x='36' y='73' width='40' height='13' rx='3.5' fill='url(%23g)'/%3E%3Ccircle cx='92' cy='79.5' r='7' fill='url(%23g)'/%3E%3C/svg%3E",
+      },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0;1,9..144,300..700,50&family=Hanken+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap",
       },
     ],
   }),
   component: HomePage,
 });
 
-const html = `
-<style>
-/* ============================================================
-   LABREAD.HEALTH — design tokens
-   ink on dark ember · Fraunces / Hanken Grotesk / Plex Mono
-   ============================================================ */
-:root{
-  --bg:#0B0907;
-  --bg-2:#0F0C09;
-  --surface:#151009;
-  --surface-2:#1C150C;
-  --line:rgba(255,180,110,.10);
-  --line-2:rgba(255,180,110,.18);
-  --cream:#F6EFE3;
-  --cream-dim:#C9BCA8;
-  --cream-mute:#8E8270;
-  --ember:#FF9A3E;
-  --ember-deep:#E2602C;
-  --ember-soft:#FFC489;
-  --glow:#FF8E2B;
-  --ok:#7BD8A8;
-  --warn:#F0B25C;
-  --alert:#F0796A;
-  --ok-bg:rgba(123,216,168,.10);
-  --warn-bg:rgba(240,178,92,.10);
-  --alert-bg:rgba(240,121,106,.10);
-  --r-card:20px;
-  --r-pill:999px;
-  --font-display:"Fraunces", Georgia, serif;
-  --font-body:"Hanken Grotesk", -apple-system, sans-serif;
-  --font-mono:"IBM Plex Mono", ui-monospace, monospace;
-  --ease:cubic-bezier(.22,1,.36,1);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--cream);
-  font-family:var(--font-body);
-  font-size:17px;
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-::selection{background:rgba(255,154,62,.32);color:#fff}
-a{color:inherit;text-decoration:none}
-img{max-width:100%}
-button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
-:focus-visible{outline:2px solid var(--ember);outline-offset:3px;border-radius:6px}
+const html = `<style>
+  :root{
+    --bg:#0B0907; --bg-2:#100D0A; --surface:#171209; --surface-2:#1C160D;
+    --line:rgba(245,166,35,.12); --line-soft:rgba(245,166,35,.07);
+    --cream:#F4ECDF; --muted:#9E9384; --faint:#6F6557;
+    --amber:#F5A623; --amber-lite:#FFC069; --amber-deep:#E8743B;
+    --grad:linear-gradient(135deg,#FFC069 0%,#F5853F 60%,#E8743B 100%);
+    --green:#6FCF97; --warn:#E3A94A; --red:#E0706A;
+    --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--cream);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--amber);display:inline-flex;align-items:center;gap:14px}
+  .eyebrow::before,.eyebrow::after{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+  .eyebrow.solo::before{display:none}
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.04;letter-spacing:-.01em}
+  .ital{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;border-radius:999px;padding:14px 26px;cursor:pointer;border:none;transition:.2s}
+  .btn-amber{background:var(--grad);color:#1a0f02;box-shadow:0 0 34px rgba(245,133,63,.34)}
+  .btn-amber:hover{box-shadow:0 0 50px rgba(245,133,63,.5);transform:translateY(-1px)}
+  .btn-ghost{border:1px solid var(--line);color:var(--cream);background:rgba(255,255,255,.01)}
+  .btn-ghost:hover{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.04)}
 
-/* ---------- grain + ambient field ---------- */
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:2000;opacity:.05;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-.ambient{position:fixed;inset:0;z-index:-2;overflow:hidden;background:
-  radial-gradient(1200px 800px at 80% -10%, rgba(255,142,43,.10), transparent 60%),
-  radial-gradient(900px 700px at -10% 110%, rgba(226,96,44,.07), transparent 60%),
-  var(--bg);}
-.ambient .orb{
-  position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;
-  animation:drift 26s var(--ease) infinite alternate;
-}
-.ambient .orb.a{width:560px;height:560px;right:-120px;top:-80px;
-  background:radial-gradient(circle at 38% 38%, rgba(255,170,90,.50), rgba(226,96,44,.22) 55%, transparent 72%);}
-.ambient .orb.b{width:420px;height:420px;left:-160px;bottom:-120px;
-  background:radial-gradient(circle at 60% 40%, rgba(255,142,43,.26), transparent 70%);
-  animation-duration:34s;animation-delay:-8s;}
-@keyframes drift{
-  0%{transform:translate(0,0) scale(1)}
-  100%{transform:translate(-60px,50px) scale(1.12)}
-}
+  /* ANNOUNCEMENT */
+  .topbar{background:linear-gradient(90deg,rgba(232,116,59,.14),rgba(245,166,35,.06));border-bottom:1px solid var(--line-soft);text-align:center;font-size:13.5px;color:var(--cream);padding:9px 16px;letter-spacing:.01em}
+  .topbar a{color:var(--amber-lite);font-weight:500}
 
-/* ---------- shared layout ---------- */
-.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
-section{position:relative;padding:130px 0}
-.eyebrow{
-  font-family:var(--font-mono);font-size:12px;font-weight:500;
-  letter-spacing:.34em;text-transform:uppercase;color:var(--ember);
-  display:flex;align-items:center;gap:14px;justify-content:center;
-}
-.eyebrow::before,.eyebrow::after{content:"";height:1px;width:36px;background:linear-gradient(90deg,transparent,var(--ember));opacity:.6}
-.eyebrow::after{background:linear-gradient(90deg,var(--ember),transparent)}
-.sec-title{
-  font-family:var(--font-display);font-weight:420;
-  font-size:clamp(38px,5.2vw,64px);line-height:1.06;letter-spacing:-.015em;
-  text-align:center;margin:22px auto 18px;max-width:760px;
-  font-variation-settings:"opsz" 90,"SOFT" 0;
-}
-.sec-sub{color:var(--cream-dim);text-align:center;max-width:560px;margin:0 auto;font-size:18px;font-weight:300}
-.sec-title em{font-style:italic;font-variation-settings:"opsz" 144,"SOFT" 50;
-  background:linear-gradient(95deg,var(--ember-soft) 10%,var(--ember) 55%,var(--ember-deep));
-  -webkit-background-clip:text;background-clip:text;color:transparent;}
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(11,9,7,.72);border-bottom:1px solid var(--line-soft)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:13px}
+  .logo-mark{width:44px;height:44px;flex-shrink:0;filter:drop-shadow(0 0 13px rgba(245,133,63,.42))}
+  @keyframes lmpulse{0%,100%{opacity:.26;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
+  .lm-glow{transform-box:fill-box;transform-origin:center;animation:lmpulse 2.8s ease-in-out infinite}
+  @media(prefers-reduced-motion:reduce){.lm-glow{animation:none}}
+  .mark{width:30px;height:30px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-family:var(--serif);font-weight:600;color:#1a0f02;font-size:17px;box-shadow:0 0 22px rgba(245,133,63,.55)}
+  .word{font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:-.01em}
+  .word span{color:var(--faint);font-weight:400}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a{font-size:14.5px;color:var(--muted);transition:.15s}
+  .nav-links a:hover{color:var(--cream)}
+  .nav-cta{display:flex;align-items:center;gap:18px}
+  .nav-cta .signin{font-size:14.5px;color:var(--muted)}
+  .menu-btn{display:none;background:none;border:none;color:var(--cream);font-size:24px;cursor:pointer}
 
-/* ---------- scroll reveal ---------- */
-.rv{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
-.rv.in{opacity:1;transform:none}
-.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
-.rv.d4{transition-delay:.32s}.rv.d5{transition-delay:.40s}
+  /* HERO */
+  .hero{position:relative;text-align:center;padding:84px 0 60px;overflow:hidden}
+  .hero::before{content:"";position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:900px;height:560px;background:radial-gradient(ellipse at center,rgba(245,133,63,.20),transparent 65%);filter:blur(20px);pointer-events:none}
+  .hero-badge{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 16px;font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);margin-bottom:30px}
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+  .hero h1{font-size:clamp(46px,7.4vw,90px);position:relative}
+  .hero-sub{max-width:600px;margin:26px auto 0;color:var(--muted);font-size:19px}
+  .hero-sub b{color:var(--cream);font-weight:600}
+  .hero-cta{display:flex;gap:14px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+  .hero-note{margin-top:26px;font-size:13.5px;color:var(--faint);display:inline-flex;align-items:center;gap:8px}
+  .hero-note svg{width:15px;height:15px;stroke:var(--green)}
 
-/* ============================================================ NAV */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  transition:background .4s,border-color .4s,backdrop-filter .4s;
-  border-bottom:1px solid transparent;
-}
-nav.scrolled{background:rgba(11,9,7,.78);backdrop-filter:blur(18px);border-color:var(--line)}
-.nav-in{max-width:1240px;margin:0 auto;padding:18px 32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
-.nav-in .logo{font-size:32px;justify-self:center}
-.logo{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-size:21px;font-weight:500;letter-spacing:-.01em}
-.logo .dot{
-  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
-  background:radial-gradient(circle at 32% 28%, #FFD9A8, var(--ember) 52%, var(--ember-deep));
-  box-shadow:0 0 22px rgba(255,142,43,.55),0 0 60px rgba(255,142,43,.25);
-  font-size:14px;color:#2A1404;font-weight:600;font-family:var(--font-display);
-}
-.logo .tld{color:var(--cream-mute);font-weight:300}
-.nav-left{display:flex;align-items:center;gap:28px;font-size:15px;font-weight:500;justify-self:start}
-.nav-right{display:flex;align-items:center;gap:22px;font-size:15px;font-weight:500;justify-self:end}
-.nav-left a,.nav-right a:not(.btn){color:var(--cream-dim);transition:color .25s}
-.nav-left a:hover,.nav-right a:not(.btn):hover{color:var(--cream)}
+  /* BIOMARKER CARD (signature) */
+  .card-stage{position:relative;max-width:680px;margin:54px auto 0}
+  .bm-card{position:relative;background:linear-gradient(180deg,rgba(28,22,13,.9),rgba(17,14,10,.94));border:1px solid var(--line);border-radius:22px;padding:26px 26px 24px;box-shadow:0 40px 90px rgba(0,0,0,.55);text-align:left}
+  .bm-head{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+  .bm-ready{color:var(--green);display:inline-flex;align-items:center;gap:7px}
+  .bm-ready .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .bm-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-top:1px solid var(--line-soft)}
+  .bm-row:first-of-type{border-top:none}
+  .bm-name{display:flex;align-items:center;gap:11px;font-size:16px}
+  .bm-name .pt{width:7px;height:7px;border-radius:50%}
+  .bm-val{font-family:var(--mono);font-size:15px;color:var(--cream)}
+  .bm-val span{color:var(--faint);font-size:12px}
+  .pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:999px;border:1px solid}
+  .pill.low{color:var(--warn);border-color:rgba(227,169,74,.35);background:rgba(227,169,74,.08)}
+  .pill.norm{color:var(--green);border-color:rgba(111,207,151,.32);background:rgba(111,207,151,.08)}
+  .pill.high{color:var(--red);border-color:rgba(224,112,106,.35);background:rgba(224,112,106,.08)}
+  .insight{margin-top:18px;border:1px solid rgba(245,133,63,.22);background:rgba(245,133,63,.06);border-radius:14px;padding:16px 18px}
+  .insight .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:7px}
+  .insight p{font-size:14.5px;color:var(--cream);line-height:1.55}
+  .insight b{color:var(--amber-lite);font-weight:600}
+  .float-chip{position:absolute;top:-18px;left:24px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-family:var(--mono);font-size:12.5px;display:flex;align-items:center;gap:8px;box-shadow:0 14px 30px rgba(0,0,0,.5)}
+  .float-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
 
-/* ---------- buttons ---------- */
-.btn{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:14px 28px;border-radius:var(--r-pill);
-  font-weight:600;font-size:15.5px;letter-spacing:.01em;
-  transition:transform .3s var(--ease),box-shadow .3s var(--ease),background .3s;
-  position:relative;
-}
-.btn-primary{
-  background:linear-gradient(120deg,#FFC07A 0%,var(--ember) 45%,var(--ember-deep) 110%);
-  color:#2A1404;
-  box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 10px 36px -8px rgba(255,142,43,.55);
-}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 18px 48px -8px rgba(255,142,43,.7)}
-.btn-primary .arr{transition:transform .3s var(--ease)}
-.btn-primary:hover .arr{transform:translateX(4px)}
-/* flat solid pill for the nav CTA — no gradient, no glow */
-#nav .btn-primary{background:var(--ember);color:#2A1404;box-shadow:none;transition:background .25s,filter .25s}
-#nav .btn-primary:hover{background:var(--ember);transform:none;box-shadow:none;filter:brightness(.92)}
-.btn-ghost{
-  border:1px solid var(--line-2);color:var(--cream);
-  background:rgba(255,180,110,.03);
-}
-.btn-ghost:hover{border-color:rgba(255,180,110,.4);background:rgba(255,180,110,.07);transform:translateY(-2px)}
-.btn-sm{padding:11px 22px;font-size:14.5px}
+  /* DASHBOARD (hero signature) */
+  .dash-stage{position:relative;max-width:1140px;margin:58px auto 0}
+  .dash-stage::before{content:"";position:absolute;inset:-44px -24px;background:radial-gradient(ellipse at 50% 0%,rgba(245,133,63,.20),transparent 62%);filter:blur(14px);z-index:-1}
+  .dash{display:grid;grid-template-columns:238px 1fr 248px;grid-template-areas:"side main rail" "coach coach coach";gap:1px;background:var(--line-soft);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 50px 120px rgba(0,0,0,.62);text-align:left}
+  .dash>div{background:linear-gradient(180deg,#15110A,#0F0C08)}
+  /* sidebar */
+  .d-side{grid-area:side;padding:20px 16px;display:flex;flex-direction:column;gap:16px}
+  .d-prof{display:flex;align-items:center;gap:11px;padding-bottom:16px;border-bottom:1px solid var(--line-soft)}
+  .d-av{width:38px;height:38px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-family:var(--mono);font-weight:600;color:#1a0f02;font-size:13px;flex-shrink:0}
+  .d-name{font-size:14px;font-weight:600}
+  .d-handle{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  .d-nav{display:flex;flex-direction:column;gap:2px}
+  .d-nav a{display:flex;align-items:center;gap:11px;font-size:13.5px;color:var(--muted);padding:9px 11px;border-radius:9px;transition:.15s}
+  .d-nav a:hover{color:var(--cream);background:rgba(255,255,255,.03)}
+  .d-nav a.on{background:rgba(245,133,63,.1);color:var(--cream)}
+  .d-nav a svg{width:16px;height:16px;stroke:currentColor;opacity:.75;fill:none;stroke-width:1.9}
+  .d-nav a.on svg{stroke:var(--amber);opacity:1}
+  .d-streak{margin-top:auto;border:1px solid var(--line);border-radius:13px;padding:13px;background:rgba(245,133,63,.05)}
+  .d-streak .big{font-family:var(--serif);font-size:24px;display:flex;align-items:baseline;gap:7px}
+  .d-streak .big small{font-size:12px;color:var(--muted);font-family:var(--sans)}
+  .d-streak .sub{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:3px;letter-spacing:.04em}
+  .d-up{border:1px dashed var(--line);border-radius:11px;padding:12px;text-align:center;font-size:12.5px;color:var(--muted);cursor:pointer;transition:.15s}
+  .d-up:hover{border-color:rgba(245,166,35,.4);color:var(--cream)}
+  .d-up b{color:var(--amber-lite);font-weight:600}
+  /* main */
+  .d-main{grid-area:main;padding:22px 24px;display:flex;flex-direction:column;gap:16px}
+  .d-mhead{display:flex;justify-content:space-between;align-items:center}
+  .d-mhead h4{font-family:var(--serif);font-size:21px;font-weight:500}
+  .d-mhead .day{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.08em}
+  .d-focus{border:1px solid var(--line);border-radius:15px;padding:17px 18px;background:rgba(0,0,0,.22)}
+  .d-fhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+  .d-fname{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-size:18px}
+  .d-fname .pt{width:8px;height:8px;border-radius:50%;background:var(--green)}
+  .d-fval{font-family:var(--mono);font-size:13.5px;color:var(--cream)}
+  .d-fval .up{color:var(--green)}
+  .d-frow{display:grid;grid-template-columns:1fr 128px;gap:18px;align-items:center}
+  .d-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.07);position:relative;margin:2px 0 7px}
+  .d-bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,var(--warn),var(--green))}
+  .d-bar .now{position:absolute;top:-3px;width:12px;height:12px;border-radius:50%;background:var(--cream);border:2px solid #0F0C08}
+  .d-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--faint)}
+  .d-spark svg{width:100%;height:52px;display:block}
+  .d-finsight{margin-top:13px;font-size:13px;color:var(--muted);line-height:1.5}
+  .d-finsight b{color:var(--amber-lite);font-weight:600}
+  /* habits */
+  .d-habits{border:1px solid var(--line);border-radius:15px;padding:15px 18px;background:rgba(0,0,0,.22)}
+  .d-hhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .d-hhead .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .d-hhead .c{font-family:var(--mono);font-size:11px;color:var(--amber)}
+  .d-hrow{display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--line-soft);font-size:14px}
+  .d-hrow:first-of-type{border-top:none}
+  .d-check{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line);display:grid;place-items:center;flex-shrink:0}
+  .d-check.done{background:var(--grad);border-color:transparent}
+  .d-check svg{width:12px;height:12px;stroke:#1a0f02;stroke-width:3;fill:none}
+  .d-hrow.done .d-hname{color:var(--muted)}
+  .d-hname{flex:1}
+  .d-htag{font-family:var(--mono);font-size:10px;color:var(--faint)}
+  /* rail */
+  .d-rail{grid-area:rail;padding:20px 18px;display:flex;flex-direction:column;gap:14px}
+  .d-ring{border:1px solid var(--line);border-radius:15px;padding:16px;text-align:center;background:rgba(0,0,0,.22)}
+  .d-ring .ttl{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .d-ring svg{width:116px;height:116px}
+  .d-ring .pc{font-family:var(--serif);fill:var(--cream)}
+  .d-ring .lab{font-family:var(--mono);font-size:10.5px;color:var(--green);margin-top:6px}
+  .d-mini{border:1px solid var(--line);border-radius:13px;padding:13px 14px;background:rgba(0,0,0,.22)}
+  .d-mini .t{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+  .d-mini .v{font-family:var(--serif);font-size:24px;display:flex;align-items:baseline;gap:5px}
+  .d-mini .v small{font-size:12px;color:var(--muted);font-family:var(--sans)}
+  .d-mini.act{border-color:rgba(245,166,35,.3);background:rgba(245,133,63,.05)}
+  .d-mini .go{font-family:var(--mono);font-size:10.5px;color:var(--amber-lite);margin-top:7px;display:inline-block}
+  /* coach */
+  .d-coach{grid-area:coach;padding:14px 20px;display:flex;align-items:center;gap:13px;border-top:1px solid var(--line)}
+  .d-cav{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle,#1d160c,#0d0a07);border:1px solid var(--line);display:grid;place-items:center;flex-shrink:0}
+  .d-cav i{width:9px;height:9px;border-radius:50%;background:var(--grad);box-shadow:0 0 10px var(--amber)}
+  .d-cinput{flex:1;background:rgba(0,0,0,.32);border:1px solid var(--line-soft);border-radius:10px;padding:10px 14px;font-size:13.5px;color:var(--muted)}
+  .d-csend{width:34px;height:34px;border-radius:9px;background:var(--grad);display:grid;place-items:center;flex-shrink:0}
+  .d-csend svg{width:15px;height:15px;stroke:#1a0f02;stroke-width:2.5;fill:none}
+  .dash-fit{transform-origin:top left;will-change:transform}
+  @media(max-width:980px){
+    .dash-stage{max-width:none;margin:34px auto 0;overflow:hidden}
+    .dash{width:1040px}
+  }
 
-/* ============================================================ HERO */
-.hero{padding:188px 0 90px;overflow:visible}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:72px;align-items:center}
-.hero-copy .eyebrow{justify-content:flex-start}
-.hero-copy .eyebrow::after{display:none}
-.hero h1{
-  font-family:var(--font-display);font-weight:380;
-  font-size:clamp(52px,6.6vw,92px);line-height:.98;letter-spacing:-.022em;
-  margin:26px 0 30px;font-variation-settings:"opsz" 120,"SOFT" 0;
-}
-.hero h1 .line{display:block;overflow:hidden}
-.hero h1 .line span{display:block;transform:translateY(110%);animation:rise 1.1s var(--ease) forwards}
-.hero h1 .line:nth-child(2) span{animation-delay:.12s}
-.hero h1 em{
-  font-style:italic;font-variation-settings:"opsz" 144,"SOFT" 60;font-weight:430;
-  background:linear-gradient(95deg,#FFE0B5 0%,var(--ember) 48%,var(--ember-deep) 92%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  padding-right:.06em;
-}
-@keyframes rise{to{transform:translateY(0)}}
-.hero-sub{
-  color:var(--cream-dim);font-size:19px;font-weight:300;max-width:480px;line-height:1.7;
-  opacity:0;animation:fade .9s var(--ease) .5s forwards;
-}
-.hero-sub strong{color:var(--cream);font-weight:500}
-@keyframes fade{to{opacity:1}}
-.hero-cta{display:flex;gap:16px;margin:38px 0 30px;flex-wrap:wrap;
-  opacity:0;animation:fade .9s var(--ease) .65s forwards;}
-.trust{
-  display:inline-flex;align-items:center;gap:11px;
-  font-size:14px;color:var(--cream-mute);
-  padding:11px 18px;border:1px solid var(--line);border-radius:var(--r-pill);
-  background:rgba(255,180,110,.02);
-  opacity:0;animation:fade .9s var(--ease) .8s forwards;
-}
-.trust svg{flex:none}
+  /* TICKER */
+  .ticker{border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);overflow:hidden;background:var(--bg-2);margin-top:64px}
+  .ticker-track{display:flex;gap:0;white-space:nowrap;animation:scroll 34s linear infinite;font-family:var(--mono);font-size:14px}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+  .ticker-item{padding:16px 30px;color:var(--muted);display:inline-flex;align-items:center;gap:10px;border-right:1px solid var(--line-soft)}
+  .ticker-item .pt{width:7px;height:7px;border-radius:50%}
+  .ticker-item b{color:var(--cream);font-weight:500}
 
-/* ----- the living report (signature) ----- */
-.report-stage{position:relative;perspective:1400px}
-.report-stage .halo{
-  position:absolute;inset:-14% -18%;border-radius:50%;z-index:-1;
-  background:radial-gradient(circle at 50% 42%, rgba(255,150,55,.34), rgba(226,96,44,.12) 48%, transparent 70%);
-  filter:blur(28px);
-  animation:halo 7s ease-in-out infinite alternate;
-}
-@keyframes halo{from{opacity:.7;transform:scale(.97)}to{opacity:1;transform:scale(1.04)}}
-.report{
-  position:relative;border-radius:26px;
-  background:linear-gradient(165deg,rgba(36,26,16,.92),rgba(20,14,9,.96));
-  border:1px solid var(--line-2);
-  box-shadow:0 40px 90px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.02) inset,0 1px 0 rgba(255,200,140,.10) inset;
-  padding:28px;
-  transform:rotateX(4deg) rotateY(-6deg);
-  transform-style:preserve-3d;
-  animation:floaty 9s ease-in-out infinite alternate;
-  overflow:hidden;
-}
-@keyframes floaty{from{transform:rotateX(4deg) rotateY(-6deg) translateY(0)}to{transform:rotateX(2deg) rotateY(-3deg) translateY(-12px)}}
-.report::after{ /* scan beam */
-  content:"";position:absolute;left:0;right:0;height:90px;top:-90px;pointer-events:none;
-  background:linear-gradient(180deg,transparent,rgba(255,154,62,.10) 50%,rgba(255,154,62,.22) 82%,transparent);
-  animation:scan 4.6s var(--ease) infinite;
-}
-@keyframes scan{0%{top:-90px}70%,100%{top:110%}}
-.report-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
-.report-head .label{font-family:var(--font-mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--cream-mute)}
-.report-status{
-  display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:12px;color:var(--ok);
-}
-.report-status .pulse{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(123,216,168,.5);animation:pulse 1.8s infinite}
-@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(123,216,168,0)}100%{box-shadow:0 0 0 0 rgba(123,216,168,0)}}
-.bio-row{
-  display:grid;grid-template-columns:1.1fr auto auto;align-items:center;gap:14px;
-  padding:15px 16px;border-radius:14px;border:1px solid transparent;
-  opacity:0;transform:translateX(-14px);
-  transition:opacity .7s var(--ease),transform .7s var(--ease),background .3s,border-color .3s;
-}
-.bio-row.show{opacity:1;transform:none}
-.bio-row:hover{background:rgba(255,180,110,.04);border-color:var(--line)}
-.bio-name{display:flex;align-items:center;gap:11px;font-weight:500;font-size:15.5px}
-.bio-dot{width:8px;height:8px;border-radius:50%;flex:none}
-.bio-val{font-family:var(--font-mono);font-size:15px;color:var(--cream-dim);text-align:right;font-weight:500;min-width:96px}
-.bio-val .u{font-size:11px;color:var(--cream-mute);margin-left:3px}
-.pill{
-  font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  padding:5px 12px;border-radius:var(--r-pill);min-width:84px;text-align:center;
-  transform:scale(.6);opacity:0;transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .35s;
-}
-.bio-row.show .pill{transform:scale(1);opacity:1;transition-delay:.55s}
-.p-ok{color:var(--ok);background:var(--ok-bg);border:1px solid rgba(123,216,168,.25)}
-.p-warn{color:var(--warn);background:var(--warn-bg);border:1px solid rgba(240,178,92,.25)}
-.p-alert{color:var(--alert);background:var(--alert-bg);border:1px solid rgba(240,121,106,.25)}
-.d-ok{background:var(--ok);box-shadow:0 0 10px rgba(123,216,168,.6)}
-.d-warn{background:var(--warn);box-shadow:0 0 10px rgba(240,178,92,.6)}
-.d-alert{background:var(--alert);box-shadow:0 0 10px rgba(240,121,106,.6)}
-.report-note{
-  margin-top:18px;padding:16px 18px;border-radius:14px;
-  background:rgba(255,154,62,.05);border:1px solid rgba(255,154,62,.14);
-  font-size:14px;color:var(--cream-dim);line-height:1.6;
-  opacity:0;transform:translateY(10px);transition:all .8s var(--ease) 2.6s;
-}
-.report.played .report-note{opacity:1;transform:none}
-.report-note b{color:var(--ember-soft);font-weight:600}
-.report-note .ai{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ember);display:block;margin-bottom:7px}
-.chip{
-  position:absolute;display:flex;align-items:center;gap:9px;
-  padding:11px 17px;border-radius:var(--r-pill);
-  background:rgba(24,17,11,.85);backdrop-filter:blur(10px);
-  border:1px solid var(--line-2);
-  font-size:13.5px;font-weight:600;font-family:var(--font-mono);
-  box-shadow:0 18px 40px -12px rgba(0,0,0,.65);
-  animation:chipfloat 6s ease-in-out infinite alternate;
-}
-.chip .bio-dot{width:7px;height:7px}
-.chip.c1{top:-26px;left:-44px;animation-delay:-1s}
-.chip.c2{bottom:64px;right:-52px;animation-delay:-3s}
-@keyframes chipfloat{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+  /* TRUST */
+  .trust{padding:54px 0 10px;text-align:center}
+  .trust-lab{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}
+  .trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+  .badge{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:12px;padding:12px 18px;font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--muted)}
+  .badge svg{width:16px;height:16px;stroke:var(--amber)}
 
-/* ============================================================ MARQUEE */
-.marquee-band{padding:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,180,110,.015)}
-.marquee{overflow:hidden;padding:22px 0;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
-.marquee-track{display:flex;gap:54px;width:max-content;animation:scroll 36s linear infinite}
-.marquee:hover .marquee-track{animation-play-state:paused}
-@keyframes scroll{to{transform:translateX(-50%)}}
-.mk{display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:13.5px;color:var(--cream-mute);white-space:nowrap}
-.mk b{color:var(--cream-dim);font-weight:500}
+  /* SECTION SHELL */
+  section.block{padding:96px 0}
+  .sec-head{text-align:center;max-width:680px;margin:0 auto 56px}
+  .sec-head h2{font-size:clamp(34px,5vw,56px);margin-top:20px}
+  .sec-head p{color:var(--muted);font-size:17.5px;margin-top:18px}
 
-/* ============================================================ STATS */
-.stats{padding:96px 0}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:24px;overflow:hidden}
-.stat{background:var(--bg-2);padding:54px 40px;text-align:center;position:relative;transition:background .4s}
-.stat:hover{background:#120D08}
-.stat .num{
-  font-family:var(--font-display);font-size:clamp(48px,5vw,72px);font-weight:380;line-height:1;
-  font-variation-settings:"opsz" 110;letter-spacing:-.02em;
-  background:linear-gradient(120deg,var(--cream) 30%,var(--ember-soft));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.stat .lbl{margin-top:12px;color:var(--cream-mute);font-size:15px;font-weight:300}
+  /* AUDIENCE */
+  .aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .aud-card{position:relative;border:1px solid var(--line);border-radius:20px;padding:30px 28px;background:linear-gradient(180deg,var(--surface),var(--bg-2));overflow:hidden;transition:.25s}
+  .aud-card:hover{border-color:rgba(245,166,35,.32);transform:translateY(-3px)}
+  .aud-card::after{content:"";position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:radial-gradient(circle,rgba(245,133,63,.14),transparent 70%)}
+  .aud-tag{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+  .aud-card h3{font-size:26px;margin-bottom:18px;position:relative}
+  .aud-list{list-style:none;display:flex;flex-direction:column;gap:13px;margin-bottom:26px;position:relative}
+  .aud-list li{display:flex;gap:11px;font-size:15px;color:var(--muted);line-height:1.4}
+  .aud-list svg{width:18px;height:18px;stroke:var(--amber);flex-shrink:0;margin-top:1px}
+  .aud-link{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:var(--amber-lite);display:inline-flex;gap:7px;position:relative}
 
-/* ============================================================ SAMPLE REPORT */
-.cards-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:64px}
-.bcard{
-  background:linear-gradient(170deg,var(--surface),var(--bg-2));
-  border:1px solid var(--line);border-radius:var(--r-card);
-  padding:30px 26px;position:relative;overflow:hidden;
-  transition:transform .45s var(--ease),border-color .45s,box-shadow .45s;
-}
-.bcard::before{
-  content:"";position:absolute;inset:0;opacity:0;transition:opacity .45s;
-  background:radial-gradient(420px 200px at var(--mx,50%) -20%, rgba(255,154,62,.12), transparent 70%);
-}
-.bcard:hover{transform:translateY(-7px);border-color:var(--line-2);box-shadow:0 28px 56px -22px rgba(0,0,0,.7)}
-.bcard:hover::before{opacity:1}
-.bcard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.bcard h3{font-family:var(--font-display);font-size:22px;font-weight:480;display:flex;align-items:center;gap:10px}
-.bcard .val{font-family:var(--font-mono);font-size:26px;font-weight:500;letter-spacing:-.01em;margin-bottom:14px}
-.bcard .val .u{font-size:13px;color:var(--cream-mute);font-weight:400}
-.bcard p{font-size:14.5px;color:var(--cream-dim);line-height:1.65;font-weight:300}
-.bar{height:5px;border-radius:99px;background:rgba(255,255,255,.06);margin:18px 0 6px;position:relative;overflow:visible}
-.bar .fill{position:absolute;inset:0;border-radius:99px;transform-origin:left;transform:scaleX(0);transition:transform 1.3s var(--ease) .3s}
-.in .bar .fill{transform:scaleX(var(--p))}
-.bar .tick{position:absolute;top:-3.5px;width:2px;height:12px;background:rgba(255,255,255,.22);border-radius:2px}
-.range-lbl{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10.5px;color:var(--cream-mute);letter-spacing:.04em}
-.center-cta{display:flex;justify-content:center;margin-top:56px}
+  /* FEATURE ALT */
+  .feat{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:80px 0}
+  .feat.rev .feat-text{order:2}
+  .feat-text h2{font-size:clamp(30px,4vw,46px);margin-bottom:20px}
+  .feat-text p{color:var(--muted);font-size:17px;margin-bottom:26px;max-width:440px}
+  .feat-vis{position:relative}
+  .feat-vis::before{content:"";position:absolute;inset:-40px;background:radial-gradient(ellipse at center,rgba(245,133,63,.12),transparent 70%);z-index:-1}
 
-/* ============================================================ HOW IT WORKS */
-.how{background:
-  radial-gradient(800px 400px at 50% 0%, rgba(255,142,43,.05), transparent 70%);}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:72px;position:relative}
-.steps::before{ /* connective beam */
-  content:"";position:absolute;top:43px;left:12%;right:12%;height:1px;z-index:0;
-  background:linear-gradient(90deg,transparent,var(--ember) 25%,var(--ember) 75%,transparent);
-  opacity:.35;
-}
-.step{position:relative;z-index:1;text-align:center;padding:0 18px}
-.step .orb{
-  width:86px;height:86px;margin:0 auto 30px;border-radius:50%;
-  display:grid;place-items:center;position:relative;
-  background:linear-gradient(160deg,var(--surface-2),var(--surface));
-  border:1px solid var(--line-2);
-  box-shadow:0 18px 40px -16px rgba(0,0,0,.7);
-  transition:transform .45s var(--ease),box-shadow .45s;
-}
-.step:hover .orb{transform:translateY(-6px) scale(1.04);box-shadow:0 24px 50px -16px rgba(255,142,43,.25)}
-.step .orb svg{width:32px;height:32px;stroke:var(--ember);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.step .k{
-  position:absolute;top:-9px;right:-9px;width:28px;height:28px;border-radius:50%;
-  background:linear-gradient(140deg,#FFC07A,var(--ember-deep));color:#2A1404;
-  font-family:var(--font-mono);font-size:12px;font-weight:600;display:grid;place-items:center;
-}
-.step h3{font-family:var(--font-display);font-size:27px;font-weight:480;margin-bottom:12px}
-.step p{color:var(--cream-dim);font-size:15.5px;font-weight:300;max-width:280px;margin:0 auto}
+  /* TREND chart */
+  .trend{background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+  .trend-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .trend-top .t{font-family:var(--serif);font-size:18px}
+  .trend-top .v{font-family:var(--mono);font-size:13px;color:var(--green)}
+  .trend svg{width:100%;height:150px;display:block}
+  .trend-x{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:8px}
 
-/* ============================================================ WHY */
-.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:64px}
-.get-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:64px}
-.why-card{
-  background:linear-gradient(170deg,var(--surface),var(--bg-2));
-  border:1px solid var(--line);border-radius:var(--r-card);
-  padding:34px 30px;transition:transform .45s var(--ease),border-color .45s;
-  position:relative;overflow:hidden;
-}
-.why-card::after{
-  content:"";position:absolute;left:30px;right:30px;bottom:0;height:1px;
-  background:linear-gradient(90deg,var(--ember),transparent);
-  transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);
-}
-.why-card:hover{transform:translateY(-6px);border-color:var(--line-2)}
-.why-card:hover::after{transform:scaleX(1)}
-.why-icon{
-  width:50px;height:50px;border-radius:14px;display:grid;place-items:center;margin-bottom:24px;
-  background:rgba(255,154,62,.08);border:1px solid rgba(255,154,62,.16);
-}
-.why-icon svg{width:23px;height:23px;stroke:var(--ember);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.why-card h3{font-family:var(--font-display);font-size:23px;font-weight:500;margin-bottom:10px}
-.why-card p{color:var(--cream-dim);font-size:15px;font-weight:300;line-height:1.65}
+  /* SAMPLE REPORT */
+  .rep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .rep-card{border:1px solid var(--line);border-radius:18px;padding:24px 22px;background:linear-gradient(180deg,var(--surface),var(--bg-2))}
+  .rep-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .rep-name{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-size:20px}
+  .rep-name .pt{width:8px;height:8px;border-radius:50%}
+  .rep-val{font-family:var(--mono);font-size:30px;color:var(--cream)}
+  .rep-val span{font-size:13px;color:var(--faint)}
+  .rep-bar{height:5px;border-radius:99px;background:rgba(255,255,255,.07);margin:16px 0 7px;position:relative;overflow:hidden}
+  .rep-fill{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+  .rep-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-bottom:14px}
+  .rep-desc{font-size:13.5px;color:var(--muted);line-height:1.5}
 
-/* ============================================================ QUOTES */
-.quotes{padding:110px 0}
-.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:60px}
-.q-card{
-  border:1px solid var(--line);border-radius:var(--r-card);
-  background:linear-gradient(170deg,var(--surface),transparent);
-  padding:40px 38px;position:relative;
-}
-.q-card .mark{
-  font-family:var(--font-display);font-size:84px;line-height:0;color:var(--ember);opacity:.4;
-  position:absolute;top:46px;left:32px;font-style:italic;
-}
-.q-card blockquote{
-  font-family:var(--font-display);font-style:italic;font-variation-settings:"opsz" 60,"SOFT" 40;
-  font-size:24px;font-weight:380;line-height:1.42;padding-left:46px;letter-spacing:-.005em;
-}
-.q-card cite{
-  display:flex;align-items:center;gap:12px;margin-top:26px;padding-left:46px;
-  font-style:normal;font-size:14px;color:var(--cream-mute);
-}
-.q-card cite .ava{
-  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
-  font-family:var(--font-display);font-size:14px;color:#2A1404;font-weight:600;
-  background:linear-gradient(140deg,#FFD9A8,var(--ember));
-}
+  /* COMPARISON */
+  .cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .cmp-card{border:1px solid var(--line);border-radius:20px;padding:32px 28px;background:linear-gradient(180deg,var(--surface),var(--bg-2));text-align:center}
+  .cmp-card.hi{border-color:rgba(245,166,35,.35);box-shadow:0 0 50px rgba(245,133,63,.1)}
+  .cmp-ic{width:54px;height:54px;border-radius:14px;background:rgba(245,133,63,.1);border:1px solid var(--line);display:grid;place-items:center;margin:0 auto 20px}
+  .cmp-ic svg{width:24px;height:24px;stroke:var(--amber)}
+  .cmp-card h3{font-size:21px;margin-bottom:14px}
+  .cmp-card p{font-size:14.5px;color:var(--muted)}
 
-/* ============================================================ LEARN */
-.learn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:64px}
-.l-card{
-  border:1px solid var(--line);border-radius:var(--r-card);
-  background:linear-gradient(170deg,var(--surface),var(--bg-2));
-  padding:32px 30px;display:flex;flex-direction:column;gap:14px;
-  transition:transform .45s var(--ease),border-color .45s;
-}
-.l-card:hover{transform:translateY(-6px);border-color:var(--line-2)}
-.l-tag{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ember)}
-.l-card h3{font-family:var(--font-display);font-size:23px;font-weight:500;line-height:1.25}
-.l-card p{color:var(--cream-dim);font-size:14.5px;font-weight:300;flex:1}
-.l-link{display:inline-flex;align-items:center;gap:8px;color:var(--ember);font-weight:600;font-size:14.5px}
-.l-link .arr{transition:transform .3s var(--ease)}
-.l-card:hover .l-link .arr{transform:translateX(5px)}
+  /* STEPS */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative}
+  .step{text-align:center;position:relative}
+  .step-node{width:90px;height:90px;border-radius:50%;border:1px solid var(--line);background:radial-gradient(circle,rgba(245,133,63,.08),transparent);display:grid;place-items:center;margin:0 auto 22px;position:relative}
+  .step-node svg{width:30px;height:30px;stroke:var(--amber)}
+  .step-num{position:absolute;top:-4px;right:50%;transform:translateX(46px);width:30px;height:30px;border-radius:50%;background:var(--grad);color:#1a0f02;font-family:var(--mono);font-size:12px;font-weight:600;display:grid;place-items:center;box-shadow:0 0 16px rgba(245,133,63,.5)}
+  .step h3{font-size:26px;margin-bottom:12px}
+  .step p{color:var(--muted);font-size:15px;max-width:280px;margin:0 auto}
+  .steps::before{content:"";position:absolute;top:45px;left:16%;right:16%;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);z-index:0}
 
-/* ============================================================ FINAL CTA */
-.final{padding:160px 0 150px;text-align:center;overflow:hidden}
-.final .sun{
-  position:absolute;left:50%;bottom:-340px;transform:translateX(-50%);
-  width:820px;height:820px;border-radius:50%;z-index:-1;
-  background:radial-gradient(circle at 50% 38%, rgba(255,190,110,.5), rgba(255,142,43,.25) 42%, rgba(226,96,44,.08) 62%, transparent 74%);
-  filter:blur(8px);
-  animation:sunrise 10s ease-in-out infinite alternate;
-}
-@keyframes sunrise{from{transform:translateX(-50%) translateY(0)}to{transform:translateX(-50%) translateY(-28px)}}
-.final h2{
-  font-family:var(--font-display);font-weight:400;
-  font-size:clamp(44px,6vw,80px);line-height:1.04;letter-spacing:-.02em;max-width:820px;margin:24px auto 22px;
-}
-.final h2 em{font-style:italic;font-variation-settings:"opsz" 144,"SOFT" 55;
-  background:linear-gradient(95deg,#FFE0B5,var(--ember) 55%,var(--ember-deep));
-  -webkit-background-clip:text;background-clip:text;color:transparent;}
-.final p{color:var(--cream-dim);font-size:18px;font-weight:300;max-width:480px;margin:0 auto 44px}
-.final .micro{margin-top:26px;font-family:var(--font-mono);font-size:12.5px;color:var(--cream-mute);letter-spacing:.06em}
+  /* HOW IT WORKS — the loop */
+  .hw-flow{position:relative;display:flex;align-items:flex-start}
+  .hw-flow::before{content:"";position:absolute;top:64px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.4),rgba(245,166,35,.55),transparent);z-index:0}
+  .hw-step{flex:1;text-align:center;position:relative;z-index:1;padding:18px 10px 0}
+  .hw-node{width:92px;height:92px;border-radius:50%;border:1px solid var(--line);background:radial-gradient(circle,rgba(245,133,63,.07),transparent 72%),#0E0B08;display:grid;place-items:center;margin:0 auto 22px;position:relative}
+  .hw-node svg{width:30px;height:30px;stroke:var(--amber);fill:none;stroke-width:1.9}
+  .hw-num{position:absolute;top:-2px;left:50%;transform:translateX(34px);width:30px;height:30px;border-radius:50%;background:var(--grad);color:#1a0f02;font-family:var(--mono);font-size:11px;font-weight:600;display:grid;place-items:center;box-shadow:0 0 16px rgba(245,133,63,.5)}
+  .hw-step h3{font-family:var(--serif);font-size:24px;font-weight:500;margin-bottom:11px}
+  .hw-step p{color:var(--muted);font-size:14.5px;max-width:230px;margin:0 auto;line-height:1.5}
+  .hw-loop{flex:3;display:flex;align-items:flex-start;position:relative;border:1px dashed rgba(245,166,35,.32);border-radius:24px;padding:0 6px 24px;background:radial-gradient(ellipse at 50% 0%,rgba(245,133,63,.06),transparent 62%)}
+  .hw-loop .hw-node{border-color:rgba(245,166,35,.32);box-shadow:0 0 36px rgba(245,133,63,.18);background:radial-gradient(circle,rgba(245,133,63,.15),transparent 72%),#110D08}
+  .hw-loop-tag{position:absolute;top:-15px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#140F0A;border:1px solid rgba(245,166,35,.34);border-radius:999px;padding:6px 16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--amber-lite);display:inline-flex;align-items:center;gap:8px}
+  .hw-loop-tag .cyc{font-size:14px;line-height:1}
+  @media(max-width:920px){
+    .hw-flow{flex-direction:column}
+    .hw-flow::before{display:none}
+    .hw-loop{flex-direction:column;width:100%;padding:34px 0 18px}
+    .hw-step{padding:14px 0 0}
+    .hw-num{transform:translateX(30px)}
+  }
 
-/* ============================================================ FOOTER */
-footer{border-top:1px solid var(--line);padding:54px 0 44px;background:rgba(0,0,0,.25)}
-.f-in{display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
-.f-links{display:flex;gap:30px;font-size:14.5px;color:var(--cream-mute)}
-.f-links a:hover{color:var(--cream)}
-.f-note{width:100%;margin-top:30px;padding-top:26px;border-top:1px solid var(--line);
-  font-size:12.5px;color:var(--cream-mute);line-height:1.7;font-weight:300;max-width:720px}
+  /* PRICING */
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+  .price-card{border:1px solid var(--line);border-radius:22px;padding:34px 30px;background:linear-gradient(180deg,var(--surface),var(--bg-2));display:flex;flex-direction:column}
+  .price-card.feat-tier{border-color:rgba(245,166,35,.4);box-shadow:0 0 60px rgba(245,133,63,.12);position:relative}
+  .price-flag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--grad);color:#1a0f02;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:5px 14px;border-radius:999px;font-weight:600}
+  .price-tier{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:16px}
+  .price-amt{font-family:var(--serif);font-size:52px;line-height:1}
+  .price-amt span{font-size:16px;color:var(--faint);font-family:var(--sans)}
+  .price-desc{color:var(--muted);font-size:14.5px;margin:14px 0 24px}
+  .price-list{list-style:none;display:flex;flex-direction:column;gap:13px;margin-bottom:28px;flex:1}
+  .price-list li{display:flex;gap:11px;font-size:14.5px;color:var(--cream)}
+  .price-list svg{width:17px;height:17px;stroke:var(--amber);flex-shrink:0;margin-top:2px}
+  .price-card .btn{justify-content:center;width:100%}
 
-/* ============================================================ RESPONSIVE */
-@media(max-width:1020px){
-  .hero-grid{grid-template-columns:1fr;gap:80px}
-  .report{transform:none;animation:none;max-width:560px;margin:0 auto}
-  .chip.c1{left:0}.chip.c2{right:0}
-  .cards-4{grid-template-columns:repeat(2,1fr)}
-  .why-grid,.learn-grid{grid-template-columns:repeat(2,1fr)}
-  .steps{grid-template-columns:1fr;gap:56px}
-  .steps::before{display:none}
-}
-@media(max-width:680px){
-  section{padding:90px 0}
-  .wrap{padding:0 22px}
-  .hero{padding-top:140px}
-  /* mobile nav: drop the 3-col grid → flex with logo left, CTA right */
-  .nav-in{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 22px}
-  .nav-left{display:none}
-  .nav-in .logo{font-size:24px;justify-self:auto}
-  .nav-right a:not(.btn){display:none}
-  .cards-4,.why-grid,.learn-grid,.q-grid,.get-grid{grid-template-columns:1fr}
-  .stats-grid{grid-template-columns:1fr}
-  .q-card blockquote{font-size:21px}
-  .chip{display:none}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-  .hero h1 .line span{transform:none}
-  .hero-sub,.hero-cta,.trust{opacity:1}
-  .rv{opacity:1;transform:none}
-  .bio-row{opacity:1;transform:none}
-  .bio-row .pill{opacity:1;transform:none}
-  .report-note{opacity:1;transform:none}
-}
+  /* ANNA — AI COACH */
+  .coach-sec{position:relative;overflow:hidden}
+  .coach-sec::before{content:"";position:absolute;top:6%;right:-8%;width:680px;height:680px;background:radial-gradient(circle,rgba(245,133,63,.15),transparent 60%);filter:blur(24px);pointer-events:none}
+  .coach-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:center;position:relative;z-index:1}
+  .coach-left h2{font-size:clamp(32px,4.6vw,52px);margin:18px 0 20px;line-height:1.05}
+  .coach-left p{color:var(--muted);font-size:17px;max-width:450px;margin-bottom:26px}
+  .coach-left p em{color:var(--cream);font-style:italic}
+  .coach-caps{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:30px}
+  .coach-cap{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:12.5px;color:var(--cream);background:rgba(255,255,255,.015)}
+  .coach-cap svg{width:14px;height:14px;stroke:var(--amber);fill:none;stroke-width:2}
+  /* living orb */
+  .orb{position:relative;width:var(--s,44px);height:var(--s,44px);border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:radial-gradient(circle at 50% 38%,#2a1c0e,#0d0a07)}
+  .orb::before{content:"";position:absolute;inset:-1px;border-radius:50%;background:conic-gradient(from 0deg,#FFC069,#E8743B,#7a4422,#FFC069);-webkit-mask:radial-gradient(circle,transparent 56%,#000 58%);mask:radial-gradient(circle,transparent 56%,#000 58%);animation:orbspin 7s linear infinite}
+  .orb i{width:34%;height:34%;border-radius:50%;background:var(--grad);box-shadow:0 0 14px rgba(245,133,63,.85);animation:orbpulse 3s ease-in-out infinite}
+  @keyframes orbspin{to{transform:rotate(360deg)}}
+  @keyframes orbpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.82);opacity:.78}}
+  /* chat card */
+  .anna-card{position:relative;border:1px solid var(--line);border-radius:24px;background:linear-gradient(180deg,#15110B,#0E0B08);box-shadow:0 44px 110px rgba(0,0,0,.62);overflow:hidden}
+  .anna-card::before{content:"";position:absolute;top:0;left:0;right:0;height:120px;background:radial-gradient(ellipse at 50% -40%,rgba(245,133,63,.16),transparent 70%);pointer-events:none}
+  .anna-head{display:flex;align-items:center;gap:12px;padding:17px 20px;border-bottom:1px solid var(--line-soft);position:relative}
+  .anna-head .nm{font-family:var(--serif);font-size:18px;line-height:1.1}
+  .anna-head .st{font-family:var(--mono);font-size:10.5px;color:var(--green);display:flex;align-items:center;gap:6px;margin-top:2px}
+  .anna-head .st .d{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .anna-thread{padding:22px 20px 16px;display:flex;flex-direction:column;gap:15px}
+  .msg{max-width:86%;font-size:14.5px;line-height:1.55}
+  .msg.user{align-self:flex-end;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:16px 16px 5px 16px;padding:11px 15px;color:var(--cream)}
+  .msg.anna{align-self:flex-start;display:flex;gap:11px;max-width:92%}
+  .msg.anna .bub{background:rgba(245,133,63,.07);border:1px solid rgba(245,166,35,.2);border-radius:5px 16px 16px 16px;padding:13px 16px;color:var(--cream)}
+  .msg.anna .bub b{color:var(--amber-lite);font-weight:600}
+  .data-chip{display:flex;align-items:center;gap:13px;margin:12px 0 5px;border:1px solid var(--line);border-radius:12px;padding:10px 13px;background:rgba(0,0,0,.32)}
+  .data-chip .nm{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .data-chip .vals{font-family:var(--mono);font-size:13px;color:var(--cream);display:flex;align-items:center;gap:6px;margin-top:2px}
+  .data-chip .up{color:var(--green)}
+  .data-chip .sk{margin-left:auto}
+  .data-chip .sk svg{width:60px;height:26px;display:block}
+  .typing{align-self:flex-start;display:flex;gap:11px;align-items:center}
+  .typing .tb{background:rgba(245,133,63,.07);border:1px solid rgba(245,166,35,.2);border-radius:5px 16px 16px 16px;padding:14px 16px;display:flex;gap:5px}
+  .typing .tb span{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:tdot 1.3s ease-in-out infinite}
+  .typing .tb span:nth-child(2){animation-delay:.18s}.typing .tb span:nth-child(3){animation-delay:.36s}
+  @keyframes tdot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+  .anna-qr{display:flex;flex-wrap:wrap;gap:8px;padding:4px 20px 0}
+  .qr{border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:12.5px;color:var(--muted);background:rgba(255,255,255,.02);cursor:pointer;transition:.15s}
+  .qr:hover{border-color:rgba(245,166,35,.4);color:var(--cream)}
+  .anna-input{display:flex;align-items:center;gap:11px;margin:16px 20px 20px;background:rgba(0,0,0,.34);border:1px solid var(--line-soft);border-radius:12px;padding:11px 14px}
+  .anna-input .ph{flex:1;font-size:13.5px;color:var(--faint)}
+  .anna-send{width:34px;height:34px;border-radius:9px;background:var(--grad);display:grid;place-items:center;flex-shrink:0}
+  .anna-send svg{width:15px;height:15px;stroke:#1a0f02;stroke-width:2.5;fill:none}
+  @media(max-width:900px){.coach-grid{grid-template-columns:1fr;gap:40px}}
+  @media(prefers-reduced-motion:reduce){.orb::before,.orb i,.typing .tb span{animation:none}}
+
+  /* FAQ */
+  .faq{max-width:820px;margin:0 auto}
+  .faq-item{border-bottom:1px solid var(--line-soft)}
+  .faq-q{width:100%;text-align:left;background:none;border:none;color:var(--cream);font-family:var(--serif);font-size:21px;padding:24px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px}
+  .faq-q .ic{color:var(--amber);font-size:26px;font-family:var(--sans);transition:.25s;flex-shrink:0}
+  .faq-item.open .faq-q .ic{transform:rotate(45deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--muted);font-size:16px}
+  .faq-item.open .faq-a{max-height:240px}
+  .faq-a p{padding-bottom:24px;max-width:680px}
+
+  /* FINAL CTA */
+  .final{position:relative;border:1px solid var(--line);border-radius:30px;background:radial-gradient(ellipse at 30% 0%,rgba(245,133,63,.16),transparent 60%),linear-gradient(180deg,var(--surface),var(--bg-2));padding:80px 40px;text-align:center;overflow:hidden;margin:40px 0}
+  .final h2{font-size:clamp(38px,6vw,66px)}
+  .final p{color:var(--muted);font-size:18px;max-width:520px;margin:22px auto 34px}
+  .final .meta{margin-top:24px;font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;color:var(--faint)}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line-soft);padding:72px 0 36px;background:var(--bg-2)}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:54px}
+  .foot-brand .word{font-size:27px}
+  .foot-brand .logo-mark{width:40px;height:40px}
+  .foot-brand p{color:var(--muted);font-size:14.5px;margin-top:16px;max-width:240px}
+  .foot-col h4{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:18px}
+  .foot-col a{display:block;color:var(--muted);font-size:14.5px;margin-bottom:12px;transition:.15s}
+  .foot-col a:hover{color:var(--cream)}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid var(--line-soft);flex-wrap:wrap;gap:20px}
+  .foot-badges{display:flex;gap:12px;flex-wrap:wrap}
+  .foot-badges .badge{font-size:11px;padding:9px 13px}
+  .foot-meta{color:var(--faint);font-size:13px}
+
+  .nav-drawer{display:none;flex-direction:column;gap:2px;padding:10px 24px 18px;background:var(--bg-2);border-top:1px solid var(--line-soft)}
+  .nav-drawer a{color:var(--muted);font-size:16px;padding:12px 4px;border-bottom:1px solid var(--line-soft)}
+  .nav-drawer a.btn{border-bottom:none;margin-top:12px;text-align:center;color:#1a0f02}
+  .nav.open .nav-drawer{display:flex}
+
+  @media(max-width:900px){
+    .nav-links,.nav-cta .signin{display:none}
+    .menu-btn{display:block}
+    .aud-grid,.cmp-grid,.steps,.price-grid{grid-template-columns:1fr}
+    .steps::before{display:none}
+    .rep-grid{grid-template-columns:1fr 1fr}
+    .feat{grid-template-columns:1fr;gap:34px}
+    .feat.rev .feat-text{order:0}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:560px){.rep-grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}*{transition:none!important}}
 </style>
 
-<div class="ambient" aria-hidden="true">
-  <div class="orb a"></div>
-  <div class="orb b"></div>
-</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="lmAmber" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC069"/><stop offset=".55" stop-color="#F5853F"/><stop offset="1" stop-color="#E8743B"/></linearGradient>
+  <symbol id="lm" viewBox="0 0 120 120">
+    <rect x="36" y="24" width="13" height="62" rx="3.5" fill="url(#lmAmber)"/>
+    <rect x="36" y="73" width="40" height="13" rx="3.5" fill="url(#lmAmber)"/>
+    <line x1="76" y1="79.5" x2="108" y2="79.5" stroke="url(#lmAmber)" stroke-width="2.4" stroke-linecap="round" opacity=".38"/>
+    <g stroke="url(#lmAmber)" stroke-width="2" stroke-linecap="round" opacity=".4"><line x1="84" y1="74.5" x2="84" y2="84.5"/><line x1="100" y1="74.5" x2="100" y2="84.5"/></g>
+    <circle class="lm-glow" cx="92" cy="79.5" r="11" fill="url(#lmAmber)" opacity=".3"/>
+    <circle cx="92" cy="79.5" r="7" fill="url(#lmAmber)"/>
+    <circle cx="92" cy="79.5" r="2.8" fill="#160d04"/>
+  </symbol>
+</defs></svg>
 
-<!-- ====================== NAV ====================== -->
-<nav id="nav">
-  <div class="nav-in">
-    <div class="nav-left">
-      <a href="#how">How it works</a>
-      <a href="#learn">Learn</a>
-    </div>
-    <a href="/" class="logo" style="color:var(--ember)">labread</a>
-    <div class="nav-right">
-      <a href="/auth">Sign in</a>
-      <a href="/try-free" class="btn btn-primary btn-sm">Try for free</a>
-    </div>
+<!-- ANNOUNCEMENT -->
+<div class="topbar">labread now reads <b style="color:var(--amber-lite)">50+ biomarkers</b> across any lab, in any language &nbsp;<a href="#">See what's new →</a></div>
+
+<!-- NAV -->
+<nav class="nav"><div class="wrap nav-in">
+  <a class="brand" href="#"><svg class="logo-mark"><use href="#lm"/></svg><span class="word">labread</span></a>
+  <div class="nav-links">
+    <a href="#audience">For you</a>
+    <a href="#audience">For doctors</a>
+    <a href="#audience">For clinics</a>
+    <a href="#learn">Learn</a>
+    <a href="#coach">Coach</a>
+  </div>
+  <div class="nav-cta">
+    <a class="signin" href="/auth">Sign in</a>
+    <a class="btn btn-amber" href="/try-free">Try for free</a>
+  </div>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+</div>
+  <div class="nav-drawer">
+    <a href="#audience">For you</a>
+    <a href="#audience">For doctors</a>
+    <a href="#audience">For clinics</a>
+    <a href="#learn">Learn</a>
+    <a href="#coach">Coach</a>
+    <a href="/auth">Sign in</a>
+    <a class="btn btn-amber" href="/try-free">Try for free</a>
   </div>
 </nav>
 
-<!-- ====================== HERO ====================== -->
-<header class="hero">
-  <div class="wrap hero-grid">
-    <div class="hero-copy">
-      <div class="eyebrow">Your personal health OS</div>
-      <h1>
-        <span class="line"><span>Your blood test,</span></span>
-        <span class="line"><span><em>finally explained.</em></span></span>
-      </h1>
-      <p class="hero-sub">Upload your blood test. Get a 90-day plan to <strong>actually improve your numbers.</strong> Daily habits, AI coaching, and progress tracking — built around your specific results.</p>
-      <div class="hero-cta">
-        <a href="/try-free" class="btn btn-primary">Try for free <span class="arr">→</span></a>
-        <a href="#sample" class="btn btn-ghost">See a sample report</a>
-      </div>
-      <div class="trust">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7BD8A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-        Your data is never stored. Processed, then immediately deleted. HIPAA-compliant.
-      </div>
-    </div>
-
-    <!-- signature: the living report -->
-    <div class="report-stage">
-      <div class="halo" aria-hidden="true"></div>
-      <div class="chip c1" aria-hidden="true"><span class="bio-dot d-ok"></span>B12 <b>540</b> ✓</div>
-      <div class="chip c2" aria-hidden="true"><span class="bio-dot d-ok"></span>Glucose <b>89</b> ✓</div>
-      <div class="report" id="report" aria-label="Animated sample of a labread report being generated">
-        <div class="report-head">
-          <span class="label">Live analysis</span>
-          <span class="report-status"><span class="pulse"></span><span id="status-text">Reading values…</span></span>
-        </div>
-        <div class="bio-row" data-delay="200">
-          <span class="bio-name"><span class="bio-dot d-warn"></span>Ferritin</span>
-          <span class="bio-val"><span class="n" data-to="18">0</span><span class="u">ng/mL</span></span>
-          <span class="pill p-warn">Low</span>
-        </div>
-        <div class="bio-row" data-delay="600">
-          <span class="bio-name"><span class="bio-dot d-warn"></span>Vitamin D</span>
-          <span class="bio-val"><span class="n" data-to="22">0</span><span class="u">ng/mL</span></span>
-          <span class="pill p-warn">Low</span>
-        </div>
-        <div class="bio-row" data-delay="1000">
-          <span class="bio-name"><span class="bio-dot d-ok"></span>TSH</span>
-          <span class="bio-val"><span class="n" data-to="2.1" data-dec="1">0</span><span class="u">mIU/L</span></span>
-          <span class="pill p-ok">Normal</span>
-        </div>
-        <div class="bio-row" data-delay="1400">
-          <span class="bio-name"><span class="bio-dot d-alert"></span>CRP</span>
-          <span class="bio-val"><span class="n" data-to="4.2" data-dec="1">0</span><span class="u">mg/L</span></span>
-          <span class="pill p-alert">Elevated</span>
-        </div>
-        <div class="report-note">
-          <span class="ai">labread insight</span>
-          Your <b>iron stores are running low</b> — a common cause of fatigue and brain fog. Worth asking your doctor about an iron panel, alongside what's driving the mild inflammation.
-        </div>
-      </div>
-    </div>
+<!-- HERO -->
+<header class="hero"><div class="wrap">
+  <div class="hero-badge"><span class="dot"></span>AI-Powered Medical Clarity</div>
+  <h1>Your blood test,<br><span class="ital">finally explained.</span></h1>
+  <p class="hero-sub">Understand your results, get a simple plan, and <b>watch your numbers move</b>. Not a one-time report — a health you can actually follow.</p>
+  <div class="hero-cta">
+    <a class="btn btn-amber" href="/try-free">Try for free →</a>
+    <a class="btn btn-ghost" href="#sample">See a sample report</a>
   </div>
-</header>
+  <div class="hero-note"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Your data is never stored. Processed, then immediately deleted · HIPAA-compliant</div>
 
-<!-- ====================== MARQUEE ====================== -->
-<div class="marquee-band" aria-hidden="true">
-  <div class="marquee">
-    <div class="marquee-track" id="mtrack">
-      <span class="mk"><span class="bio-dot d-ok"></span>Hemoglobin <b>14.2</b></span>
-      <span class="mk"><span class="bio-dot d-ok"></span>HDL <b>62</b></span>
-      <span class="mk"><span class="bio-dot d-warn"></span>LDL <b>131</b></span>
-      <span class="mk"><span class="bio-dot d-ok"></span>A1c <b>5.3%</b></span>
-      <span class="mk"><span class="bio-dot d-ok"></span>ALT <b>24</b></span>
-      <span class="mk"><span class="bio-dot d-warn"></span>Ferritin <b>18</b></span>
-      <span class="mk"><span class="bio-dot d-ok"></span>Creatinine <b>0.9</b></span>
-      <span class="mk"><span class="bio-dot d-alert"></span>CRP <b>4.2</b></span>
-      <span class="mk"><span class="bio-dot d-ok"></span>B12 <b>540</b></span>
-      <span class="mk"><span class="bio-dot d-ok"></span>TSH <b>2.1</b></span>
-      <span class="mk"><span class="bio-dot d-warn"></span>Vitamin D <b>22</b></span>
-      <span class="mk"><span class="bio-dot d-ok"></span>Glucose <b>89</b></span>
+  <div class="dash-stage">
+    <div class="dash-fit">
+    <div class="dash">
+
+      <div class="d-side">
+        <div class="d-prof"><span class="d-av">SA</span><span><span class="d-name">Soufiane A.</span><br><span class="d-handle">@soufiane</span></span></div>
+        <nav class="d-nav">
+          <a class="on" href="#"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</a>
+          <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</a>
+          <a href="#"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Protocol</a>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 7-8"/><path d="M16 7h4v4"/></svg>Progress</a>
+          <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Daily check-in</a>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6.5A8 8 0 1121 12z"/></svg>Coach</a>
+        </nav>
+        <div class="d-streak"><div class="big">12 <small>day streak</small></div><div class="sub">DAY 38 OF 90 · PROTOCOL</div></div>
+        <div class="d-up">+ <b>New blood test</b></div>
+      </div>
+
+      <div class="d-main">
+        <div class="d-mhead"><h4>Today</h4><span class="day">DAY 38 / 90</span></div>
+
+        <div class="d-focus">
+          <div class="d-fhead"><span class="d-fname"><span class="pt"></span>Ferritin</span><span class="d-fval">31 <span style="color:var(--faint)">ng/mL</span> &nbsp;<span class="up">↑ from 18</span></span></div>
+          <div class="d-frow">
+            <div>
+              <div class="d-bar"><div class="fill" style="width:44%"></div><div class="now" style="left:42%"></div></div>
+              <div class="d-scale"><span>0</span><span>optimal 30–150</span><span>300</span></div>
+            </div>
+            <div class="d-spark"><svg viewBox="0 0 128 52" preserveAspectRatio="none">
+              <polyline points="4,44 28,42 52,36 76,28 100,18 124,12" fill="none" stroke="#6FCF97" stroke-width="2"/>
+              <circle cx="124" cy="12" r="3.5" fill="#6FCF97"/>
+            </svg></div>
+          </div>
+          <p class="d-finsight"><b>Your iron is climbing.</b> Six weeks in, ferritin has moved out of the low zone toward optimal — your energy and focus should follow.</p>
+        </div>
+
+        <div class="d-habits">
+          <div class="d-hhead"><span class="t">Today's habits</span><span class="c">3 of 5 done</span></div>
+          <div class="d-hrow done"><span class="d-check done"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><span class="d-hname">Iron-rich meal</span><span class="d-htag">AM</span></div>
+          <div class="d-hrow done"><span class="d-check done"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><span class="d-hname">Vitamin D · 4000 IU</span><span class="d-htag">AM</span></div>
+          <div class="d-hrow done"><span class="d-check done"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><span class="d-hname">8,000 steps</span><span class="d-htag">8,210</span></div>
+          <div class="d-hrow"><span class="d-check"></span><span class="d-hname">Magnesium</span><span class="d-htag">PM</span></div>
+          <div class="d-hrow"><span class="d-check"></span><span class="d-hname">Sleep 7h+</span><span class="d-htag">PM</span></div>
+        </div>
+      </div>
+
+      <div class="d-rail">
+        <div class="d-ring">
+          <div class="ttl">Protocol progress</div>
+          <svg viewBox="0 0 120 120">
+            <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC069"/><stop offset="1" stop-color="#E8743B"/></linearGradient></defs>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="url(#rg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="182" transform="rotate(-90 60 60)"/>
+            <text x="60" y="58" text-anchor="middle" class="pc" font-size="28">42%</text>
+            <text x="60" y="76" text-anchor="middle" font-size="9" fill="#9E9384" letter-spacing="1">DAY 38/90</text>
+          </svg>
+          <div class="lab">On track</div>
+        </div>
+        <div class="d-mini"><div class="t">Markers in range</div><div class="v">78<small>%</small></div></div>
+        <div class="d-mini act"><div class="t">Next blood test</div><div class="v">21<small>days</small></div><span class="go">Set a reminder →</span></div>
+      </div>
+
+      <div class="d-coach">
+        <span class="d-cav"><i></i></span>
+        <span class="d-cinput">Ask your coach — "why is my ferritin moving so slowly?"</span>
+        <span class="d-csend"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
+      </div>
+
     </div>
-  </div>
-</div>
-
-<!-- ====================== STATS ====================== -->
-<section class="stats">
-  <div class="wrap">
-    <div class="stats-grid rv">
-      <div class="stat"><div class="num">90-day</div><div class="lbl">protocol</div></div>
-      <div class="stat"><div class="num">Daily</div><div class="lbl">check-ins</div></div>
-      <div class="stat"><div class="num">Free</div><div class="lbl">to start</div></div>
     </div>
   </div>
-</section>
+</div></header>
 
-<!-- ====================== SAMPLE REPORT ====================== -->
-<section id="sample">
-  <div class="wrap">
-    <div class="eyebrow rv">Sample report</div>
-    <h2 class="sec-title rv d1">Here's what your <em>report</em> looks like</h2>
-    <p class="sec-sub rv d2">Every value placed on its real medical range — so you can see at a glance where you stand.</p>
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-track">
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>Hemoglobin <b>14.2</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>HDL <b>62</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--warn)"></span>LDL <b>131</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>A1c <b>5.3%</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>ALT <b>24</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--warn)"></span>Ferritin <b>18</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>Creatinine <b>0.9</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--red)"></span>CRP <b>4.2</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>B12 <b>540</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>Hemoglobin <b>14.2</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>HDL <b>62</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--warn)"></span>LDL <b>131</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>A1c <b>5.3%</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>ALT <b>24</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--warn)"></span>Ferritin <b>18</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>Creatinine <b>0.9</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--red)"></span>CRP <b>4.2</b></span>
+  <span class="ticker-item"><span class="pt" style="background:var(--green)"></span>B12 <b>540</b></span>
+</div></div>
 
-    <div class="cards-4">
-      <div class="bcard rv">
-        <div class="bcard-top">
-          <h3><span class="bio-dot d-warn"></span>Ferritin</h3>
-          <span class="pill p-warn" style="transform:none;opacity:1">Low</span>
-        </div>
-        <div class="val">18 <span class="u">ng/mL</span></div>
-        <div class="bar"><div class="fill" style="--p:.16;background:linear-gradient(90deg,var(--warn),#C98A3E)"></div><span class="tick" style="left:25%"></span><span class="tick" style="left:80%"></span></div>
-        <div class="range-lbl"><span>0</span><span>optimal 30–150</span><span>300</span></div>
-        <p>Your iron stores are running low — a common cause of fatigue, brain fog, and feeling cold.</p>
-      </div>
-      <div class="bcard rv d1">
-        <div class="bcard-top">
-          <h3><span class="bio-dot d-warn"></span>Vitamin D</h3>
-          <span class="pill p-warn" style="transform:none;opacity:1">Low</span>
-        </div>
-        <div class="val">22 <span class="u">ng/mL</span></div>
-        <div class="bar"><div class="fill" style="--p:.27;background:linear-gradient(90deg,var(--warn),#C98A3E)"></div><span class="tick" style="left:37%"></span><span class="tick" style="left:75%"></span></div>
-        <div class="range-lbl"><span>0</span><span>optimal 30–60</span><span>80</span></div>
-        <p>Below the optimal range — often linked to low energy, low mood, and weaker immunity.</p>
-      </div>
-      <div class="bcard rv d2">
-        <div class="bcard-top">
-          <h3><span class="bio-dot d-ok"></span>TSH</h3>
-          <span class="pill p-ok" style="transform:none;opacity:1">Normal</span>
-        </div>
-        <div class="val">2.1 <span class="u">mIU/L</span></div>
-        <div class="bar"><div class="fill" style="--p:.42;background:linear-gradient(90deg,var(--ok),#4FA87C)"></div><span class="tick" style="left:9%"></span><span class="tick" style="left:80%"></span></div>
-        <div class="range-lbl"><span>0</span><span>normal 0.4–4.0</span><span>5</span></div>
-        <p>Your thyroid signal is in range — though one number doesn't capture the full thyroid picture.</p>
-      </div>
-      <div class="bcard rv d3">
-        <div class="bcard-top">
-          <h3><span class="bio-dot d-alert"></span>CRP</h3>
-          <span class="pill p-alert" style="transform:none;opacity:1">Elevated</span>
-        </div>
-        <div class="val">4.2 <span class="u">mg/L</span></div>
-        <div class="bar"><div class="fill" style="--p:.62;background:linear-gradient(90deg,var(--alert),#C04E40)"></div><span class="tick" style="left:14%"></span><span class="tick" style="left:43%"></span></div>
-        <div class="range-lbl"><span>0</span><span>low risk &lt;1 · avg 1–3</span><span>7</span></div>
-        <p>A marker of inflammation that's mildly raised — worth understanding what's driving it.</p>
-      </div>
-    </div>
-
-    <div class="center-cta rv"><a href="/try-free" class="btn btn-primary">Get yours free <span class="arr">→</span></a></div>
+<!-- TRUST -->
+<section class="trust"><div class="wrap">
+  <div class="trust-lab">Built to clinical standards</div>
+  <div class="trust-row">
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>HIPAA compliant</span>
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>GDPR compliant</span>
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>SOC 2 aligned</span>
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>Any lab · 80+ languages</span>
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 12h8M12 8v8"/></svg>Zero data retention</span>
   </div>
-</section>
+</div></section>
 
-<!-- ====================== HOW IT WORKS ====================== -->
-<section class="how" id="how">
-  <div class="wrap">
-    <div class="eyebrow rv">How it works</div>
-    <h2 class="sec-title rv d1">Four steps to <em>clarity.</em></h2>
-
-    <div class="steps">
-      <div class="step rv">
-        <div class="orb">
-          <span class="k">01</span>
-          <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
-        </div>
-        <h3>Upload</h3>
-        <p>Drop your blood test PDF. Any lab, any country, any language.</p>
-      </div>
-      <div class="step rv d1">
-        <div class="orb">
-          <span class="k">02</span>
-          <svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-6 6c0 2 .7 3.1 1.6 4.2.7.9 1.4 1.8 1.4 3.3h6c0-1.5.7-2.4 1.4-3.3C17.3 12.1 18 11 18 9a6 6 0 0 0-6-6z"/><path d="M9.5 20.5h5M10.5 23h3"/></svg>
-        </div>
-        <h3>Understand</h3>
-        <p>Every flagged value explained in plain English. No jargon.</p>
-      </div>
-      <div class="step rv d2">
-        <div class="orb">
-          <span class="k">03</span>
-          <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-7"/><path d="M17 8h4v4"/></svg>
-        </div>
-        <h3>Improve</h3>
-        <p>Get a 90-day plan with daily habits tied to your specific numbers.</p>
-      </div>
-      <div class="step rv d3">
-        <div class="orb">
-          <span class="k">04</span>
-          <svg viewBox="0 0 24 24"><path d="M3 12h4l2.5-7 4 14 2.5-7h5"/></svg>
-        </div>
-        <h3>Track</h3>
-        <p>Check in daily, watch your streak grow, retest in 90 days and see what moved.</p>
-      </div>
+<!-- AUDIENCE -->
+<section class="block" id="audience"><div class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Who it's for</span>
+    <h2>One platform. <span class="ital">Three ways</span> to use it.</h2>
+    <p>Whether you're reading your own results or running a practice, labread meets you where you are.</p>
+  </div>
+  <div class="aud-grid">
+    <div class="aud-card">
+      <div class="aud-tag">For individuals & families</div>
+      <h3>Understand your own results</h3>
+      <ul class="aud-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Plain-English interpretation of every value</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Track your whole family in one place</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Questions worth asking your doctor</li>
+      </ul>
+      <a class="aud-link" href="#">How it works →</a>
+    </div>
+    <div class="aud-card">
+      <div class="aud-tag">For doctors & consultants</div>
+      <h3>Save time on every patient</h3>
+      <ul class="aud-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Branded interpretation reports</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Track biomarker trends over time</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Instant context for patient questions</li>
+      </ul>
+      <a class="aud-link" href="#">Explore for clinicians →</a>
+    </div>
+    <div class="aud-card">
+      <div class="aud-tag">For labs & clinics</div>
+      <h3>White-label the explanation layer</h3>
+      <ul class="aud-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Embed labread under your own brand</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>API + report automation at scale</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Custom deployment & support</li>
+      </ul>
+      <a class="aud-link" href="#">Talk to us →</a>
     </div>
   </div>
-</section>
+</div></section>
 
-<!-- ====================== WHAT YOU GET ====================== -->
-<section>
-  <div class="wrap">
-    <div class="eyebrow rv">What you get</div>
-    <h2 class="sec-title rv d1">More than an <em>explainer.</em></h2>
-    <p class="sec-sub rv d2">A system built around your results.</p>
+<!-- FEATURE 1 -->
+<div class="wrap"><div class="feat">
+  <div class="feat-text">
+    <span class="eyebrow solo">Instant interpretation</span>
+    <h2 style="margin-top:18px">Every value, read against <span class="ital">real medical ranges</span></h2>
+    <p>labread doesn't just label numbers green or red. It explains what each marker means for your body today, why it might be off, and what's worth a conversation with your doctor.</p>
+    <a class="btn btn-amber" href="#sample">Read a sample →</a>
+  </div>
+  <div class="feat-vis">
+    <div class="bm-card">
+      <div class="bm-head"><span>Coenzyme Q10 · lipid corrected</span><span class="bm-ready"><span class="dot"></span>Optimal</span></div>
+      <div class="rep-bar" style="margin-top:4px"><div class="rep-fill" style="left:8%;width:62%;background:linear-gradient(90deg,var(--warn),var(--green))"></div></div>
+      <div class="rep-scale"><span>0.2</span><span style="color:var(--green)">0.35 quotient</span><span>0.8</span></div>
+      <div class="insight"><div class="lab">what it means</div><p>CoQ10 supports cellular energy in your heart, muscles and brain. Lipid-corrected adjusts for cholesterol — giving a truer picture of your real status.</p></div>
+    </div>
+  </div>
+</div></div>
 
-    <div class="get-grid">
-      <div class="why-card rv">
-        <div class="why-icon" style="font-size:22px">🧬</div>
-        <h3>Blood test analysis</h3>
-        <p>Every biomarker explained. Flagged values highlighted. Plain English, not medical jargon.</p>
+<!-- FEATURE 2 -->
+<div class="wrap"><div class="feat rev">
+  <div class="feat-text">
+    <span class="eyebrow solo">Track over time</span>
+    <h2 style="margin-top:18px">Watch your markers <span class="ital">move</span></h2>
+    <p>Upload each new test and labread builds a history — so you can see whether a change is a trend or a blip, and whether your last decision actually worked.</p>
+    <a class="btn btn-ghost" href="#">See tracking →</a>
+  </div>
+  <div class="feat-vis">
+    <div class="trend">
+      <div class="trend-top"><span class="t">Aspartate Aminotransferase</span><span class="v">20.7 U/L ↑</span></div>
+      <svg viewBox="0 0 320 150" preserveAspectRatio="none">
+        <rect x="0" y="0" width="320" height="40" fill="rgba(224,112,106,.07)"/>
+        <rect x="0" y="40" width="320" height="70" fill="rgba(111,207,151,.07)"/>
+        <rect x="0" y="110" width="320" height="40" fill="rgba(227,169,74,.07)"/>
+        <polyline points="10,120 70,108 130,82 190,70 250,60 300,55" fill="none" stroke="#6FCF97" stroke-width="2.5"/>
+        <circle cx="250" cy="60" r="5" fill="#6FCF97"/>
+        <circle cx="250" cy="60" r="9" fill="none" stroke="#6FCF97" stroke-width="1.5" opacity=".4"/>
+      </svg>
+      <div class="trend-x"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- SAMPLE REPORT -->
+<section class="block" id="sample"><div class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Sample report</span>
+    <h2>Here's what your <span class="ital">report</span> looks like</h2>
+    <p>Every value placed on its real medical range — so you can see at a glance where you stand.</p>
+  </div>
+  <div class="rep-grid">
+    <div class="rep-card">
+      <div class="rep-top"><span class="rep-name"><span class="pt" style="background:var(--warn)"></span>Ferritin</span><span class="pill low">Low</span></div>
+      <div class="rep-val">18 <span>ng/mL</span></div>
+      <div class="rep-bar"><div class="rep-fill" style="left:0;width:24%;background:var(--warn)"></div></div>
+      <div class="rep-scale"><span>0</span><span>optimal 30–150</span><span>300</span></div>
+      <p class="rep-desc">Your iron stores are running low — a common cause of fatigue, brain fog, and feeling cold.</p>
+    </div>
+    <div class="rep-card">
+      <div class="rep-top"><span class="rep-name"><span class="pt" style="background:var(--warn)"></span>Vitamin D</span><span class="pill low">Low</span></div>
+      <div class="rep-val">22 <span>ng/mL</span></div>
+      <div class="rep-bar"><div class="rep-fill" style="left:0;width:30%;background:var(--warn)"></div></div>
+      <div class="rep-scale"><span>0</span><span>optimal 30–60</span><span>80</span></div>
+      <p class="rep-desc">Below the optimal range — often linked to low energy, low mood, and weaker immunity.</p>
+    </div>
+    <div class="rep-card">
+      <div class="rep-top"><span class="rep-name"><span class="pt" style="background:var(--green)"></span>TSH</span><span class="pill norm">Normal</span></div>
+      <div class="rep-val">2.1 <span>mIU/L</span></div>
+      <div class="rep-bar"><div class="rep-fill" style="left:6%;width:50%;background:var(--green)"></div></div>
+      <div class="rep-scale"><span>0</span><span>normal 0.4–4.0</span><span>5</span></div>
+      <p class="rep-desc">Your thyroid signal is in range — though one number doesn't capture the full thyroid picture.</p>
+    </div>
+    <div class="rep-card">
+      <div class="rep-top"><span class="rep-name"><span class="pt" style="background:var(--red)"></span>CRP</span><span class="pill high">Elevated</span></div>
+      <div class="rep-val">4.2 <span>mg/L</span></div>
+      <div class="rep-bar"><div class="rep-fill" style="left:0;width:60%;background:var(--red)"></div></div>
+      <div class="rep-scale"><span>0</span><span>low risk &lt;1</span><span>7</span></div>
+      <p class="rep-desc">A marker of inflammation that's mildly raised — worth understanding what's driving it.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- COMPARISON -->
+<section class="block" style="background:var(--bg-2)"><div class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Why not just Google it</span>
+    <h2>labread vs <span class="ital">the old way</span></h2>
+    <p>Search engines give you panic. A general chatbot gives you a guess. labread gives you your result, in context.</p>
+  </div>
+  <div class="cmp-grid">
+    <div class="cmp-card hi">
+      <div class="cmp-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg></div>
+      <h3>Private by design</h3>
+      <p>Your numbers are processed and immediately deleted. Never stored, never used to train models.</p>
+    </div>
+    <div class="cmp-card hi">
+      <div class="cmp-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div>
+      <h3>Built for blood, only</h3>
+      <p>Not a general chatbot. A focused pipeline that maps every value to validated clinical reference ranges.</p>
+    </div>
+    <div class="cmp-card hi">
+      <div class="cmp-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+      <h3>Personal, not generic</h3>
+      <p>Context-aware next steps tuned to your unique results — not a copy-paste of a textbook range.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- HOW IT WORKS -->
+<section class="block"><div class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">How it works</span>
+    <h2>It doesn't end at the <span class="ital">report.</span></h2>
+    <p>Most tools stop at explaining your numbers. labread turns them into a plan you follow — and proof it's working.</p>
+  </div>
+  <div class="hw-flow">
+    <div class="hw-step">
+      <div class="hw-node"><span class="hw-num">01</span><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></svg></div>
+      <h3>Upload</h3>
+      <p>Drop a PDF or snap a photo of your lab report. Any lab, any language.</p>
+    </div>
+    <div class="hw-step">
+      <div class="hw-node"><span class="hw-num">02</span><svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 00-4 12c.5.5 1 1.5 1 3h6c0-1.5.5-2.5 1-3a7 7 0 00-4-12z"/></svg></div>
+      <h3>Understand</h3>
+      <p>Every value explained in plain English, placed on its real medical range.</p>
+    </div>
+    <div class="hw-loop">
+      <span class="hw-loop-tag"><span class="cyc">↻</span> The ongoing loop · repeats every test</span>
+      <div class="hw-step">
+        <div class="hw-node"><span class="hw-num">03</span><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+        <h3>Your protocol</h3>
+        <p>A simple 90-day plan built from your results — what to change, and why.</p>
       </div>
-      <div class="why-card rv d1">
-        <div class="why-icon" style="font-size:22px">📋</div>
-        <h3>90-day protocol</h3>
-        <p>A personalized plan generated from your flagged results. Supplements, diet, sleep, exercise — all specific to you.</p>
+      <div class="hw-step">
+        <div class="hw-node"><span class="hw-num">04</span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg></div>
+        <h3>Daily actions</h3>
+        <p>A few small habits to check off each day. Streaks keep you going.</p>
       </div>
-      <div class="why-card rv d2">
-        <div class="why-icon" style="font-size:22px">✅</div>
-        <h3>Daily check-ins</h3>
-        <p>Track your habits every day. Build streaks. The app knows your numbers and keeps you accountable.</p>
-      </div>
-      <div class="why-card rv d3">
-        <div class="why-icon" style="font-size:22px">🤖</div>
-        <h3>Lab Coach AI</h3>
-        <p>Ask anything about your results. Gets answers that reference your actual values, not generic advice.</p>
+      <div class="hw-step">
+        <div class="hw-node"><span class="hw-num">05</span><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 7-8"/><path d="M16 7h4v4"/></svg></div>
+        <h3>Watch progress</h3>
+        <p>Re-test and see your numbers move. Keep what works, adjust what doesn't.</p>
       </div>
     </div>
   </div>
-</section>
+</div></section>
 
-<!-- ====================== WHY ====================== -->
-<section>
-  <div class="wrap">
-    <div class="eyebrow rv">Why labread</div>
-    <h2 class="sec-title rv d1">Built for clarity.<br><em>Designed for you.</em></h2>
+<!-- ANNA — AI COACH -->
+<section class="block coach-sec" id="coach" style="background:var(--bg-2)"><div class="wrap">
+  <div class="coach-grid">
+    <div class="coach-left">
+      <span class="eyebrow solo">Your AI coach</span>
+      <h2>Not a chatbot.<br><span class="ital">Your coach.</span></h2>
+      <p>Anna reads your results, follows your protocol and remembers your history — so when you ask a question, the answer is about <em>you</em>, not a textbook. Plain English, any time, in 80+ languages.</p>
+      <div class="coach-caps">
+        <span class="coach-cap"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Knows your results</span>
+        <span class="coach-cap"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Follows your protocol</span>
+        <span class="coach-cap"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Remembers your history</span>
+        <span class="coach-cap"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Available 24/7</span>
+      </div>
+      <a class="btn btn-amber" href="#">Meet Anna →</a>
+    </div>
 
-    <div class="why-grid">
-      <div class="why-card rv">
-        <div class="why-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></svg></div>
-        <h3>Any lab, any country</h3>
-        <p>Bloodwork, panels, hormones — we read them all, in any language and any unit system.</p>
+    <div class="anna-card">
+      <div class="anna-head">
+        <span class="orb" style="--s:42px"><i></i></span>
+        <span><span class="nm">Anna</span><br><span class="st"><span class="d"></span>your coach · online</span></span>
       </div>
-      <div class="why-card rv d1">
-        <div class="why-icon"><svg viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 0-4 4c-2 .5-3 2-3 4a4 4 0 0 0 4 4h.5M12 4a4 4 0 0 1 4 4c2 .5 3 2 3 4a4 4 0 0 1-4 4h-.5M12 4v16"/></svg></div>
-        <h3>Plain-language insights</h3>
-        <p>No jargon. Just what each value means for your body, today.</p>
+      <div class="anna-thread">
+        <div class="msg user">Anna, why does my ferritin still feel low after 6 weeks?</div>
+        <div class="msg anna">
+          <span class="orb" style="--s:30px"><i></i></span>
+          <div class="bub">
+            Actually — it's turning the corner. Since you started the protocol your ferritin has climbed from <b>18 to 31</b>:
+            <div class="data-chip">
+              <div><div class="nm">Ferritin</div><div class="vals">18 <span class="up">→ 31 ↑</span></div></div>
+              <span class="sk"><svg viewBox="0 0 60 26" preserveAspectRatio="none"><polyline points="3,22 16,20 28,15 40,9 57,4" fill="none" stroke="#6FCF97" stroke-width="2"/><circle cx="57" cy="4" r="2.6" fill="#6FCF97"/></svg></span>
+            </div>
+            That's into the optimal range. The fatigue should keep easing — stay with the iron-rich meal and we'll confirm at your next test.
+          </div>
+        </div>
+        <div class="typing"><span class="orb" style="--s:30px"><i></i></span><div class="tb"><span></span><span></span><span></span></div></div>
       </div>
-      <div class="why-card rv d2">
-        <div class="why-icon"><svg viewBox="0 0 24 24"><path d="M3 12h4l2.5-7 4 14 2.5-7h5"/></svg></div>
-        <h3>Flagged automatically</h3>
-        <p>Color-coded results so abnormal values are impossible to miss.</p>
+      <div class="anna-qr">
+        <span class="qr">Explain my CRP</span>
+        <span class="qr">What should I eat this week?</span>
+        <span class="qr">Am I actually improving?</span>
       </div>
-      <div class="why-card rv">
-        <div class="why-icon"><svg viewBox="0 0 24 24"><path d="M5 4v6a7 7 0 0 0 14 0V4"/><path d="M5 4h2M17 4h2M12 17v2a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3v-1"/><circle cx="18" cy="17" r="1.6"/></svg></div>
-        <h3>Screening recommendations</h3>
-        <p>Personalized next steps and tests worth discussing with your doctor.</p>
-      </div>
-      <div class="why-card rv d1">
-        <div class="why-icon"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7zM15 3v4h4"/><path d="M10 12h6M10 16h6"/></svg></div>
-        <h3>Beautiful history</h3>
-        <p>Every report saved, searchable, and easy to compare over time.</p>
-      </div>
-      <div class="why-card rv d2">
-        <div class="why-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
-        <h3>Zero data stored</h3>
-        <p>Your results are processed and immediately deleted. Nothing is saved. HIPAA-compliant.</p>
-      </div>
+      <div class="anna-input"><span class="ph">Ask Anna anything about your results…</span><span class="anna-send"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span></div>
     </div>
   </div>
-</section>
+</div></section>
 
-<!-- ====================== QUOTES ====================== -->
-<section class="quotes">
-  <div class="wrap">
-    <div class="eyebrow rv">What people say</div>
-    <div class="q-grid">
-      <div class="q-card rv">
-        <span class="mark">"</span>
-        <blockquote>I've had my blood test sitting in my email for 6 months because I didn't understand it. Uploaded it here, had a plan in 10 minutes.</blockquote>
-        <cite><span class="ava">A</span>Alix</cite>
-      </div>
-      <div class="q-card rv d1">
-        <span class="mark">"</span>
-        <blockquote>My doctor said everything looks normal. labread showed me my ferritin was low-normal and explained exactly why I've been exhausted.</blockquote>
-        <cite><span class="ava">R</span>Rechi</cite>
-      </div>
+<!-- LEARN -->
+<section class="block" id="learn"><div class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Learn</span>
+    <h2>Understand your <span class="ital">results.</span></h2>
+    <p>Plain-English guides to the biomarkers people ask about most.</p>
+  </div>
+  <div class="rep-grid" style="grid-template-columns:repeat(3,1fr)">
+    <a class="rep-card" href="/learn/ferritin" style="text-decoration:none"><div class="aud-tag">Iron</div><h3 style="font-family:var(--serif);font-size:22px;margin-bottom:10px">What does low ferritin mean?</h3><p class="rep-desc" style="margin-bottom:16px">Iron deficiency, explained in plain English.</p><span class="aud-link">Read guide →</span></a>
+    <a class="rep-card" href="/learn/vitamin-d" style="text-decoration:none"><div class="aud-tag">Vitamins</div><h3 style="font-family:var(--serif);font-size:22px;margin-bottom:10px">Vitamin D deficiency explained</h3><p class="rep-desc" style="margin-bottom:16px">Why "normal" and "optimal" are far apart.</p><span class="aud-link">Read guide →</span></a>
+    <a class="rep-card" href="/learn/tsh-thyroid" style="text-decoration:none"><div class="aud-tag">Thyroid</div><h3 style="font-family:var(--serif);font-size:22px;margin-bottom:10px">TSH normal but still tired?</h3><p class="rep-desc" style="margin-bottom:16px">Why one thyroid number isn't the whole story.</p><span class="aud-link">Read guide →</span></a>
+  </div>
+</div></section>
+
+<!-- FAQ -->
+<section class="block" style="background:var(--bg-2)"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">Questions</span><h2>We're glad you <span class="ital">asked.</span></h2></div>
+  <div class="faq">
+    <div class="faq-item open"><button class="faq-q">My bloodwork came back "normal" — so why do I still feel off?<span class="ic">+</span></button><div class="faq-a"><p>Because "normal" isn't the same as optimal. labread shows where you actually fall inside each range, what's quietly trending the wrong way, and the markers worth watching before they ever become a problem.</p></div></div>
+    <div class="faq-item"><button class="faq-q">What will labread tell me that my report didn't?<span class="ic">+</span></button><div class="faq-a"><p>What each number means for your body, what's most likely driving it, and the specific next steps and questions worth raising — instead of a wall of reference ranges you have to decode alone.</p></div></div>
+    <div class="faq-item"><button class="faq-q">Once I know what's off — can I actually do something about it?<span class="ic">+</span></button><div class="faq-a"><p>Yes. labread turns your results into a personalized 90-day protocol with a few simple daily habits, then tracks your streaks and progress so you can watch your markers move.</p></div></div>
+    <div class="faq-item"><button class="faq-q">Will it show me if I'm actually getting better?<span class="ic">+</span></button><div class="faq-a"><p>Upload each new test and labread builds your history automatically — so you can see whether a change is a real trend, and whether what you're doing is working.</p></div></div>
+  </div>
+</div></section>
+
+<!-- FINAL CTA -->
+<div class="wrap"><div class="final">
+  <h2>Stop guessing what your <span class="ital">numbers mean.</span></h2>
+  <p>Your next blood test doesn't have to be a mystery. Get your first report in minutes.</p>
+  <a class="btn btn-amber" href="/try-free">Try labread for free →</a>
+  <div class="meta">50+ biomarkers · any lab · zero data stored</div>
+</div></div>
+
+<!-- FOOTER -->
+<footer><div class="wrap">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="brand" href="#"><svg class="logo-mark"><use href="#lm"/></svg><span class="word">labread</span></a>
+      <p>The health OS your doctor never gave you. Your blood test, finally explained.</p>
     </div>
+    <div class="foot-col"><h4>Product</h4><a href="#">For individuals</a><a href="#">For doctors</a><a href="#">For labs</a><a href="#coach">Meet Anna</a></div>
+    <div class="foot-col"><h4>Learn</h4><a href="/learn/ferritin">Low ferritin</a><a href="/learn/vitamin-d">Vitamin D</a><a href="/learn/tsh-thyroid">Thyroid / TSH</a><a href="/learn/crp">High CRP</a><a href="/learn/a1c">A1c</a></div>
+    <div class="foot-col"><h4>Company</h4><a href="#">About</a><a href="#">Trust center</a><a href="#">Contact</a></div>
+    <div class="foot-col"><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Subprocessors</a></div>
   </div>
-</section>
-
-<!-- ====================== LEARN ====================== -->
-<section id="learn">
-  <div class="wrap">
-    <div class="eyebrow rv">Learn</div>
-    <h2 class="sec-title rv d1">Understand your <em>results.</em></h2>
-    <p class="sec-sub rv d2">Plain-English guides to the biomarkers people ask about most — what the numbers mean, and what to do next.</p>
-
-    <div class="learn-grid">
-      <a href="/learn/ferritin" class="l-card rv">
-        <span class="l-tag">Iron</span>
-        <h3>What Does Low Ferritin Mean?</h3>
-        <p>Iron deficiency, explained in plain English.</p>
-        <span class="l-link">Read guide <span class="arr">→</span></span>
-      </a>
-      <a href="/learn/vitamin-d" class="l-card rv d1">
-        <span class="l-tag">Vitamins</span>
-        <h3>Vitamin D Deficiency Explained</h3>
-        <p>Why "normal" and "optimal" are far apart.</p>
-        <span class="l-link">Read guide <span class="arr">→</span></span>
-      </a>
-      <a href="/learn/tsh-thyroid" class="l-card rv d2">
-        <span class="l-tag">Thyroid</span>
-        <h3>TSH Normal But Still Tired?</h3>
-        <p>Why one thyroid number isn't the whole story.</p>
-        <span class="l-link">Read guide <span class="arr">→</span></span>
-      </a>
-      <a href="/learn/crp" class="l-card rv">
-        <span class="l-tag">Inflammation</span>
-        <h3>What Does High CRP Mean?</h3>
-        <p>The quiet inflammation marker most people overlook.</p>
-        <span class="l-link">Read guide <span class="arr">→</span></span>
-      </a>
-      <a href="/learn/a1c" class="l-card rv d1">
-        <span class="l-tag">Metabolic</span>
-        <h3>What Is Pre-Diabetic A1c?</h3>
-        <p>The window where changes matter most.</p>
-        <span class="l-link">Read guide <span class="arr">→</span></span>
-      </a>
-      <a href="#learn" class="l-card rv d2">
-        <span class="l-tag">Coming soon</span>
-        <h3>50+ more biomarkers</h3>
-        <p>New plain-English guides every week.</p>
-        <span class="l-link">Browse all <span class="arr">→</span></span>
-      </a>
+  <div class="foot-bottom">
+    <div class="foot-badges">
+      <span class="badge">HIPAA</span><span class="badge">GDPR</span><span class="badge">SOC 2</span>
     </div>
+    <div class="foot-meta">© 2026 labread · hello@labread.health · X / Twitter</div>
   </div>
-</section>
-
-<!-- ====================== FINAL CTA ====================== -->
-<section class="final">
-  <div class="sun" aria-hidden="true"></div>
-  <div class="wrap">
-    <div class="eyebrow rv">Free · No card needed</div>
-    <h2 class="rv d1">Your blood test is just the <em>beginning.</em></h2>
-    <p class="rv d2">Upload your results and get a 90-day plan to actually improve them. Free to start.</p>
-    <div class="rv d3"><a href="/try-free" class="btn btn-primary" style="padding:18px 40px;font-size:17px">Try labread for free <span class="arr">→</span></a></div>
-    <div class="micro rv d4">50+ biomarkers · any lab · zero data stored</div>
-  </div>
-</section>
-
-<!-- ====================== FOOTER ====================== -->
-<footer>
-  <div class="wrap f-in">
-    <a href="/" class="logo" style="font-size:18px"><span class="dot" style="width:28px;height:28px;font-size:12px">l</span>labread<span class="tld">.health</span></a>
-    <div class="f-links">
-      <a href="#how">How it works</a>
-      <a href="#learn">Learn</a>
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-      <a href="https://x.com/labread_health" target="_blank" rel="noopener">X / Twitter</a>
-    </div>
-    <p class="f-note">labread.health provides educational information about laboratory values and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult your doctor about your results. © 2026 labread.health</p>
-  </div>
-</footer>
+</div></footer>
 `;
 
 function HomePage() {
   useEffect(() => {
-    const timeouts: ReturnType<typeof setTimeout>[] = [];
-    const observers: IntersectionObserver[] = [];
-
-    /* ---------- nav scroll state ---------- */
-    const nav = document.getElementById("nav");
-    const onScroll = () => nav?.classList.toggle("scrolled", window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    /* ---------- scroll reveals ---------- */
-    const io = new IntersectionObserver(
-      (es) =>
-        es.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("in");
-            io.unobserve(e.target);
-          }
-        }),
-      { threshold: 0.18, rootMargin: "0px 0px -40px 0px" }
-    );
-    document.querySelectorAll(".rv").forEach((el) => io.observe(el));
-    observers.push(io);
-
-    /* ---------- count-up helper ---------- */
-    function count(el: Element, to: number, dec: number, dur = 900) {
-      const t0 = performance.now();
-      function tick(t: number) {
-        const p = Math.min(1, (t - t0) / dur),
-          e = 1 - Math.pow(1 - p, 3);
-        el.textContent = (to * e).toFixed(dec);
-        if (p < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    }
-
-    /* ---------- living report sequence ---------- */
-    const report = document.getElementById("report");
-    const statusText = document.getElementById("status-text");
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    function playReport() {
-      if (!report || !statusText) return;
-      if (reduce) {
-        report.querySelectorAll(".n").forEach((n) => {
-          n.textContent = (n as HTMLElement).dataset.to ?? "";
-        });
-        report.classList.add("played");
-        statusText.textContent = "Report ready";
-        return;
-      }
-      report.querySelectorAll<HTMLElement>(".bio-row").forEach((row) => {
-        timeouts.push(
-          setTimeout(() => {
-            row.classList.add("show");
-            const n = row.querySelector<HTMLElement>(".n");
-            if (n) count(n, parseFloat(n.dataset.to ?? "0"), parseInt(n.dataset.dec ?? "0"));
-          }, parseInt(row.dataset.delay ?? "0"))
-        );
-      });
-      timeouts.push(
-        setTimeout(() => {
-          statusText.textContent = "Generating insight…";
-        }, 1900)
-      );
-      timeouts.push(
-        setTimeout(() => {
-          report.classList.add("played");
-          statusText.textContent = "Report ready";
-        }, 2700)
-      );
-    }
-    if (report) {
-      const ro = new IntersectionObserver(
-        (es, o) => {
-          if (es[0].isIntersecting) {
-            playReport();
-            o.disconnect();
-          }
-        },
-        { threshold: 0.35 }
-      );
-      ro.observe(report);
-      observers.push(ro);
-    }
-
-    /* ---------- duplicate marquee for seamless loop (idempotent) ---------- */
-    const track = document.getElementById("mtrack");
-    if (track && !track.dataset.duplicated) {
-      track.innerHTML += track.innerHTML;
-      track.dataset.duplicated = "1";
-    }
-
-    /* ---------- card glow follows cursor ---------- */
-    const glowHandlers: Array<{ el: HTMLElement; fn: (e: PointerEvent) => void }> = [];
-    document.querySelectorAll<HTMLElement>(".bcard").forEach((c) => {
-      const fn = (e: PointerEvent) => {
-        const r = c.getBoundingClientRect();
-        c.style.setProperty("--mx", ((e.clientX - r.left) / r.width) * 100 + "%");
-      };
-      c.addEventListener("pointermove", fn);
-      glowHandlers.push({ el: c, fn });
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach((b) => {
+      b.addEventListener('click', () => b.parentElement?.classList.toggle('open'));
     });
 
+    // Mobile menu
+    const nav = document.querySelector('.nav');
+    const menuBtn = document.querySelector('.menu-btn');
+    const onMenu = () => nav && nav.classList.toggle('open');
+    if (menuBtn) menuBtn.addEventListener('click', onMenu);
+    nav?.querySelectorAll('.nav-drawer a').forEach((a) =>
+      a.addEventListener('click', () => nav.classList.remove('open')),
+    );
+
+    // Dashboard scale-to-fit (keeps full laptop composition on phones)
+    const DESIGN = 1040;
+    const mq = window.matchMedia('(max-width:980px)');
+    const fit = () => {
+      const stage = document.querySelector('.dash-stage');
+      if (!stage) return;
+      const frame = stage.querySelector('.dash-fit') as HTMLElement | null;
+      const dash = stage.querySelector('.dash') as HTMLElement | null;
+      if (!frame || !dash) return;
+      if (mq.matches) {
+        const s = Math.min(1, stage.clientWidth / DESIGN);
+        frame.style.transform = `scale(${s})`;
+        frame.style.height = dash.offsetHeight * s + 'px';
+      } else {
+        frame.style.transform = '';
+        frame.style.height = '';
+      }
+    };
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', fit);
+    fit();
+    if (document.fonts?.ready) document.fonts.ready.then(fit);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      observers.forEach((o) => o.disconnect());
-      timeouts.forEach((t) => clearTimeout(t));
-      glowHandlers.forEach(({ el, fn }) => el.removeEventListener("pointermove", fn));
+      window.removeEventListener('resize', fit);
+      window.removeEventListener('orientationchange', fit);
     };
   }, []);
 
