@@ -229,6 +229,22 @@ function Dashboard() {
     if (!loading && !user) nav({ to: "/auth" });
   }, [user, loading]);
 
+  // Role gate: doctor/clinic accounts belong on the clinician dashboard.
+  useEffect(() => {
+    if (loading || !user) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase.from("profiles").select("plan").eq("id", user.id).maybeSingle();
+      const plan = (data as { plan?: string } | null)?.plan;
+      if (!cancelled && (plan === "professional" || plan === "clinic" || plan === "doctor")) {
+        nav({ to: "/clinician" });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, loading, nav]);
+
   const loadAll = useCallback(async () => {
     if (!user) return;
 

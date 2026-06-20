@@ -11,9 +11,11 @@ const STEPS = [
 ];
 
 export function UploadModal({
-  open, onClose, userId, onCreated,
+  open, onClose, userId, onCreated, patientId,
 }: {
   open: boolean; onClose: () => void; userId: string; onCreated: (id: string) => void;
+  /** When set (clinician flow), the created report is linked to this patient. */
+  patientId?: string | null;
 }) {
   const [tab, setTab] = useState<"pdf" | "image">("pdf");
   const [file, setFile] = useState<File | null>(null);
@@ -91,7 +93,7 @@ export function UploadModal({
       }
       const { data, error } = await supabase
         .from("reports")
-        .insert({ user_id: userId, title: analysis.title || file.name, analysis, file_name: file.name })
+        .insert({ user_id: userId, title: analysis.title || file.name, analysis, file_name: file.name, ...(patientId ? { patient_id: patientId } : {}) })
         .select("id").single();
       if (error) throw error;
       onCreated(data.id);

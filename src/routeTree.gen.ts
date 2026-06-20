@@ -10,11 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TryFreeRouteImport } from './routes/try-free'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ClinicianRouteImport } from './routes/clinician'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -31,6 +34,11 @@ const TryFreeRoute = TryFreeRouteImport.update({
   path: '/try-free',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProgressRoute = ProgressRouteImport.update({
   id: '/progress',
   path: '/progress',
@@ -39,6 +47,11 @@ const ProgressRoute = ProgressRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryRoute = HistoryRouteImport.update({
@@ -54,6 +67,11 @@ const GetStartedRoute = GetStartedRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClinicianRoute = ClinicianRouteImport.update({
+  id: '/clinician',
+  path: '/clinician',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckinRoute = CheckinRouteImport.update({
@@ -112,11 +130,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
   '/checkin': typeof CheckinRoute
+  '/clinician': typeof ClinicianRoute
   '/dashboard': typeof DashboardRoute
   '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
+  '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
@@ -130,11 +151,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
   '/checkin': typeof CheckinRoute
+  '/clinician': typeof ClinicianRoute
   '/dashboard': typeof DashboardRoute
   '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
+  '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
@@ -149,11 +173,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
   '/checkin': typeof CheckinRoute
+  '/clinician': typeof ClinicianRoute
   '/dashboard': typeof DashboardRoute
   '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
+  '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
@@ -169,11 +196,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/chat'
     | '/checkin'
+    | '/clinician'
     | '/dashboard'
     | '/get-started'
     | '/history'
+    | '/privacy'
     | '/profile'
     | '/progress'
+    | '/terms'
     | '/try-free'
     | '/learn/a1c'
     | '/learn/crp'
@@ -187,11 +217,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/chat'
     | '/checkin'
+    | '/clinician'
     | '/dashboard'
     | '/get-started'
     | '/history'
+    | '/privacy'
     | '/profile'
     | '/progress'
+    | '/terms'
     | '/try-free'
     | '/learn/a1c'
     | '/learn/crp'
@@ -205,11 +238,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/chat'
     | '/checkin'
+    | '/clinician'
     | '/dashboard'
     | '/get-started'
     | '/history'
+    | '/privacy'
     | '/profile'
     | '/progress'
+    | '/terms'
     | '/try-free'
     | '/learn/a1c'
     | '/learn/crp'
@@ -224,11 +260,14 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ChatRoute: typeof ChatRoute
   CheckinRoute: typeof CheckinRoute
+  ClinicianRoute: typeof ClinicianRoute
   DashboardRoute: typeof DashboardRoute
   GetStartedRoute: typeof GetStartedRoute
   HistoryRoute: typeof HistoryRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
+  TermsRoute: typeof TermsRoute
   TryFreeRoute: typeof TryFreeRoute
   LearnA1cRoute: typeof LearnA1cRoute
   LearnCrpRoute: typeof LearnCrpRoute
@@ -247,6 +286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TryFreeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/progress': {
       id: '/progress'
       path: '/progress'
@@ -259,6 +305,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/history': {
@@ -280,6 +333,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clinician': {
+      id: '/clinician'
+      path: '/clinician'
+      fullPath: '/clinician'
+      preLoaderRoute: typeof ClinicianRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkin': {
@@ -360,11 +420,14 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ChatRoute: ChatRoute,
   CheckinRoute: CheckinRoute,
+  ClinicianRoute: ClinicianRoute,
   DashboardRoute: DashboardRoute,
   GetStartedRoute: GetStartedRoute,
   HistoryRoute: HistoryRoute,
+  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
+  TermsRoute: TermsRoute,
   TryFreeRoute: TryFreeRoute,
   LearnA1cRoute: LearnA1cRoute,
   LearnCrpRoute: LearnCrpRoute,
