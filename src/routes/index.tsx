@@ -442,7 +442,7 @@ const html = `<style>
   </div>
   <div class="nav-cta">
     <a class="signin" href="/auth">Sign in</a>
-    <a class="btn btn-amber" href="/try-free">Try for free</a>
+    <a class="btn btn-amber" href="/get-started">Try for free</a>
   </div>
   <button class="menu-btn" aria-label="Menu">☰</button>
 </div>
@@ -453,7 +453,7 @@ const html = `<style>
     <a href="#learn">Learn</a>
     <a href="#coach">Coach</a>
     <a href="/auth">Sign in</a>
-    <a class="btn btn-amber" href="/try-free">Try for free</a>
+    <a class="btn btn-amber" href="/get-started">Try for free</a>
   </div>
 </nav>
 
@@ -463,7 +463,7 @@ const html = `<style>
   <h1>Your blood test,<br><span class="ital">finally explained.</span></h1>
   <p class="hero-sub">Understand your results, get a simple plan, and <b>watch your numbers move</b>. Not a one-time report — a health you can actually follow.</p>
   <div class="hero-cta">
-    <a class="btn btn-amber" href="/try-free">Try for free →</a>
+    <a class="btn btn-amber" href="/get-started">Try for free →</a>
     <a class="btn btn-ghost" href="#sample">See a sample report</a>
   </div>
   <div class="hero-note"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Your data is never stored. Processed, then immediately deleted · HIPAA-compliant</div>
@@ -837,7 +837,7 @@ const html = `<style>
 <div class="wrap"><div class="final">
   <h2>Stop guessing what your <span class="ital">numbers mean.</span></h2>
   <p>Your next blood test doesn't have to be a mystery. Get your first report in minutes.</p>
-  <a class="btn btn-amber" href="/try-free">Try labread for free →</a>
+  <a class="btn btn-amber" href="/get-started">Try labread for free →</a>
   <div class="meta">50+ biomarkers · any lab · zero data stored</div>
 </div></div>
 

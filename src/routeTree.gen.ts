@@ -13,6 +13,7 @@ import { Route as TryFreeRouteImport } from './routes/try-free'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as ChatRouteImport } from './routes/chat'
@@ -43,6 +44,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GetStartedRoute = GetStartedRouteImport.update({
+  id: '/get-started',
+  path: '/get-started',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/checkin': typeof CheckinRoute
   '/dashboard': typeof DashboardRoute
+  '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/checkin': typeof CheckinRoute
   '/dashboard': typeof DashboardRoute
+  '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/checkin': typeof CheckinRoute
   '/dashboard': typeof DashboardRoute
+  '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/checkin'
     | '/dashboard'
+    | '/get-started'
     | '/history'
     | '/profile'
     | '/progress'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/checkin'
     | '/dashboard'
+    | '/get-started'
     | '/history'
     | '/profile'
     | '/progress'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/checkin'
     | '/dashboard'
+    | '/get-started'
     | '/history'
     | '/profile'
     | '/progress'
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   CheckinRoute: typeof CheckinRoute
   DashboardRoute: typeof DashboardRoute
+  GetStartedRoute: typeof GetStartedRoute
   HistoryRoute: typeof HistoryRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
@@ -253,6 +266,13 @@ declare module '@tanstack/react-router' {
       path: '/history'
       fullPath: '/history'
       preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/get-started': {
+      id: '/get-started'
+      path: '/get-started'
+      fullPath: '/get-started'
+      preLoaderRoute: typeof GetStartedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -341,6 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   CheckinRoute: CheckinRoute,
   DashboardRoute: DashboardRoute,
+  GetStartedRoute: GetStartedRoute,
   HistoryRoute: HistoryRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
