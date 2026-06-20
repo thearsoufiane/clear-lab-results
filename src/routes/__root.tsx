@@ -95,9 +95,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: the inline script below adds `class="js"` to
+    // <html> before hydration (progressive enhancement), so SSR/client differ.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        {/* Progressive enhancement: mark JS-capable so marketing .rv reveals
+            only hide when JS can run (JS off → content stays visible). */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         {GA_MEASUREMENT_ID && (
           <>
             <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />

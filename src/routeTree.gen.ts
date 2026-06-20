@@ -16,6 +16,9 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as GetStartedRouteImport } from './routes/get-started'
+import { Route as ForYouRouteImport } from './routes/for-you'
+import { Route as ForLabsRouteImport } from './routes/for-labs'
+import { Route as ForDoctorsRouteImport } from './routes/for-doctors'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClinicianRouteImport } from './routes/clinician'
 import { Route as CheckinRouteImport } from './routes/checkin'
@@ -62,6 +65,21 @@ const HistoryRoute = HistoryRouteImport.update({
 const GetStartedRoute = GetStartedRouteImport.update({
   id: '/get-started',
   path: '/get-started',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForYouRoute = ForYouRouteImport.update({
+  id: '/for-you',
+  path: '/for-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForLabsRoute = ForLabsRouteImport.update({
+  id: '/for-labs',
+  path: '/for-labs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForDoctorsRoute = ForDoctorsRouteImport.update({
+  id: '/for-doctors',
+  path: '/for-doctors',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -132,6 +150,9 @@ export interface FileRoutesByFullPath {
   '/checkin': typeof CheckinRoute
   '/clinician': typeof ClinicianRoute
   '/dashboard': typeof DashboardRoute
+  '/for-doctors': typeof ForDoctorsRoute
+  '/for-labs': typeof ForLabsRoute
+  '/for-you': typeof ForYouRoute
   '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
   '/privacy': typeof PrivacyRoute
@@ -153,6 +174,9 @@ export interface FileRoutesByTo {
   '/checkin': typeof CheckinRoute
   '/clinician': typeof ClinicianRoute
   '/dashboard': typeof DashboardRoute
+  '/for-doctors': typeof ForDoctorsRoute
+  '/for-labs': typeof ForLabsRoute
+  '/for-you': typeof ForYouRoute
   '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
   '/privacy': typeof PrivacyRoute
@@ -175,6 +199,9 @@ export interface FileRoutesById {
   '/checkin': typeof CheckinRoute
   '/clinician': typeof ClinicianRoute
   '/dashboard': typeof DashboardRoute
+  '/for-doctors': typeof ForDoctorsRoute
+  '/for-labs': typeof ForLabsRoute
+  '/for-you': typeof ForYouRoute
   '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
   '/privacy': typeof PrivacyRoute
@@ -198,6 +225,9 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/clinician'
     | '/dashboard'
+    | '/for-doctors'
+    | '/for-labs'
+    | '/for-you'
     | '/get-started'
     | '/history'
     | '/privacy'
@@ -219,6 +249,9 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/clinician'
     | '/dashboard'
+    | '/for-doctors'
+    | '/for-labs'
+    | '/for-you'
     | '/get-started'
     | '/history'
     | '/privacy'
@@ -240,6 +273,9 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/clinician'
     | '/dashboard'
+    | '/for-doctors'
+    | '/for-labs'
+    | '/for-you'
     | '/get-started'
     | '/history'
     | '/privacy'
@@ -262,6 +298,9 @@ export interface RootRouteChildren {
   CheckinRoute: typeof CheckinRoute
   ClinicianRoute: typeof ClinicianRoute
   DashboardRoute: typeof DashboardRoute
+  ForDoctorsRoute: typeof ForDoctorsRoute
+  ForLabsRoute: typeof ForLabsRoute
+  ForYouRoute: typeof ForYouRoute
   GetStartedRoute: typeof GetStartedRoute
   HistoryRoute: typeof HistoryRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -326,6 +365,27 @@ declare module '@tanstack/react-router' {
       path: '/get-started'
       fullPath: '/get-started'
       preLoaderRoute: typeof GetStartedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-you': {
+      id: '/for-you'
+      path: '/for-you'
+      fullPath: '/for-you'
+      preLoaderRoute: typeof ForYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-labs': {
+      id: '/for-labs'
+      path: '/for-labs'
+      fullPath: '/for-labs'
+      preLoaderRoute: typeof ForLabsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-doctors': {
+      id: '/for-doctors'
+      path: '/for-doctors'
+      fullPath: '/for-doctors'
+      preLoaderRoute: typeof ForDoctorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -422,6 +482,9 @@ const rootRouteChildren: RootRouteChildren = {
   CheckinRoute: CheckinRoute,
   ClinicianRoute: ClinicianRoute,
   DashboardRoute: DashboardRoute,
+  ForDoctorsRoute: ForDoctorsRoute,
+  ForLabsRoute: ForLabsRoute,
+  ForYouRoute: ForYouRoute,
   GetStartedRoute: GetStartedRoute,
   HistoryRoute: HistoryRoute,
   PrivacyRoute: PrivacyRoute,

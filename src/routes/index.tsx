@@ -434,9 +434,9 @@ const html = `<style>
 <nav class="nav"><div class="wrap nav-in">
   <a class="brand" href="#"><svg class="logo-mark"><use href="#lm"/></svg><span class="word">labread</span></a>
   <div class="nav-links">
-    <a href="#audience">For you</a>
-    <a href="#audience">For doctors</a>
-    <a href="#audience">For clinics</a>
+    <a href="/for-you">For you</a>
+    <a href="/for-doctors">For doctors</a>
+    <a href="/for-labs">For clinics</a>
     <a href="#learn">Learn</a>
     <a href="#coach">Coach</a>
   </div>
@@ -447,9 +447,9 @@ const html = `<style>
   <button class="menu-btn" aria-label="Menu">☰</button>
 </div>
   <div class="nav-drawer">
-    <a href="#audience">For you</a>
-    <a href="#audience">For doctors</a>
-    <a href="#audience">For clinics</a>
+    <a href="/for-you">For you</a>
+    <a href="/for-doctors">For doctors</a>
+    <a href="/for-labs">For clinics</a>
     <a href="#learn">Learn</a>
     <a href="#coach">Coach</a>
     <a href="/auth">Sign in</a>
@@ -591,7 +591,7 @@ const html = `<style>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Track your whole family in one place</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Questions worth asking your doctor</li>
       </ul>
-      <a class="aud-link" href="#">How it works →</a>
+      <a class="aud-link" href="/for-you">How it works →</a>
     </div>
     <div class="aud-card">
       <div class="aud-tag">For doctors & consultants</div>
@@ -601,7 +601,7 @@ const html = `<style>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Track biomarker trends over time</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Instant context for patient questions</li>
       </ul>
-      <a class="aud-link" href="#">Explore for clinicians →</a>
+      <a class="aud-link" href="/for-doctors">Explore for clinicians →</a>
     </div>
     <div class="aud-card">
       <div class="aud-tag">For labs & clinics</div>
@@ -611,7 +611,7 @@ const html = `<style>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>API + report automation at scale</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Custom deployment & support</li>
       </ul>
-      <a class="aud-link" href="#">Talk to us →</a>
+      <a class="aud-link" href="/for-labs">Talk to us →</a>
     </div>
   </div>
 </div></section>
@@ -848,7 +848,7 @@ const html = `<style>
       <a class="brand" href="#"><svg class="logo-mark"><use href="#lm"/></svg><span class="word">labread</span></a>
       <p>The health OS your doctor never gave you. Your blood test, finally explained.</p>
     </div>
-    <div class="foot-col"><h4>Product</h4><a href="#">For individuals</a><a href="#">For doctors</a><a href="#">For labs</a><a href="#coach">Meet Anna</a></div>
+    <div class="foot-col"><h4>Product</h4><a href="/for-you">For individuals</a><a href="/for-doctors">For doctors</a><a href="/for-labs">For labs</a><a href="#coach">Meet Anna</a></div>
     <div class="foot-col"><h4>Learn</h4><a href="/learn/ferritin">Low ferritin</a><a href="/learn/vitamin-d">Vitamin D</a><a href="/learn/tsh-thyroid">Thyroid / TSH</a><a href="/learn/crp">High CRP</a><a href="/learn/a1c">A1c</a></div>
     <div class="foot-col"><h4>Company</h4><a href="#">About</a><a href="#">Trust center</a><a href="#">Contact</a></div>
     <div class="foot-col"><h4>Legal</h4><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="#">Subprocessors</a></div>
