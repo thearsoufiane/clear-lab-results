@@ -91,10 +91,13 @@ function ReportView() {
           // TEMP: paywall disabled — force isPaid so every section renders for free.
           // Re-enable later by restoring `isPaid={report.is_paid}`.
           return (
-            <>
-              <AnalysisView analysis={report.analysis} dateLabel={dateLabel} prevValues={prevMap} isPaid={true} />
-              <ProtocolCTA userId={user.id} reportId={report.id} analysis={report.analysis} />
-            </>
+            <AnalysisView
+              analysis={report.analysis}
+              dateLabel={dateLabel}
+              prevValues={prevMap}
+              isPaid={true}
+              ctaSlot={<ProtocolCTA userId={user.id} reportId={report.id} analysis={report.analysis} />}
+            />
           );
         })()}
         </main>

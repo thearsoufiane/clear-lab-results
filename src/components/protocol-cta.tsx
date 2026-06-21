@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase, type Analysis } from "@/lib/supabase";
 import { generateProtocol } from "@/lib/generate-protocol";
 import { Loader2, Sparkles, ArrowRight } from "lucide-react";
+import { LrUi, GradientButton, Eyebrow, Gauge, Reveal, LR_FONT_LINKS } from "@/components/lr-ui";
 
 type ExistingProtocol = { id: string; starts_at: string | null };
 
@@ -12,6 +13,23 @@ function dayOfProtocol(startsAt: string | null): number {
   const diffDays = Math.floor((now.getTime() - start.getTime()) / 86_400_000);
   return Math.min(90, Math.max(1, diffDays + 1));
 }
+
+const ctaCss = `
+  .lr-ui .pc-band{position:relative;margin:8px 0;border-radius:22px;overflow:hidden;padding:clamp(24px,4vw,36px);
+    background:var(--surface);border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.4)}
+  .lr-ui .pc-band::before{content:"";position:absolute;top:-130px;right:-90px;width:500px;height:400px;
+    background:radial-gradient(ellipse at center,rgba(245,133,63,.18),transparent 64%);filter:blur(28px);pointer-events:none}
+  .lr-ui .pc-in{position:relative;z-index:1}
+  .lr-ui .pc-h{font-family:var(--serif);font-weight:500;font-size:clamp(24px,3.6vw,34px);line-height:1.06}
+  .lr-ui .pc-h .i{font-style:italic;color:var(--amber-lite)}
+  .lr-ui .pc-sub{color:var(--muted);font-size:16px;margin-top:11px;max-width:460px;line-height:1.5}
+  .lr-ui .pc-timeline{display:flex;gap:10px;margin:22px 0 6px;flex-wrap:wrap}
+  .lr-ui .pc-pill{flex:1;min-width:130px;border:1px solid var(--line);border-radius:13px;padding:13px 15px;background:rgba(255,255,255,.015)}
+  .lr-ui .pc-pill .w{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber)}
+  .lr-ui .pc-pill .t{font-size:13px;color:var(--cream);margin-top:6px;line-height:1.4}
+  .lr-ui .pc-err{color:var(--red);font-size:13px;margin-top:12px}
+  .lr-ui .pc-row{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+`;
 
 export function ProtocolCTA({
   userId,
@@ -28,7 +46,6 @@ export function ProtocolCTA({
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Is there already an active protocol linked to this report?
   useEffect(() => {
     let active = true;
     supabase
@@ -64,57 +81,65 @@ export function ProtocolCTA({
     }
   }
 
-  // Avoid a flash of the CTA before we know whether a protocol already exists.
   if (checking) return null;
 
   // --- Protocol exists ------------------------------------------------------
   if (protocol) {
+    const day = dayOfProtocol(protocol.starts_at);
     return (
-      <div className="glass rounded-2xl p-6 mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h3 className="text-base font-semibold flex items-center gap-2">
-            <span className="text-success" aria-hidden>✓</span>
-            {justCreated ? "Your 90-day plan is ready" : "90-day plan active"}
-          </h3>
-          {!justCreated && (
-            <p className="text-sm text-muted-foreground mt-1">
-              Day {dayOfProtocol(protocol.starts_at)} of 90
-            </p>
-          )}
-        </div>
-        <a
-          href="/checkin"
-          className="inline-flex items-center justify-center gap-2 bg-accent text-accent-foreground font-medium rounded-full px-6 py-3 transition-colors min-h-[44px] whitespace-nowrap"
-        >
-          Go to daily check-in <ArrowRight size={16} />
-        </a>
-      </div>
+      <LrUi revealDeps={[true]} style={{ margin: "34px 0 8px" }}>
+        {LR_FONT_LINKS.map((l, i) => <link key={i} {...l} />)}
+        <style dangerouslySetInnerHTML={{ __html: ctaCss }} />
+        <Reveal>
+          <div className="pc-band">
+            <div className="pc-in pc-row">
+              <Gauge pct={(day / 90) * 100} size={86} stroke={7}>
+                <div>
+                  <div style={{ fontFamily: "var(--serif)", fontSize: 20, lineHeight: 1 }}>{day}</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--muted)", letterSpacing: ".08em" }}>/ 90</div>
+                </div>
+              </Gauge>
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <h3 className="pc-h" style={{ fontSize: 24 }}>{justCreated ? "Your 90-day plan is ready" : "90-day plan active"}</h3>
+                {!justCreated && <p className="pc-sub" style={{ fontSize: 14.5, marginTop: 6 }}>Day {day} of 90 — keep your daily habits going.</p>}
+                <a href="/checkin" className="lr-gbtn" style={{ marginTop: 14, textDecoration: "none" }}>
+                  Go to daily check-in <ArrowRight size={16} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </LrUi>
     );
   }
 
-  // --- No protocol yet — offer to generate one ------------------------------
+  // --- No protocol yet — the hero moment ------------------------------------
   return (
-    <div className="glass rounded-2xl p-6 mt-8">
-      <h3 className="text-lg font-semibold">Ready to improve these numbers?</h3>
-      <p className="text-sm text-muted-foreground mt-1">
-        We'll build you a 90-day plan based on your flagged results.
-      </p>
-      <button
-        onClick={handleGenerate}
-        disabled={generating}
-        className="mt-4 inline-flex items-center justify-center gap-2 bg-accent text-accent-foreground font-medium rounded-full px-6 py-3 transition-colors disabled:opacity-40 min-h-[44px]"
-      >
-        {generating ? (
-          <>
-            <Loader2 size={16} className="animate-spin" /> Building your plan...
-          </>
-        ) : (
-          <>
-            <Sparkles size={16} /> Generate my 90-day plan
-          </>
-        )}
-      </button>
-      {error && <p className="text-sm text-danger mt-3">{error}</p>}
-    </div>
+    <LrUi revealDeps={[checking]} style={{ margin: "34px 0 8px" }}>
+      {LR_FONT_LINKS.map((l, i) => <link key={i} {...l} />)}
+      <style dangerouslySetInnerHTML={{ __html: ctaCss }} />
+      <Reveal>
+        <div className="pc-band">
+          <div className="pc-in">
+            <Eyebrow style={{ marginBottom: 14 }}>Your next step</Eyebrow>
+            <h3 className="pc-h">Ready to improve these <span className="i">numbers?</span></h3>
+            <p className="pc-sub">We'll build you a 90-day plan from your flagged results — food, supplements, and daily habits matched to exactly what your body needs.</p>
+            <div className="pc-timeline">
+              <div className="pc-pill"><div className="w">Weeks 1–4</div><div className="t">Kickstart — targeted food &amp; supplements</div></div>
+              <div className="pc-pill"><div className="w">Weeks 5–8</div><div className="t">Build — daily habits that move markers</div></div>
+              <div className="pc-pill"><div className="w">Weeks 9–12</div><div className="t">Re-test — watch your numbers move</div></div>
+            </div>
+            <GradientButton onClick={handleGenerate} disabled={generating} style={{ marginTop: 18 }}>
+              {generating ? (
+                <><Loader2 size={16} className="lr-spin" /> Building your plan…</>
+              ) : (
+                <><Sparkles size={16} /> Generate my 90-day plan</>
+              )}
+            </GradientButton>
+            {error && <p className="pc-err">{error}</p>}
+          </div>
+        </div>
+      </Reveal>
+    </LrUi>
   );
 }

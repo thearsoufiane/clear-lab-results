@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Analysis } from "@/lib/supabase";
 
 /* ------------------------------------------------------------------
@@ -83,11 +84,14 @@ export function AnalysisView({
   dateLabel,
   prevValues,
   isPaid,
+  ctaSlot,
 }: {
   analysis: Analysis;
   dateLabel?: string;
   prevValues?: Map<string, string>;
   isPaid?: boolean;
+  /** Rendered after the markers but before the educational disclaimer (the 90-day CTA). */
+  ctaSlot?: ReactNode;
 }) {
   const needsAttention = a.values.filter(v => ["low", "high", "elevated", "deficient"].includes(v.status));
   const lookingGood = a.values.filter(v => v.status === "normal");
@@ -240,6 +244,8 @@ export function AnalysisView({
           </div>
         </div>
       )}
+
+      {ctaSlot}
 
       <div style={{ textAlign: "center", paddingTop: "28px", borderTop: `1px solid ${C.hairline}`, marginTop: "34px" }}>
         <div style={{ fontSize: "12px", color: C.textFaint, lineHeight: 1.7, marginBottom: "12px" }}>
