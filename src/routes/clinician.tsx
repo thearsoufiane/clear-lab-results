@@ -442,7 +442,7 @@ function Clinician() {
               <svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z" /><path d="M14 3v5h5M9 13h6M9 17h4" /></svg>
               Analyses
             </Link>
-            <Link to="/clinician">
+            <Link to="/protocol">
               <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 8h6M9 12h6M9 16h3" /></svg>
               Protocols
             </Link>
@@ -485,7 +485,10 @@ function Clinician() {
                   <span className={`flagbadge${activeFlagged === 0 ? " ok" : ""}`}>
                     {activeFlagged === 0 ? "all normal" : `${activeFlagged} flagged`}
                   </span>
-                  <button className="newan" onClick={() => setUploadOpen(true)}>+ New analysis</button>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <Link to="/protocol" className="newan" style={{ background: "rgba(255,255,255,.03)", color: "var(--amber-lite)", border: "1px solid var(--line)" }}>Protocol</Link>
+                    <button className="newan" onClick={() => setUploadOpen(true)}>+ New analysis</button>
+                  </div>
                 </div>
               </div>
 
@@ -583,7 +586,7 @@ function Clinician() {
           <svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z" /><path d="M14 3v5h5" /></svg>
           Analyses
         </Link>
-        <Link to="/clinician">
+        <Link to="/protocol">
           <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 8h6M9 12h6" /></svg>
           Protocols
         </Link>

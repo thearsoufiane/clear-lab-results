@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TryFreeRouteImport } from './routes/try-free'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ProtocolRouteImport } from './routes/protocol'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -40,6 +41,11 @@ const TryFreeRoute = TryFreeRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtocolRoute = ProtocolRouteImport.update({
+  id: '/protocol',
+  path: '/protocol',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProgressRoute = ProgressRouteImport.update({
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
+  '/protocol': typeof ProtocolRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
+  '/protocol': typeof ProtocolRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -207,6 +215,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
+  '/protocol': typeof ProtocolRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/profile'
     | '/progress'
+    | '/protocol'
     | '/terms'
     | '/try-free'
     | '/learn/a1c'
@@ -257,6 +267,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/profile'
     | '/progress'
+    | '/protocol'
     | '/terms'
     | '/try-free'
     | '/learn/a1c'
@@ -281,6 +292,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/profile'
     | '/progress'
+    | '/protocol'
     | '/terms'
     | '/try-free'
     | '/learn/a1c'
@@ -306,6 +318,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
+  ProtocolRoute: typeof ProtocolRoute
   TermsRoute: typeof TermsRoute
   TryFreeRoute: typeof TryFreeRoute
   LearnA1cRoute: typeof LearnA1cRoute
@@ -330,6 +343,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/protocol': {
+      id: '/protocol'
+      path: '/protocol'
+      fullPath: '/protocol'
+      preLoaderRoute: typeof ProtocolRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/progress': {
@@ -490,6 +510,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
+  ProtocolRoute: ProtocolRoute,
   TermsRoute: TermsRoute,
   TryFreeRoute: TryFreeRoute,
   LearnA1cRoute: LearnA1cRoute,
