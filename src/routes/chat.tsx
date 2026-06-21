@@ -2,14 +2,14 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
-import { Logo } from "@/components/logo";
 import { ArrowLeft, ArrowUp } from "lucide-react";
+import { LR_UI_CSS, LR_FONT_LINKS, LrDefs } from "@/components/lr-ui";
 
 export const Route = createFileRoute("/chat")({
   head: () => ({
     meta: [
-      { title: "Lab Coach | labread.health" },
-      { name: "description", content: "Chat with Lab Coach about your blood test results and your health protocol." },
+      { title: "Anna | labread.health" },
+      { name: "description", content: "Chat with Anna, your lab coach, about your blood test results and your health protocol." },
       { name: "robots", content: "noindex" },
     ],
     links: [{ rel: "canonical", href: "https://labread.health/chat" }],
@@ -24,6 +24,69 @@ const CHAT_URL = `${SUPABASE_URL}/functions/v1/health-chat`;
 
 function timeLabel(iso: string): string {
   return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+const annaCss = `
+  .anna-wrap{height:100dvh;display:flex;flex-direction:column;max-width:520px;margin:0 auto;width:100%;
+    background:var(--bg);padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  .anna-top{padding:14px 16px;border-bottom:1px solid var(--line-soft);background:rgba(11,9,7,.9);backdrop-filter:blur(10px)}
+  .anna-top-row{display:flex;align-items:center;gap:10px}
+  .anna-back{width:40px;height:40px;margin-left:-6px;border-radius:999px;display:grid;place-items:center;color:var(--muted);transition:.15s}
+  .anna-back:hover{color:var(--cream);background:rgba(255,255,255,.04)}
+  .anna-top h1{font-family:var(--serif);font-size:22px}
+  .anna-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .anna-chips .fc{font-family:var(--mono);font-size:10.5px;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--line-soft);border-radius:999px;padding:4px 10px}
+
+  /* orbit avatar — warm amber, native to labread */
+  .anna-orb{border-radius:50%;background:radial-gradient(circle at 35% 30%,#241a0d,#0a0806);border:1px solid var(--line);
+    display:grid;place-items:center;position:relative;flex-shrink:0}
+  .anna-orb::before{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 16px rgba(245,166,35,.5)}
+  .anna-orb i{border-radius:50%;background:var(--amber-lite);animation:lrspin 4.2s linear infinite}
+
+  .anna-msgs{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:14px}
+  .anna-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 6px}
+  .anna-empty h2{font-family:var(--serif);font-size:30px;margin-top:18px}
+  .anna-empty .sub{color:var(--muted);font-size:15px;margin-top:8px;max-width:20rem;line-height:1.5}
+  .anna-empty .sub b{color:var(--amber-lite);font-weight:600}
+  .anna-sugs{width:100%;display:flex;flex-direction:column;gap:9px;margin-top:26px}
+  .anna-chip{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:12px 16px;
+    font-size:14px;color:var(--cream);cursor:pointer;transition:.15s;font-family:var(--sans)}
+  .anna-chip:hover{border-color:rgba(245,166,35,.45);background:rgba(245,133,63,.06)}
+
+  .anna-u{align-self:flex-end;max-width:82%;background:rgba(245,133,63,.16);border:1px solid rgba(245,166,35,.25);color:var(--cream);
+    border-radius:16px 16px 5px 16px;padding:11px 14px;font-size:15px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+  .anna-arow{align-self:flex-start;max-width:88%;display:flex;gap:9px;align-items:flex-end}
+  .anna-a{background:var(--surface);border:1px solid var(--line);border-radius:16px 16px 16px 5px;padding:12px 15px;font-size:15px;
+    line-height:1.55;white-space:pre-wrap;word-break:break-word}
+  .anna-a b{color:var(--amber-lite)}
+  .anna-ts{font-family:var(--mono);font-size:9.5px;color:var(--faint);margin:3px 4px 0}
+  .anna-dots{display:inline-flex;gap:4px;padding:3px 0}
+  .anna-dots span{width:6px;height:6px;border-radius:50%;background:var(--amber-lite);animation:annaDot 1.1s ease-in-out infinite}
+  @keyframes annaDot{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+  @media(prefers-reduced-motion:reduce){.anna-dots span{animation:none}}
+
+  .anna-input{border-top:1px solid var(--line-soft);background:rgba(11,9,7,.95);padding:12px 14px}
+  .anna-err{font-size:13px;color:var(--red);margin:0 2px 8px}
+  .anna-row{display:flex;align-items:flex-end;gap:9px}
+  .anna-field{flex:1;resize:none;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:18px;padding:12px 16px;
+    font-size:15px;color:var(--cream);font-family:var(--sans);max-height:128px;transition:.15s}
+  .anna-field::placeholder{color:var(--faint)}
+  .anna-field:focus{outline:none;border-color:var(--amber)}
+  .anna-field:disabled{opacity:.6}
+  .anna-send{width:44px;height:44px;flex-shrink:0;border-radius:50%;border:none;background:var(--grad);color:#1a0f02;
+    display:grid;place-items:center;cursor:pointer;transition:.15s;box-shadow:0 0 22px rgba(245,133,63,.3)}
+  .anna-send:hover:not(:disabled){transform:translateY(-1px)}
+  .anna-send:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+`;
+
+function AnnaOrb({ size = 34 }: { size?: number }) {
+  const dot = Math.max(3, Math.round(size * 0.11));
+  const off = Math.round(size * 0.24);
+  return (
+    <span className="anna-orb" style={{ width: size, height: size }}>
+      <i style={{ width: dot, height: dot, boxShadow: `${off}px 0 0 var(--amber), -${off}px 0 0 var(--amber-lite), 0 ${off}px 0 var(--green), 0 -${off}px 0 var(--amber)` }} />
+    </span>
+  );
 }
 
 function ChatPage() {
@@ -44,7 +107,6 @@ function ChatPage() {
     if (!loading && !user) nav({ to: "/auth" });
   }, [user, loading]);
 
-  // Load last 20 messages + protocol focus areas
   useEffect(() => {
     if (!user) return;
     let active = true;
@@ -64,9 +126,6 @@ function ChatPage() {
         .limit(1)
         .maybeSingle();
       if (!active) return;
-      // Most-recent-20 come back newest-first; sort to chronological order.
-      // On a created_at tie (a user+assistant pair saved together), keep the
-      // user turn before the assistant turn.
       const ordered = ((rows as Msg[]) ?? []).slice().sort((a, b) => {
         if (a.created_at !== b.created_at) return a.created_at < b.created_at ? -1 : 1;
         if (a.role === b.role) return 0;
@@ -81,7 +140,6 @@ function ChatPage() {
     };
   }, [user]);
 
-  // Auto-scroll to bottom whenever messages change
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -97,7 +155,6 @@ function ChatPage() {
       const userMsg: Msg = { role: "user", content: trimmed, created_at: now };
       const history = [...messages, userMsg].map((m) => ({ role: m.role, content: m.content }));
 
-      // Optimistically add the user message + an empty assistant bubble (typing).
       setMessages((prev) => [...prev, userMsg, { role: "assistant", content: "", created_at: new Date().toISOString(), streaming: true }]);
       setStreaming(true);
 
@@ -151,7 +208,6 @@ function ChatPage() {
           return next;
         });
       } catch (e) {
-        // Drop the empty assistant placeholder and surface the error.
         setMessages((prev) => {
           const next = prev.slice();
           const last = next[next.length - 1];
@@ -185,102 +241,82 @@ function ChatPage() {
   const showEmpty = historyLoaded && messages.length === 0;
 
   return (
-    <div className="h-[100dvh] flex flex-col max-w-[480px] mx-auto w-full pb-16">
-      {/* ===== TOP BAR ===== */}
-      <header className="px-4 py-3 border-b border-border/50 bg-background">
-        <div className="flex items-center gap-2">
-          <Link
-            to="/dashboard"
-            className="text-muted-foreground hover:text-foreground p-2 -ml-2 rounded-full hover:bg-white/5 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
-            title="Back"
-          >
-            <ArrowLeft size={18} />
-          </Link>
-          <h1 className="text-xl tracking-tight">Lab Coach</h1>
-        </div>
-        {focusAreas.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2 pl-0.5">
-            {focusAreas.slice(0, 4).map((f, i) => (
-              <span
-                key={`${f.biomarker ?? "area"}-${i}`}
-                className="text-[11px] text-muted-foreground bg-white/5 border border-border/60 rounded-full px-2.5 py-1"
-              >
-                {f.biomarker ?? "Focus"}
-              </span>
-            ))}
-          </div>
-        )}
-      </header>
+    <div className="lr-ui">
+      <style dangerouslySetInnerHTML={{ __html: LR_UI_CSS + annaCss }} />
+      {LR_FONT_LINKS.map((l, i) => <link key={i} {...l} />)}
+      <LrDefs />
 
-      {/* ===== MESSAGES ===== */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
-        {showEmpty ? (
-          <div className="h-full flex flex-col items-center justify-center text-center px-2">
-            <div className="w-14 h-14 rounded-full bg-accent grid place-items-center text-2xl">🩺</div>
-            <div className="mt-4 text-2xl font-serif">Lab Coach</div>
-            <p className="mt-2 text-sm text-muted-foreground max-w-[18rem]">
-              Ask me anything about your results or how your habits are working. I know your numbers.
-            </p>
-            <div className="mt-6 w-full space-y-2">
-              {suggestions.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => send(s)}
-                  className="w-full text-left text-sm glass rounded-full px-4 py-2.5 hover:border-accent/40 transition-colors"
-                >
-                  {s}
-                </button>
+      <div className="anna-wrap">
+        {/* TOP BAR */}
+        <header className="anna-top">
+          <div className="anna-top-row">
+            <Link to="/dashboard" className="anna-back" title="Back"><ArrowLeft size={18} /></Link>
+            <AnnaOrb size={32} />
+            <h1>Anna</h1>
+          </div>
+          {focusAreas.length > 0 && (
+            <div className="anna-chips">
+              {focusAreas.slice(0, 4).map((f, i) => (
+                <span key={`${f.biomarker ?? "area"}-${i}`} className="fc">{f.biomarker ?? "Focus"}</span>
               ))}
             </div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {messages.map((m, i) =>
-              m.role === "user" ? (
-                <div key={i} className="flex flex-col items-end">
-                  <div className="max-w-[80%] bg-accent text-white rounded-2xl rounded-br-md px-4 py-2.5 text-[15px] whitespace-pre-wrap break-words">
-                    {m.content}
-                  </div>
-                  <span className="text-[10px] font-mono text-muted-foreground mt-1 mr-1">{timeLabel(m.created_at)}</span>
-                </div>
-              ) : (
-                <div key={i} className="flex flex-col items-start">
-                  <div className="max-w-[85%] glass rounded-xl border-l-2 border-l-accent px-4 py-3 text-[15px] whitespace-pre-wrap break-words">
-                    {m.content === "" && m.streaming ? <TypingDots /> : m.content}
-                  </div>
-                  {m.content !== "" && (
-                    <span className="text-[10px] font-mono text-muted-foreground mt-1 ml-1">{timeLabel(m.created_at)}</span>
-                  )}
-                </div>
-              ),
-            )}
-            <div ref={endRef} />
-          </div>
-        )}
-      </div>
+          )}
+        </header>
 
-      {/* ===== INPUT BAR ===== */}
-      <div className="border-t border-border/50 bg-background px-3 py-3">
-        {error && <p className="text-sm text-danger mb-2 px-1">{error}</p>}
-        <div className="flex items-end gap-2">
-          <textarea
-            ref={inputRef}
-            rows={1}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={onKeyDown}
-            disabled={streaming}
-            placeholder="Ask about your results..."
-            className="flex-1 resize-none bg-input/60 border border-border rounded-2xl px-4 py-3 text-[15px] focus:outline-none focus:border-accent transition max-h-32 disabled:opacity-60"
-          />
-          <button
-            onClick={() => send(input)}
-            disabled={streaming || !input.trim()}
-            className="w-11 h-11 flex-none rounded-full bg-accent text-white grid place-items-center transition disabled:opacity-40"
-            title="Send"
-          >
-            <ArrowUp size={18} />
-          </button>
+        {/* MESSAGES */}
+        <div className="anna-msgs">
+          {showEmpty ? (
+            <div className="anna-empty">
+              <AnnaOrb size={60} />
+              <h2>Anna</h2>
+              <p className="sub">Your lab coach. <b>I know your numbers.</b> Ask me what a marker means, why it changed, or what to do next.</p>
+              <div className="anna-sugs">
+                {suggestions.map((s) => (
+                  <button key={s} className="anna-chip" onClick={() => send(s)}>{s}</button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              {messages.map((m, i) =>
+                m.role === "user" ? (
+                  <div key={i} style={{ alignSelf: "flex-end", display: "flex", flexDirection: "column", alignItems: "flex-end", maxWidth: "82%" }}>
+                    <div className="anna-u">{m.content}</div>
+                    <span className="anna-ts">{timeLabel(m.created_at)}</span>
+                  </div>
+                ) : (
+                  <div key={i} style={{ alignSelf: "flex-start", maxWidth: "88%" }}>
+                    <div className="anna-arow">
+                      <AnnaOrb size={26} />
+                      <div className="anna-a">{m.content === "" && m.streaming ? <TypingDots /> : m.content}</div>
+                    </div>
+                    {m.content !== "" && <span className="anna-ts" style={{ marginLeft: 35 }}>{timeLabel(m.created_at)}</span>}
+                  </div>
+                ),
+              )}
+              <div ref={endRef} />
+            </>
+          )}
+        </div>
+
+        {/* INPUT BAR */}
+        <div className="anna-input">
+          {error && <p className="anna-err">{error}</p>}
+          <div className="anna-row">
+            <textarea
+              ref={inputRef}
+              rows={1}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={onKeyDown}
+              disabled={streaming}
+              placeholder="Ask Anna about your results…"
+              className="anna-field"
+            />
+            <button className="anna-send" onClick={() => send(input)} disabled={streaming || !input.trim()} title="Send">
+              <ArrowUp size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -289,14 +325,10 @@ function ChatPage() {
 
 function TypingDots() {
   return (
-    <span className="inline-flex items-center gap-1 py-1">
-      {[0, 0.15, 0.3].map((d) => (
-        <span
-          key={d}
-          className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce-dot"
-          style={{ animationDelay: `${d}s` }}
-        />
-      ))}
+    <span className="anna-dots">
+      <span style={{ animationDelay: "0s" }} />
+      <span style={{ animationDelay: ".15s" }} />
+      <span style={{ animationDelay: ".3s" }} />
     </span>
   );
 }

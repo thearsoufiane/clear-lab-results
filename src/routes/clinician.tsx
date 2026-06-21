@@ -569,7 +569,7 @@ function Clinician() {
         {/* COACH BAR */}
         <div className="coachbar">
           <span className="c-orb"><i /></span>
-          <Link to="/chat" className="c-input">Ask labread about {firstName}'s results…</Link>
+          <Link to="/chat" className="c-input">Ask Anna about {firstName}'s results…</Link>
           <Link to="/chat" className="c-send">
             <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
           </Link>
