@@ -95,6 +95,30 @@ function ProtocolScreen() {
             </Reveal>
 
             <Reveal>
+              <Eyebrow style={{ marginTop: 30, display: "block", marginBottom: 12 }}>The plan</Eyebrow>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 10 }}>
+                {[
+                  { w: "Weeks 1–4", t: "Kickstart", d: "Targeted food & supplements", lo: 1, hi: 30 },
+                  { w: "Weeks 5–8", t: "Build", d: "Daily habits that move markers", lo: 31, hi: 60 },
+                  { w: "Weeks 9–12", t: "Re-test", d: "Confirm your numbers moved", lo: 61, hi: 90 },
+                ].map((ph) => {
+                  const active = dayX != null && dayX >= ph.lo && dayX <= ph.hi;
+                  const done = dayX != null && dayX > ph.hi;
+                  return (
+                    <GlassPanel key={ph.w} style={{ padding: "14px 15px", ...(active ? { borderColor: "var(--amber)", background: "rgba(245,133,63,.06)" } : {}) }}>
+                      <div style={{ fontFamily: "var(--mono)", fontSize: 9.5, letterSpacing: ".1em", textTransform: "uppercase", color: active ? "var(--amber-lite)" : "var(--faint)" }}>{ph.w}</div>
+                      <div style={{ fontFamily: "var(--serif)", fontSize: 17, marginTop: 6 }}>{ph.t}</div>
+                      <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 5, lineHeight: 1.4 }}>{ph.d}</div>
+                      <div style={{ fontFamily: "var(--mono)", fontSize: 9, marginTop: 8, color: active ? "var(--amber)" : done ? "var(--green)" : "var(--faint)" }}>
+                        {active ? "● CURRENT" : done ? "✓ DONE" : "UPCOMING"}
+                      </div>
+                    </GlassPanel>
+                  );
+                })}
+              </div>
+            </Reveal>
+
+            <Reveal>
               <Eyebrow style={{ marginTop: 30, display: "block" }}>Your habits</Eyebrow>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 12 }}>
                 {habits.length ? habits.map((h) => (
