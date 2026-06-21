@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { X, Upload, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
+import { X, Upload, FileText, Image as ImageIcon } from "lucide-react";
 import { fileToBase64 } from "@/lib/pdf";
 import { supabase, SUPABASE_ANON_KEY, SUPABASE_URL, type Analysis } from "@/lib/supabase";
+import { LR_UI_CSS, LR_FONT_LINKS, LrDefs, GlassPanel, GradientButton, Gauge } from "@/components/lr-ui";
 
 const STEPS = [
   "Extracting values",
@@ -9,6 +10,61 @@ const STEPS = [
   "Writing explanations",
   "Building recommendations",
 ];
+
+const modalCss = `
+  .lr-ui .um-ov{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;
+    background:rgba(6,5,3,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:umFade .2s ease}
+  @keyframes umFade{from{opacity:0}to{opacity:1}}
+  .lr-ui .um-modal{position:relative;width:100%;max-width:560px;padding:36px;border-radius:20px;animation:umIn .26s cubic-bezier(.2,.8,.2,1)}
+  @keyframes umIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+  .lr-ui .um-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:10px;border:1px solid var(--line-soft);
+    background:rgba(255,255,255,.02);color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:.15s}
+  .lr-ui .um-close:hover{color:var(--cream);border-color:var(--line)}
+  .lr-ui .um-close:focus-visible{outline:2px solid var(--amber-lite);outline-offset:2px}
+  .lr-ui .um-title{font-size:26px}
+  .lr-ui .um-sub{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:7px}
+  .lr-ui .um-seg{display:flex;gap:6px;margin:22px 0 18px;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:999px;padding:5px}
+  .lr-ui .um-seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;border:none;background:none;color:var(--muted);
+    font-family:var(--sans);font-size:14px;font-weight:500;padding:10px;border-radius:999px;cursor:pointer;transition:.15s}
+  .lr-ui .um-seg button.on{background:var(--grad);color:#1a0f02;font-weight:600}
+  .lr-ui .um-seg button svg{width:15px;height:15px}
+  .lr-ui .um-drop{min-height:200px;border:1.5px dashed var(--line);border-radius:16px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:13px;text-align:center;padding:24px;cursor:pointer;transition:.18s;background:rgba(255,255,255,.01)}
+  .lr-ui .um-drop:hover,.lr-ui .um-drop.drag{border-color:var(--amber);background:rgba(245,133,63,.06)}
+  .lr-ui .um-drop .glyph{width:54px;height:54px;border-radius:14px;background:rgba(245,133,63,.1);border:1px solid var(--line);display:grid;place-items:center}
+  .lr-ui .um-drop .glyph svg{width:26px;height:26px;color:var(--amber-lite)}
+  .lr-ui .um-drop .dz-main{font-size:15px;color:var(--cream)}
+  .lr-ui .um-drop .dz-sub{font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .lr-ui .um-file{font-size:15px;font-weight:600;color:var(--cream)}
+  .lr-ui .um-file small{display:block;font-family:var(--mono);font-size:11px;color:var(--faint);font-weight:400;margin-top:4px}
+  .lr-ui .um-cta{width:100%;margin-top:22px}
+  .lr-ui .um-ahead{display:flex;align-items:center;gap:13px;margin-bottom:24px}
+  .lr-ui .um-checklist{display:flex;flex-direction:column;gap:15px}
+  .lr-ui .um-cstep{display:flex;align-items:center;gap:13px;font-size:15px;transition:.2s}
+  .lr-ui .um-cstep .ic{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;border:1.5px solid var(--line)}
+  .lr-ui .um-cstep.pending{color:var(--faint)}
+  .lr-ui .um-cstep.active{color:var(--cream)}
+  .lr-ui .um-cstep.done{color:var(--muted)}
+  .lr-ui .um-cstep.active .ic{border-color:var(--amber)}
+  .lr-ui .um-cstep.active .ic i{width:9px;height:9px;border-radius:50%;background:var(--grad);display:block}
+  .lr-ui .um-cstep.done .ic{background:rgba(111,207,151,.15);border-color:rgba(111,207,151,.4)}
+  .lr-ui .um-cstep.done .ic svg{width:13px;height:13px;stroke:var(--green);fill:none;stroke-width:3}
+  .lr-ui .um-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;position:relative;margin:26px 0 14px}
+  .lr-ui .um-bar i{position:absolute;top:0;bottom:0;width:40%;border-radius:99px;background:var(--grad);animation:umBar 1.4s ease-in-out infinite}
+  @keyframes umBar{0%{left:-42%}100%{left:100%}}
+  .lr-ui .um-help{font-size:13px;color:var(--faint);line-height:1.5}
+  .lr-ui .um-err{font-family:var(--mono);font-size:12px;color:var(--red);background:rgba(224,112,106,.08);border:1px solid rgba(224,112,106,.3);
+    border-radius:12px;padding:13px;white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto;margin-top:6px}
+  .lr-ui .um-row{display:flex;gap:10px;margin-top:16px}
+  .lr-ui .um-ghost{flex:1;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--cream);border-radius:999px;padding:12px;font-size:14px;cursor:pointer;font-family:var(--sans)}
+  .lr-ui .um-ghost:hover{border-color:rgba(245,166,35,.4)}
+  @media(prefers-reduced-motion:reduce){.lr-ui .um-bar i{animation:none;width:100%;left:0;opacity:.5}}
+  @media(max-width:560px){
+    .lr-ui .um-ov{place-items:end center;padding:0}
+    .lr-ui .um-modal{max-width:none;border-radius:20px 20px 0 0;padding:26px 20px calc(26px + env(safe-area-inset-bottom));animation:umSheet .28s cubic-bezier(.2,.8,.2,1)}
+    @keyframes umSheet{from{transform:translateY(100%)}to{transform:none}}
+  }
+`;
 
 export function UploadModal({
   open, onClose, userId, onCreated, patientId,
@@ -110,87 +166,98 @@ export function UploadModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/70" onClick={onClose}>
-      <div className="glass w-full max-w-lg p-6 relative" onClick={(e) => e.stopPropagation()}>
-        <button onClick={onClose} className="absolute right-2 top-2 text-muted-foreground hover:text-foreground p-2 rounded min-h-[44px] min-w-[44px] flex items-center justify-center"><X size={18} /></button>
+    <div className="lr-ui">
+      <style dangerouslySetInnerHTML={{ __html: LR_UI_CSS + modalCss }} />
+      {LR_FONT_LINKS.map((l, i) => <link key={i} {...l} />)}
+      <LrDefs />
 
-        {phase === "idle" && (
-          <>
-            <h3 className="text-2xl mb-1">Upload your report</h3>
-            <p className="text-sm text-muted-foreground mb-5">PDF or image. Bloodwork from any lab.</p>
-            <div className="flex gap-1 mb-4 p-1 bg-input/50 rounded-full text-sm">
-              {(["pdf", "image"] as const).map((t) => (
-                <button key={t} onClick={() => { setTab(t); setFile(null); }}
-                  className={`flex-1 py-2 rounded-full transition flex items-center justify-center gap-2 ${tab === t ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-                  {t === "pdf" ? <FileText size={14}/> : <ImageIcon size={14}/>}
-                  {t === "pdf" ? "PDF" : "Image"}
-                </button>
-              ))}
-            </div>
-            <div
-              onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
-              onDragLeave={() => setDrag(false)}
-              onDrop={(e) => { e.preventDefault(); setDrag(false); pickFile(e.dataTransfer.files?.[0] ?? null); }}
-              onClick={() => inputRef.current?.click()}
-              className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition ${drag ? "border-accent bg-accent/5" : "border-border hover:border-accent/60"}`}
-            >
-              <Upload size={28} className="mx-auto mb-3 text-accent" />
-              {file ? (
-                <div className="text-sm">
-                  <div className="text-foreground font-medium truncate">{file.name}</div>
-                  <div className="text-muted-foreground mt-1">{(file.size/1024).toFixed(0)} KB</div>
-                </div>
-              ) : (
-                <div className="text-sm text-muted-foreground">Drag & drop, or click to choose a {tab.toUpperCase()}</div>
-              )}
-              <input ref={inputRef} type="file" accept={accept} className="hidden"
-                onChange={(e) => pickFile(e.target.files?.[0] ?? null)} />
-            </div>
-            <button
-              disabled={!file}
-              onClick={submit}
-              className="w-full mt-5 bg-accent text-accent-foreground font-medium rounded-full py-3 transition-colors disabled:opacity-40"
-            >
-              Analyze report
-            </button>
-          </>
-        )}
+      <div className="um-ov" onClick={onClose}>
+        <GlassPanel className="um-modal">
+          <div onClick={(e) => e.stopPropagation()}>
+            {phase !== "running" && (
+              <button className="um-close" onClick={onClose} aria-label="Close"><X size={18} /></button>
+            )}
 
-        {phase === "running" && (
-          <div className="py-6">
-            <div className="flex items-center gap-2 mb-6">
-              <Loader2 size={18} className="text-accent animate-spin" />
-              <h3 className="text-xl">Analyzing</h3>
-              <span className="ml-1 inline-flex gap-1">
-                {[0,1,2].map(i => <span key={i} className="w-1.5 h-1.5 rounded-full bg-accent animate-bounce-dot" style={{animationDelay: `${i*0.15}s`}}/>)}
-              </span>
-            </div>
-            <div className="space-y-3">
-              {STEPS.map((s, i) => (
-                <div key={s} className={`flex items-center gap-3 text-sm transition ${i < step ? "text-muted-foreground" : i === step ? "text-foreground" : "text-muted-foreground/50"}`}>
-                  <span className={`dot ${i < step ? "dot-normal" : i === step ? "dot-warn" : ""}`} style={i > step ? {background:"#2a2e36"} : undefined}/>
-                  {s}
+            {phase === "idle" && (
+              <>
+                <h3 className="um-title">Upload your report</h3>
+                <div className="um-sub">PDF or image · bloodwork from any lab</div>
+
+                <div className="um-seg" role="tablist">
+                  {(["pdf", "image"] as const).map((t) => (
+                    <button key={t} role="tab" aria-selected={tab === t} className={tab === t ? "on" : ""} onClick={() => { setTab(t); setFile(null); }}>
+                      {t === "pdf" ? <FileText /> : <ImageIcon />}
+                      {t === "pdf" ? "PDF" : "Image"}
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </div>
-            {step >= STEPS.length && (
-              <div className="mt-5 text-xs text-muted-foreground">
-                Still working — large reports can take up to a couple of minutes.
-              </div>
+
+                <div
+                  className={"um-drop" + (drag ? " drag" : "")}
+                  role="button"
+                  tabIndex={0}
+                  onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+                  onDragLeave={() => setDrag(false)}
+                  onDrop={(e) => { e.preventDefault(); setDrag(false); pickFile(e.dataTransfer.files?.[0] ?? null); }}
+                  onClick={() => inputRef.current?.click()}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); inputRef.current?.click(); } }}
+                >
+                  <span className="glyph"><Upload /></span>
+                  {file ? (
+                    <div className="um-file">{file.name}<small>{(file.size / 1024).toFixed(0)} KB · click to replace</small></div>
+                  ) : (
+                    <>
+                      <div className="dz-main">Drag &amp; drop, or click to choose</div>
+                      <div className="dz-sub">{tab.toUpperCase()} · max 3 min to analyze</div>
+                    </>
+                  )}
+                  <input ref={inputRef} type="file" accept={accept} className="sr-only" style={{ display: "none" }}
+                    onChange={(e) => pickFile(e.target.files?.[0] ?? null)} />
+                </div>
+
+                <GradientButton className="um-cta" disabled={!file} onClick={submit}>Analyze report</GradientButton>
+              </>
+            )}
+
+            {phase === "running" && (
+              <>
+                <div className="um-ahead">
+                  <Gauge size={30} stroke={4} spin pct={72} />
+                  <h3 className="um-title" style={{ fontSize: 24 }}>Analyzing</h3>
+                </div>
+                <div className="um-checklist">
+                  {STEPS.map((s, i) => {
+                    const state = i < step ? "done" : i === step ? "active" : "pending";
+                    return (
+                      <div key={s} className={`um-cstep ${state}`}>
+                        <span className="ic">
+                          {state === "done"
+                            ? <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg>
+                            : state === "active" ? <i className="lr-pulse" /> : null}
+                        </span>
+                        {s}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="um-bar"><i /></div>
+                <div className="um-help">Still working — large reports can take a couple of minutes.</div>
+              </>
+            )}
+
+            {phase === "error" && (
+              <>
+                <h3 className="um-title" style={{ fontSize: 22 }}>Analysis failed</h3>
+                <div className="um-sub" style={{ marginBottom: 10 }}>Something went wrong reading that file</div>
+                <pre className="um-err">{err}</pre>
+                <div className="um-row">
+                  <button className="um-ghost" onClick={() => { setPhase("idle"); setErr(null); }}>Try again</button>
+                  <GradientButton style={{ flex: 1 }} onClick={onClose}>Close</GradientButton>
+                </div>
+              </>
             )}
           </div>
-        )}
-
-        {phase === "error" && (
-          <div className="py-2">
-            <h3 className="text-xl mb-2">Analysis failed</h3>
-            <pre className="text-xs bg-danger/10 border border-danger/30 rounded-lg p-3 text-danger whitespace-pre-wrap break-words max-h-60 overflow-auto">{err}</pre>
-            <div className="flex gap-2 mt-4">
-              <button onClick={() => { setPhase("idle"); setErr(null); }} className="flex-1 glass py-2.5 rounded-full text-sm hover:bg-white/5">Try again</button>
-              <button onClick={onClose} className="flex-1 bg-accent text-accent-foreground py-2.5 rounded-full text-sm">Close</button>
-            </div>
-          </div>
-        )}
+        </GlassPanel>
       </div>
     </div>
   );
