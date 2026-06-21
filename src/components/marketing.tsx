@@ -61,9 +61,14 @@ export const MARKETING_CSS = `
   .lr-mkt .sec-head{text-align:center;max-width:720px;margin:0 auto}
   .lr-mkt .sec-head h2{font-size:clamp(32px,4.4vw,52px);margin-top:16px}
   .lr-mkt .sec-head p{color:var(--muted);font-size:17px;margin-top:16px}
-  .lr-mkt .rv{transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1)}
-  html.js .lr-mkt .rv{opacity:0;transform:translateY(26px)}
-  .lr-mkt .rv.in{opacity:1;transform:none}
+  /* Default = visible (SSR / no-JS / pre-hydration). Only hide once JS is
+     active to reveal it. Both hide + reveal live under html.js so the .in
+     reveal rule out-specifies the hide rule (the earlier bug: the hide rule
+     carried html and out-specified a non-html .in reveal rule). */
+  .lr-mkt .rv{opacity:1;transform:none}
+  html.js .lr-mkt .rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1)}
+  html.js .lr-mkt .rv.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){html.js .lr-mkt .rv{opacity:1;transform:none;transition:none}}
 
   /* FINAL CTA */
   .lr-mkt .final{position:relative;text-align:center;padding:80px 0;overflow:hidden}
@@ -442,16 +447,73 @@ export function ConsoleHero({ badges, h1, sub, ctas, metrics, gaugeCenter, panel
   );
 }
 
+/* Idempotent reveal: flips a .rv section to .in and fires the inner
+   animations that used to depend on the observer (ring fills, range markers,
+   trend-line draw). No-op if already revealed. */
+function revealEl(el: HTMLElement, timers: ReturnType<typeof setTimeout>[]) {
+  if (!el || el.classList.contains("in")) return;
+  el.classList.add("in");
+  el.querySelectorAll<HTMLElement>(".rc-fg[data-pct]").forEach((c) => {
+    const len = 113, pct = +(c.getAttribute("data-pct") || "0");
+    c.style.strokeDashoffset = String(len - (len * pct) / 100);
+  });
+  el.querySelectorAll<HTMLElement>(".range-mark[data-left]").forEach((m) => {
+    const dt = setTimeout(() => { m.style.left = m.getAttribute("data-left") || ""; }, 120);
+    timers.push(dt);
+  });
+  const tp = el.querySelector(".trend-path, .trend-line");
+  if (tp) tp.classList.add("draw");
+}
+
 /* All hero/scroll JS from the reference pages, converted to one effect.
-   Reveal observer (+ ring/range triggers), gauge ring fill, counters,
-   and console parallax — guarded by reduced-motion and the 1040px check. */
+   Sets the html.js progressive-enhancement flag client-side (never in SSR),
+   runs ONE bulletproof reveal path (threshold 0 + rootMargin + synchronous
+   mount sweep + scroll/resize safety net + no-IO fallback), and wires the
+   gauge ring fill, counters, and console parallax. */
 export function useMarketingEffects(rootRef: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
+    // JS is active → engage the .rv hide gate (SSR / no-JS stays visible).
+    document.documentElement.classList.add("js");
     const reduce = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
     const timers: ReturnType<typeof setTimeout>[] = [];
 
+    /* ---- reveal: single observer + safety net ---- */
+    const els = Array.from(root.querySelectorAll<HTMLElement>(".rv"));
+    let io: IntersectionObserver | null = null;
+    const sweep = () => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      els.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top < vh * 0.92 && r.bottom > 0) revealEl(el, timers);
+      });
+    };
+    let onScroll: (() => void) | null = null;
+    if (!("IntersectionObserver" in window)) {
+      els.forEach((el) => revealEl(el, timers)); // no IO → reveal everything
+    } else {
+      io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              revealEl(e.target as HTMLElement, timers);
+              io!.unobserve(e.target);
+            }
+          });
+        },
+        { root: null, rootMargin: "0px 0px -8% 0px", threshold: 0 },
+      );
+      els.forEach((el) => io!.observe(el));
+      onScroll = sweep;
+      sweep(); // synchronous: reveal anything already in view (no hidden flash)
+      requestAnimationFrame(sweep);
+      timers.push(setTimeout(sweep, 300));
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+    }
+
+    /* ---- counters ---- */
     const runCount = (el: HTMLElement) => {
       const goal = +(el.getAttribute("data-count") || "0");
       const suf = el.getAttribute("data-suf") || "";
@@ -465,25 +527,7 @@ export function useMarketingEffects(rootRef: RefObject<HTMLElement | null>) {
       timers.push(t);
     };
 
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        const t = e.target as HTMLElement;
-        t.classList.add("in");
-        t.querySelectorAll<HTMLElement>(".rc-fg[data-pct]").forEach((c) => {
-          const len = 113, pct = +(c.getAttribute("data-pct") || "0");
-          c.style.strokeDashoffset = String(len - (len * pct) / 100);
-        });
-        t.querySelectorAll<HTMLElement>(".range-mark[data-left]").forEach((m) => {
-          const dt = setTimeout(() => { m.style.left = m.getAttribute("data-left") || "0"; }, 120);
-          timers.push(dt);
-        });
-        io.unobserve(t);
-      });
-    }, { threshold: 0.16 });
-    root.querySelectorAll<HTMLElement>(".rv").forEach((el) => io.observe(el));
-
-    // gauge ring fill + mini-mark + hero counters, on load
+    /* ---- gauge ring fill + mini-mark + hero counters, on load ---- */
     const load = setTimeout(() => {
       root.querySelectorAll<HTMLElement>(".gauge .ring-val[data-pct]").forEach((c) => {
         c.style.strokeDashoffset = String(100 - +(c.getAttribute("data-pct") || "0"));
@@ -494,7 +538,7 @@ export function useMarketingEffects(rootRef: RefObject<HTMLElement | null>) {
     }, 420);
     timers.push(load);
 
-    // console cursor parallax (desktop, motion-allowed)
+    /* ---- console cursor parallax (desktop, motion-allowed) ---- */
     const cons = root.querySelector<HTMLElement>(".console");
     let onMove: ((e: MouseEvent) => void) | null = null;
     let onLeave: (() => void) | null = null;
@@ -516,8 +560,12 @@ export function useMarketingEffects(rootRef: RefObject<HTMLElement | null>) {
     }
 
     return () => {
-      io.disconnect();
+      if (io) io.disconnect();
       timers.forEach((t) => { clearTimeout(t); clearInterval(t as unknown as ReturnType<typeof setInterval>); });
+      if (onScroll) {
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onScroll);
+      }
       if (cons && onMove) cons.removeEventListener("mousemove", onMove);
       if (cons && onLeave) cons.removeEventListener("mouseleave", onLeave);
     };
