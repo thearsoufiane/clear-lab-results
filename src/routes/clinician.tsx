@@ -438,7 +438,7 @@ function Clinician() {
               <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" /><path d="M3 20c0-3.5 3-5 6-5s6 1.5 6 5" /><circle cx="18" cy="9" r="2.5" /><path d="M16 20c0-2.5 1.5-4 4-4" /></svg>
               My patients
             </Link>
-            <Link to="/clinician">
+            <Link to="/analyses">
               <svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z" /><path d="M14 3v5h5M9 13h6M9 17h4" /></svg>
               Analyses
             </Link>
@@ -582,7 +582,7 @@ function Clinician() {
           <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" /><path d="M3 20c0-3.5 3-5 6-5s6 1.5 6 5" /></svg>
           Patients
         </Link>
-        <Link to="/clinician">
+        <Link to="/analyses">
           <svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z" /><path d="M14 3v5h5" /></svg>
           Analyses
         </Link>

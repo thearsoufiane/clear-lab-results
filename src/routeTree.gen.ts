@@ -25,6 +25,7 @@ import { Route as ClinicianRouteImport } from './routes/clinician'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AnalysesRouteImport } from './routes/analyses'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as LearnVitaminDRouteImport } from './routes/learn/vitamin-d'
@@ -113,6 +114,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnalysesRoute = AnalysesRouteImport.update({
+  id: '/analyses',
+  path: '/analyses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -151,6 +157,7 @@ const LearnA1cRoute = LearnA1cRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analyses': typeof AnalysesRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
   '/checkin': typeof CheckinRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analyses': typeof AnalysesRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
   '/checkin': typeof CheckinRoute
@@ -202,6 +210,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analyses': typeof AnalysesRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
   '/checkin': typeof CheckinRoute
@@ -229,6 +238,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/analyses'
     | '/auth'
     | '/chat'
     | '/checkin'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/analyses'
     | '/auth'
     | '/chat'
     | '/checkin'
@@ -279,6 +290,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/analyses'
     | '/auth'
     | '/chat'
     | '/checkin'
@@ -305,6 +317,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalysesRoute: typeof AnalysesRoute
   AuthRoute: typeof AuthRoute
   ChatRoute: typeof ChatRoute
   CheckinRoute: typeof CheckinRoute
@@ -443,6 +456,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/analyses': {
+      id: '/analyses'
+      path: '/analyses'
+      fullPath: '/analyses'
+      preLoaderRoute: typeof AnalysesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -497,6 +517,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalysesRoute: AnalysesRoute,
   AuthRoute: AuthRoute,
   ChatRoute: ChatRoute,
   CheckinRoute: CheckinRoute,
