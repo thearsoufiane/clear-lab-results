@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase, type Report, type Analysis } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
+import { useActiveMember } from "@/contexts/active-member";
 import { normalizeName } from "@/components/analysis-view";
 import { LrUi, GlassPanel, GradientButton, Eyebrow, Gauge, Reveal, LR_FONT_LINKS } from "@/components/lr-ui";
 import { ArrowLeft, Upload, Flame } from "lucide-react";
@@ -69,6 +70,7 @@ function currentWeekDays(): Date[] {
 
 function ProgressPage() {
   const { user, loading } = useAuth();
+  const { activeMemberId } = useActiveMember();
   const nav = useNavigate();
   const todayStr = useMemo(() => localDateStr(new Date()), []);
 
@@ -81,17 +83,18 @@ function ProgressPage() {
   useEffect(() => { if (!loading && !user) nav({ to: "/auth" }); }, [user, loading]);
 
   const loadData = useCallback(async () => {
-    if (!user) return;
+    if (!user || !activeMemberId) return;
+    setDataLoaded(false);
     const { data: proto } = await supabase
       .from("health_protocols").select("id, title, starts_at, ends_at, focus_areas")
-      .eq("user_id", user.id).eq("status", "active")
+      .eq("member_id", activeMemberId).eq("status", "active")
       .order("created_at", { ascending: false }).limit(1).maybeSingle();
 
     // reports power the per-marker trend charts (ascending = oldest → newest)
-    const { data: reps } = await supabase.from("reports").select("*").order("created_at", { ascending: true });
+    const { data: reps } = await supabase.from("reports").select("*").eq("member_id", activeMemberId).order("created_at", { ascending: true });
     setReports((reps as Report[]) ?? []);
 
-    if (!proto) { setProtocol(null); setDataLoaded(true); return; }
+    if (!proto) { setProtocol(null); setCheckins([]); setTotalHabits(0); setDataLoaded(true); return; }
     setProtocol(proto as Protocol);
 
     const { count } = await supabase
@@ -101,10 +104,10 @@ function ProgressPage() {
     const startsAt = (proto as Protocol).starts_at ?? todayStr;
     const { data: rows } = await supabase
       .from("daily_checkins").select("checkin_date, completed_habit_ids")
-      .eq("user_id", user.id).gte("checkin_date", startsAt).order("checkin_date", { ascending: true });
+      .eq("member_id", activeMemberId).gte("checkin_date", startsAt).order("checkin_date", { ascending: true });
     setCheckins((rows as CheckinRow[]) ?? []);
     setDataLoaded(true);
-  }, [user, todayStr]);
+  }, [user, todayStr, activeMemberId]);
 
   useEffect(() => { loadData(); }, [loadData]);
 

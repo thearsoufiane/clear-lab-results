@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase, type Report } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
+import { useActiveMember } from "@/contexts/active-member";
 import { Logo } from "@/components/logo";
 import { HistorySidebar } from "@/components/history-sidebar";
 import { ArrowLeft, FileText, ChevronRight, AlertTriangle, User } from "lucide-react";
@@ -10,6 +11,7 @@ export const Route = createFileRoute("/history")({ component: HistoryPage });
 
 function HistoryPage() {
   const { user, loading } = useAuth();
+  const { activeMemberId } = useActiveMember();
   const nav = useNavigate();
   const [reports, setReports] = useState<Report[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -18,17 +20,18 @@ function HistoryPage() {
   useEffect(() => { if (!loading && !user) nav({ to: "/auth" }); }, [user, loading]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !activeMemberId) return;
     supabase
       .from("reports")
       .select("*")
+      .eq("member_id", activeMemberId)
       .order("created_at", { ascending: false })
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: Report[] | null; error: { message: string } | null }) => {
         if (error) setError(error.message);
         else setReports((data ?? []) as Report[]);
         setFetched(true);
       });
-  }, [user]);
+  }, [user, activeMemberId]);
 
   if (loading || !user) return null;
 

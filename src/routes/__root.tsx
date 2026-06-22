@@ -11,6 +11,7 @@ import appCss from "../styles.css?url";
 import { DisclaimerModal } from "@/components/disclaimer-modal";
 import { BottomNav } from "@/components/bottom-nav";
 import { NotFound } from "@/components/not-found";
+import { ActiveMemberProvider } from "@/contexts/active-member";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
 function NotFoundComponent() {
@@ -122,9 +123,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <BottomNav />
-      <DisclaimerModal />
+      <ActiveMemberProvider>
+        <Outlet />
+        <BottomNav />
+        <DisclaimerModal />
+      </ActiveMemberProvider>
     </QueryClientProvider>
   );
 }

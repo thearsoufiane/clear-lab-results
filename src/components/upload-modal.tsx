@@ -67,11 +67,13 @@ const modalCss = `
 `;
 
 export function UploadModal({
-  open, onClose, userId, onCreated, patientId,
+  open, onClose, userId, onCreated, patientId, memberId,
 }: {
   open: boolean; onClose: () => void; userId: string; onCreated: (id: string) => void;
   /** When set (clinician flow), the created report is linked to this patient. */
   patientId?: string | null;
+  /** When set (personal flow), the created report is linked to this family member. */
+  memberId?: string | null;
 }) {
   const [tab, setTab] = useState<"pdf" | "image">("pdf");
   const [file, setFile] = useState<File | null>(null);
@@ -149,7 +151,7 @@ export function UploadModal({
       }
       const { data, error } = await supabase
         .from("reports")
-        .insert({ user_id: userId, title: analysis.title || file.name, analysis, file_name: file.name, ...(patientId ? { patient_id: patientId } : {}) })
+        .insert({ user_id: userId, title: analysis.title || file.name, analysis, file_name: file.name, ...(patientId ? { patient_id: patientId } : {}), ...(memberId ? { member_id: memberId } : {}) })
         .select("id").single();
       if (error) throw error;
       onCreated(data.id);

@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
+import { useActiveMember } from "@/contexts/active-member";
 import { ArrowLeft, ArrowUp } from "lucide-react";
 import { LR_UI_CSS, LR_FONT_LINKS, LrDefs } from "@/components/lr-ui";
 
@@ -91,6 +92,7 @@ function AnnaOrb({ size = 34 }: { size?: number }) {
 
 function ChatPage() {
   const { user, loading } = useAuth();
+  const { activeMemberId } = useActiveMember();
   const nav = useNavigate();
 
   const [historyLoaded, setHistoryLoaded] = useState(false);
@@ -108,19 +110,20 @@ function ChatPage() {
   }, [user, loading]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !activeMemberId) return;
     let active = true;
+    setMessages([]); setFocusAreas([]); setHistoryLoaded(false);
     (async () => {
       const { data: rows } = await supabase
         .from("health_chat_messages")
         .select("role, content, created_at")
-        .eq("user_id", user.id)
+        .eq("member_id", activeMemberId)
         .order("created_at", { ascending: false })
         .limit(20);
       const { data: proto } = await supabase
         .from("health_protocols")
         .select("focus_areas")
-        .eq("user_id", user.id)
+        .eq("member_id", activeMemberId)
         .eq("status", "active")
         .order("created_at", { ascending: false })
         .limit(1)
@@ -138,7 +141,7 @@ function ChatPage() {
     return () => {
       active = false;
     };
-  }, [user]);
+  }, [user, activeMemberId]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -171,7 +174,7 @@ function ChatPage() {
             apikey: SUPABASE_ANON_KEY,
             Authorization: `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({ message: trimmed, conversationHistory: history }),
+          body: JSON.stringify({ message: trimmed, conversationHistory: history, memberId: activeMemberId }),
         });
 
         if (!res.ok || !res.body) {

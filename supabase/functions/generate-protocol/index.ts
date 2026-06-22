@@ -111,14 +111,14 @@ Deno.serve(async (req) => {
     }
 
     // --- Parse + validate body ----------------------------------------------
-    let payload: { userId?: string; reportId?: string; analysisResult?: unknown };
+    let payload: { userId?: string; reportId?: string; analysisResult?: unknown; memberId?: string | null };
     try {
       payload = await req.json();
     } catch {
       return json({ error: "Invalid JSON body." }, 400);
     }
 
-    const { userId, reportId, analysisResult } = payload;
+    const { userId, reportId, analysisResult, memberId } = payload;
     if (!reportId || !analysisResult) {
       return json({ error: "Missing required fields: reportId and analysisResult." }, 400);
     }
@@ -193,6 +193,7 @@ Deno.serve(async (req) => {
       .from("health_protocols")
       .insert({
         user_id: ownerId,
+        member_id: memberId ?? null,
         created_from_report_id: reportId,
         title: generated.title,
         focus_areas: generated.focus_areas ?? [],
@@ -212,6 +213,7 @@ Deno.serve(async (req) => {
     const habitRows = generated.habits.map((habit, index) => ({
       protocol_id: protocolId,
       user_id: ownerId,
+      member_id: memberId ?? null,
       category: habit.category,
       title: habit.title,
       why: habit.why,

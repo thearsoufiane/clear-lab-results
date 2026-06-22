@@ -39,14 +39,20 @@ function ReportView() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("reports").select("*").eq("id", id).single().then(({ data, error }) => {
+    supabase.from("reports").select("*").eq("id", id).single().then(({ data, error }: { data: Report | null; error: { message: string } | null }) => {
       if (error) setError(error.message);
       else setReport(data as Report);
     });
-    supabase.from("reports").select("*").order("created_at", { ascending: false }).then(({ data }) => {
-      if (data) setReports(data as Report[]);
-    });
   }, [user, id]);
+
+  // sibling reports (history sidebar + trend) scoped to the same member/patient.
+  useEffect(() => {
+    if (!user || !report) return;
+    let q = supabase.from("reports").select("*").order("created_at", { ascending: false });
+    if (report.member_id) q = q.eq("member_id", report.member_id);
+    else if (report.patient_id) q = q.eq("patient_id", report.patient_id);
+    q.then(({ data }: { data: Report[] | null }) => { if (data) setReports(data as Report[]); });
+  }, [user, report?.member_id, report?.patient_id]);
 
   if (loading || !user) return null;
 
@@ -96,7 +102,7 @@ function ReportView() {
               dateLabel={dateLabel}
               prevValues={prevMap}
               isPaid={true}
-              ctaSlot={<ProtocolCTA userId={user.id} reportId={report.id} analysis={report.analysis} />}
+              ctaSlot={<ProtocolCTA userId={user.id} reportId={report.id} analysis={report.analysis} memberId={report.member_id ?? null} />}
             />
           );
         })()}

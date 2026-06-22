@@ -35,10 +35,12 @@ export function ProtocolCTA({
   userId,
   reportId,
   analysis,
+  memberId,
 }: {
   userId: string;
   reportId: string;
   analysis: Analysis;
+  memberId?: string | null;
 }) {
   const [checking, setChecking] = useState(true);
   const [protocol, setProtocol] = useState<ExistingProtocol | null>(null);
@@ -71,7 +73,7 @@ export function ProtocolCTA({
     setGenerating(true);
     setError(null);
     try {
-      const id = await generateProtocol(userId, reportId, analysis);
+      const id = await generateProtocol(userId, reportId, analysis, memberId);
       setProtocol({ id, starts_at: new Date().toISOString().slice(0, 10) });
       setJustCreated(true);
     } catch (e) {

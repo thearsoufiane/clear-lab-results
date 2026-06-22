@@ -39,9 +39,10 @@ export async function generateProtocol(
   userId: string,
   reportId: string,
   analysisResult: Analysis | Record<string, unknown>,
+  memberId?: string | null,
 ): Promise<string> {
   const { data, error } = await supabase.functions.invoke("generate-protocol", {
-    body: { userId, reportId, analysisResult },
+    body: { userId, reportId, analysisResult, memberId },
   });
 
   // A non-2xx from the function surfaces here; try to read the server's {error}.

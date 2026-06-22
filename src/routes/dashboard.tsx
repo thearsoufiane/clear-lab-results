@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase, type Report, type Analysis } from "@/lib/supabase";
 import { UploadModal } from "@/components/upload-modal";
+import { useActiveMember } from "@/contexts/active-member";
+import { MemberSwitcher } from "@/components/member-switcher";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -212,6 +214,7 @@ const CHECK_SVG = (
 
 function Dashboard() {
   const { user, loading } = useAuth();
+  const { activeMember, activeMemberId } = useActiveMember();
   const nav = useNavigate();
 
   const todayStr = useMemo(() => localDateStr(new Date()), []);
@@ -246,14 +249,16 @@ function Dashboard() {
   }, [user, loading, nav]);
 
   const loadAll = useCallback(async () => {
-    if (!user) return;
+    if (!user || !activeMemberId) return;
+    setLoaded(false);
 
+    // all queries scoped to the active member
     const [{ data: reps }, { data: proto }] = await Promise.all([
-      supabase.from("reports").select("*").order("created_at", { ascending: true }),
+      supabase.from("reports").select("*").eq("member_id", activeMemberId).order("created_at", { ascending: true }),
       supabase
         .from("health_protocols")
         .select("id, title, starts_at, ends_at, focus_areas")
-        .eq("user_id", user.id)
+        .eq("member_id", activeMemberId)
         .eq("status", "active")
         .order("created_at", { ascending: false })
         .limit(1)
@@ -261,19 +266,22 @@ function Dashboard() {
     ]);
     setReports((reps as Report[]) ?? []);
     setProtocol((proto as Protocol) ?? null);
+    setHabits([]);
+    setCompleted([]);
+    setStreak(0);
 
     if (proto) {
       const [{ data: hb }, { data: today }, { data: recent }] = await Promise.all([
         supabase.from("protocol_habits").select("id, title, category, frequency, icon, sort_order").eq("protocol_id", (proto as Protocol).id).order("sort_order", { ascending: true }),
-        supabase.from("daily_checkins").select("completed_habit_ids").eq("user_id", user.id).eq("checkin_date", todayStr).maybeSingle(),
-        supabase.from("daily_checkins").select("checkin_date, completed_habit_ids").eq("user_id", user.id).order("checkin_date", { ascending: false }).limit(120),
+        supabase.from("daily_checkins").select("completed_habit_ids").eq("member_id", activeMemberId).eq("checkin_date", todayStr).maybeSingle(),
+        supabase.from("daily_checkins").select("checkin_date, completed_habit_ids").eq("member_id", activeMemberId).order("checkin_date", { ascending: false }).limit(120),
       ]);
       setHabits((hb as Habit[]) ?? []);
       setCompleted(Array.isArray(today?.completed_habit_ids) ? (today!.completed_habit_ids as string[]) : []);
       setStreak(consecutiveStreak((recent as CheckinRow[]) ?? []));
     }
     setLoaded(true);
-  }, [user, todayStr]);
+  }, [user, todayStr, activeMemberId]);
 
   useEffect(() => {
     loadAll();
@@ -287,12 +295,12 @@ function Dashboard() {
 
   const toggleHabit = useCallback(
     async (habitId: string) => {
-      if (!user || !protocol) return;
+      if (!user || !protocol || !activeMemberId) return;
       const next = completed.includes(habitId) ? completed.filter((x) => x !== habitId) : [...completed, habitId];
       setCompleted(next); // optimistic
       const { error } = await supabase.from("daily_checkins").upsert(
-        { user_id: user.id, protocol_id: protocol.id, checkin_date: todayStr, completed_habit_ids: next },
-        { onConflict: "user_id,checkin_date" },
+        { user_id: user.id, member_id: activeMemberId, protocol_id: protocol.id, checkin_date: todayStr, completed_habit_ids: next },
+        { onConflict: "member_id,checkin_date" },
       );
       if (error) {
         setCompleted(completed); // revert
@@ -300,20 +308,13 @@ function Dashboard() {
         setStreak(1); // first completion today starts the streak
       }
     },
-    [user, protocol, completed, todayStr, streak],
+    [user, protocol, completed, todayStr, streak, activeMemberId],
   );
 
   if (loading || !user) return null;
 
   /* ---------- derived values ---------- */
-  const email = user.email || "";
-  const localPart = email.split("@")[0] || "you";
-  const displayName = localPart
-    .replace(/[._-]+/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase())
-    .trim();
-  const initials = (displayName.match(/\b\w/g) || ["U"]).slice(0, 2).join("").toUpperCase();
-  const handle = `@${localPart.toLowerCase()}`;
+  if (!activeMember) return null;
 
   const startsAt = protocol?.starts_at ?? null;
   const elapsed = startsAt ? clamp(Math.floor((Date.now() - parseDate(startsAt).getTime()) / DAY_MS), 0, 90) : 0;
@@ -425,26 +426,21 @@ function Dashboard() {
           </svg>
           <span className="word">labread</span>
         </Link>
-        <Link to="/profile" className="av">
-          {initials}
-        </Link>
+        <MemberSwitcher variant="appbar" />
       </header>
 
       <div className="app">
         {/* SIDEBAR */}
         <aside className="sidebar">
-          <Link to="/profile" className="s-prof">
-            <span className="s-av">{initials}</span>
-            <span>
-              <span className="s-name">{displayName}</span>
-              <br />
-              <span className="s-handle">{handle}</span>
-            </span>
-          </Link>
+          <MemberSwitcher variant="sidebar" />
           <nav className="s-nav">
             <Link className="on" to="/dashboard">
               <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>
               Dashboard
+            </Link>
+            <Link to="/family">
+              <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" /><path d="M3 20c0-3.5 3-5 6-5s6 1.5 6 5" /><circle cx="18" cy="9" r="2.5" /><path d="M16 20c0-2.5 1.5-4 4-4" /></svg>
+              Family
             </Link>
             <Link to="/history">
               <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
@@ -651,6 +647,7 @@ function Dashboard() {
         open={uploadOpen}
         onClose={() => setUploadOpen(false)}
         userId={user.id}
+        memberId={activeMemberId}
         onCreated={(id) => {
           setUploadOpen(false);
           nav({ to: "/report/$id", params: { id } });

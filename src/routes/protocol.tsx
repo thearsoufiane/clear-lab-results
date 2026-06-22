@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { useActiveMember } from "@/contexts/active-member";
 import { supabase } from "@/lib/supabase";
 import { LrUi, GlassPanel, GradientButton, Eyebrow, Gauge, Reveal, LR_FONT_LINKS } from "@/components/lr-ui";
 
@@ -22,6 +23,7 @@ type Habit = { id: string; title: string; category: string | null; frequency: st
 
 function ProtocolScreen() {
   const { user, loading } = useAuth();
+  const { activeMemberId } = useActiveMember();
   const nav = useNavigate();
   const [loaded, setLoaded] = useState(false);
   const [protocol, setProtocol] = useState<Protocol | null>(null);
@@ -32,13 +34,15 @@ function ProtocolScreen() {
   }, [user, loading, nav]);
 
   const load = useCallback(async () => {
-    if (!user) return;
+    if (!user || !activeMemberId) return;
+    setLoaded(false);
     const { data: proto } = await supabase
       .from("health_protocols")
       .select("id, title, starts_at")
-      .eq("user_id", user.id).eq("status", "active")
+      .eq("member_id", activeMemberId).eq("status", "active")
       .order("created_at", { ascending: false }).limit(1).maybeSingle();
     setProtocol((proto as Protocol) ?? null);
+    setHabits([]);
     if (proto) {
       const { data: hb } = await supabase
         .from("protocol_habits")
@@ -47,7 +51,7 @@ function ProtocolScreen() {
       setHabits((hb as Habit[]) ?? []);
     }
     setLoaded(true);
-  }, [user]);
+  }, [user, activeMemberId]);
 
   useEffect(() => { load(); }, [load]);
 

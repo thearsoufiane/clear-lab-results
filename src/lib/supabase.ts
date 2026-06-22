@@ -26,6 +26,8 @@ export type Report = {
   file_name: string;
   created_at: string;
   is_paid?: boolean;
+  patient_id?: string | null;
+  member_id?: string | null;
 };
 
 export type Analysis = {

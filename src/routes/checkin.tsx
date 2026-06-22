@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
+import { useActiveMember } from "@/contexts/active-member";
 import { Logo } from "@/components/logo";
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 
@@ -75,6 +76,7 @@ function computeStreak(rows: CheckinRow[]): number {
 
 function CheckinPage() {
   const { user, loading } = useAuth();
+  const { activeMemberId } = useActiveMember();
   const nav = useNavigate();
 
   const todayStr = useMemo(() => localDateStr(new Date()), []);
@@ -104,19 +106,24 @@ function CheckinPage() {
   }, [user, loading]);
 
   const loadData = useCallback(async () => {
-    if (!user) return;
+    if (!user || !activeMemberId) return;
 
     const { data: proto } = await supabase
       .from("health_protocols")
       .select("id, title, starts_at, status")
-      .eq("user_id", user.id)
+      .eq("member_id", activeMemberId)
       .eq("status", "active")
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
 
+    // reset member-scoped state when switching
+    setCompleted([]); setEnergy(null); setSleep(null); setAlreadyCheckedIn(false); setEditing(false);
+
     if (!proto) {
       setProtocol(null);
+      setHabits([]);
+      setStreak(0);
       setDataLoaded(true);
       return;
     }
@@ -132,7 +139,7 @@ function CheckinPage() {
     const { data: today } = await supabase
       .from("daily_checkins")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("member_id", activeMemberId)
       .eq("checkin_date", todayStr)
       .maybeSingle();
 
@@ -146,13 +153,13 @@ function CheckinPage() {
     const { data: recent } = await supabase
       .from("daily_checkins")
       .select("checkin_date, completed_habit_ids")
-      .eq("user_id", user.id)
+      .eq("member_id", activeMemberId)
       .order("checkin_date", { ascending: false })
       .limit(120);
     setStreak(computeStreak((recent as CheckinRow[]) ?? []));
 
     setDataLoaded(true);
-  }, [user, todayStr]);
+  }, [user, todayStr, activeMemberId]);
 
   // Initial load
   useEffect(() => {
@@ -176,19 +183,20 @@ function CheckinPage() {
   };
 
   const handleSave = async () => {
-    if (!user || !protocol) return;
+    if (!user || !protocol || !activeMemberId) return;
     setSaving(true);
     setError(null);
     const { error: saveError } = await supabase.from("daily_checkins").upsert(
       {
         user_id: user.id,
+        member_id: activeMemberId,
         protocol_id: protocol.id,
         checkin_date: todayStr,
         completed_habit_ids: completed,
         energy_level: energy,
         sleep_hours: sleep,
       },
-      { onConflict: "user_id,checkin_date" },
+      { onConflict: "member_id,checkin_date" },
     );
     setSaving(false);
 
@@ -206,7 +214,7 @@ function CheckinPage() {
     const { data: recent } = await supabase
       .from("daily_checkins")
       .select("checkin_date, completed_habit_ids")
-      .eq("user_id", user.id)
+      .eq("member_id", activeMemberId)
       .order("checkin_date", { ascending: false })
       .limit(120);
     setStreak(computeStreak((recent as CheckinRow[]) ?? []));

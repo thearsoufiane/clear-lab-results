@@ -85,12 +85,13 @@ Deno.serve(async (req) => {
     const ownerId = user.id;
 
     // --- Parse body ---------------------------------------------------------
-    let body: { message?: string; conversationHistory?: ChatMessage[] };
+    let body: { message?: string; conversationHistory?: ChatMessage[]; memberId?: string | null };
     try {
       body = await req.json();
     } catch {
       return jsonError("Invalid JSON body.", 400);
     }
+    const memberId = body.memberId ?? null;
     const message = (body.message ?? "").trim();
     if (!message) return jsonError("Missing 'message'.", 400);
     const history = Array.isArray(body.conversationHistory) ? body.conversationHistory : [];
@@ -104,14 +105,15 @@ Deno.serve(async (req) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    const { data: protocol } = await admin
+    // Scope context to the active member when provided (falls back to the
+    // account owner for older clients that don't send memberId yet).
+    const protocolQuery = admin
       .from("health_protocols")
       .select("id, focus_areas")
-      .eq("user_id", ownerId)
       .eq("status", "active")
       .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(1);
+    const { data: protocol } = await (memberId ? protocolQuery.eq("member_id", memberId) : protocolQuery.eq("user_id", ownerId)).maybeSingle();
 
     let habitTitles: string[] = [];
     let focusAreas: Array<Record<string, unknown>> = [];
@@ -125,13 +127,12 @@ Deno.serve(async (req) => {
       habitTitles = (habits ?? []).map((h: { title: string }) => h.title).filter(Boolean);
     }
 
-    const { data: report } = await admin
+    const reportQuery = admin
       .from("reports")
       .select("analysis")
-      .eq("user_id", ownerId)
       .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(1);
+    const { data: report } = await (memberId ? reportQuery.eq("member_id", memberId) : reportQuery.eq("user_id", ownerId)).maybeSingle();
 
     const values: AnalysisValue[] = Array.isArray(report?.analysis?.values) ? report.analysis.values : [];
     const flagged = values.filter((v) => v.status && v.status !== "normal");
@@ -207,8 +208,8 @@ Deno.serve(async (req) => {
         const assistantCreatedAt = new Date().toISOString();
         try {
           await admin.from("health_chat_messages").insert([
-            { user_id: ownerId, role: "user", content: message, context_type: "general", created_at: userCreatedAt },
-            { user_id: ownerId, role: "assistant", content: assistantText, context_type: "general", created_at: assistantCreatedAt },
+            { user_id: ownerId, member_id: memberId, role: "user", content: message, context_type: "general", created_at: userCreatedAt },
+            { user_id: ownerId, member_id: memberId, role: "assistant", content: assistantText, context_type: "general", created_at: assistantCreatedAt },
           ]);
         } catch {
           // best-effort; don't break the response

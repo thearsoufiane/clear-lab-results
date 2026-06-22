@@ -20,6 +20,7 @@ import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as ForYouRouteImport } from './routes/for-you'
 import { Route as ForLabsRouteImport } from './routes/for-labs'
 import { Route as ForDoctorsRouteImport } from './routes/for-doctors'
+import { Route as FamilyRouteImport } from './routes/family'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClinicianRouteImport } from './routes/clinician'
 import { Route as CheckinRouteImport } from './routes/checkin'
@@ -87,6 +88,11 @@ const ForLabsRoute = ForLabsRouteImport.update({
 const ForDoctorsRoute = ForDoctorsRouteImport.update({
   id: '/for-doctors',
   path: '/for-doctors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FamilyRoute = FamilyRouteImport.update({
+  id: '/family',
+  path: '/family',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/checkin': typeof CheckinRoute
   '/clinician': typeof ClinicianRoute
   '/dashboard': typeof DashboardRoute
+  '/family': typeof FamilyRoute
   '/for-doctors': typeof ForDoctorsRoute
   '/for-labs': typeof ForLabsRoute
   '/for-you': typeof ForYouRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/checkin': typeof CheckinRoute
   '/clinician': typeof ClinicianRoute
   '/dashboard': typeof DashboardRoute
+  '/family': typeof FamilyRoute
   '/for-doctors': typeof ForDoctorsRoute
   '/for-labs': typeof ForLabsRoute
   '/for-you': typeof ForYouRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/checkin': typeof CheckinRoute
   '/clinician': typeof ClinicianRoute
   '/dashboard': typeof DashboardRoute
+  '/family': typeof FamilyRoute
   '/for-doctors': typeof ForDoctorsRoute
   '/for-labs': typeof ForLabsRoute
   '/for-you': typeof ForYouRoute
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/clinician'
     | '/dashboard'
+    | '/family'
     | '/for-doctors'
     | '/for-labs'
     | '/for-you'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/clinician'
     | '/dashboard'
+    | '/family'
     | '/for-doctors'
     | '/for-labs'
     | '/for-you'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/clinician'
     | '/dashboard'
+    | '/family'
     | '/for-doctors'
     | '/for-labs'
     | '/for-you'
@@ -323,6 +335,7 @@ export interface RootRouteChildren {
   CheckinRoute: typeof CheckinRoute
   ClinicianRoute: typeof ClinicianRoute
   DashboardRoute: typeof DashboardRoute
+  FamilyRoute: typeof FamilyRoute
   ForDoctorsRoute: typeof ForDoctorsRoute
   ForLabsRoute: typeof ForLabsRoute
   ForYouRoute: typeof ForYouRoute
@@ -419,6 +432,13 @@ declare module '@tanstack/react-router' {
       path: '/for-doctors'
       fullPath: '/for-doctors'
       preLoaderRoute: typeof ForDoctorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/family': {
+      id: '/family'
+      path: '/family'
+      fullPath: '/family'
+      preLoaderRoute: typeof FamilyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -523,6 +543,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckinRoute: CheckinRoute,
   ClinicianRoute: ClinicianRoute,
   DashboardRoute: DashboardRoute,
+  FamilyRoute: FamilyRoute,
   ForDoctorsRoute: ForDoctorsRoute,
   ForLabsRoute: ForLabsRoute,
   ForYouRoute: ForYouRoute,
