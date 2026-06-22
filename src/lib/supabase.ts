@@ -44,6 +44,12 @@ export type Analysis = {
     references?: string[];
     normal_range?: { min: number; max: number };
     optimal_range?: { min: number; max: number };
+    /** Deterministic flagger: value is in the critical/panic zone (rendered as an
+     *  urgent indicator on top of the normal high/low pill). Enum stays unchanged. */
+    critical?: boolean;
+    /** Deterministic flagger: couldn't classify this marker (no known range +
+     *  no printed range) — surfaced in a "review manually" group, not as normal. */
+    unrecognized?: boolean;
   }>;
   screenings: Array<{
     name: string;
