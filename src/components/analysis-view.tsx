@@ -93,11 +93,14 @@ export function AnalysisView({
   /** Rendered after the markers but before the educational disclaimer (the 90-day CTA). */
   ctaSlot?: ReactNode;
 }) {
-  // Unrecognized markers (deterministic flagger couldn't classify) get their own
-  // group; they're excluded from the normal/attention buckets rather than faked.
+  // Unrecognized (couldn't classify) and qualitative (non-numeric) markers each
+  // get their own group; they're kept out of the graded normal/attention buckets
+  // rather than faked into "normal".
   const unrecognized = a.values.filter(v => v.unrecognized);
-  const needsAttention = a.values.filter(v => !v.unrecognized && ["low", "high", "elevated", "deficient"].includes(v.status));
-  const lookingGood = a.values.filter(v => !v.unrecognized && v.status === "normal");
+  const qualitative = a.values.filter(v => v.qualitative && !v.unrecognized);
+  const graded = a.values.filter(v => !v.unrecognized && !v.qualitative);
+  const needsAttention = graded.filter(v => ["low", "high", "elevated", "deficient"].includes(v.status));
+  const lookingGood = graded.filter(v => v.status === "normal");
   // Trends ("was X") are a paid feature — only surface previous values when unlocked.
   const trendValues = isPaid ? prevValues : undefined;
   const reportDate = dateLabel || new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
@@ -169,6 +172,19 @@ export function AnalysisView({
           <SectionHead icon="✓" title="Looking good" count={lookingGood.length} tint={C.normal} />
           <div className="lr-stagger">
             {lookingGood.map((v, i) => <BiomarkerCard key={i} value={v} prevValues={trendValues} />)}
+          </div>
+          <hr style={{ border: "none", borderTop: `1px solid ${C.hairline}`, margin: "30px 0" }} />
+        </div>
+      )}
+
+      {qualitative.length > 0 && (
+        <div style={{ marginBottom: "10px" }}>
+          <SectionHead icon="≈" title="Other results" count={qualitative.length} tint={C.textDim} />
+          <div style={{ fontSize: "13px", color: C.textFaint, margin: "-6px 0 14px" }}>
+            Non-numeric results, shown as reported. These aren't auto-graded.
+          </div>
+          <div className="lr-stagger">
+            {qualitative.map((v, i) => <BiomarkerCard key={i} value={v} prevValues={trendValues} />)}
           </div>
           <hr style={{ border: "none", borderTop: `1px solid ${C.hairline}`, margin: "30px 0" }} />
         </div>
@@ -316,8 +332,8 @@ function BiomarkerCard({ value: v, prevValues }: { value: MarkerValue; prevValue
         </div>
       )}
       <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "10px", flexWrap: "wrap" }}>
-        <span style={{ display: "inline-block", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", padding: "4px 10px", borderRadius: "100px", background: v.unrecognized ? "rgba(158,147,132,0.14)" : `${color}1f`, border: `1px solid ${v.unrecognized ? "rgba(158,147,132,0.4)" : `${color}3a`}`, color: v.unrecognized ? C.textDim : color }}>
-          {v.unrecognized ? "Review manually" : statusLabel(v.status)}
+        <span style={{ display: "inline-block", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", padding: "4px 10px", borderRadius: "100px", background: (v.unrecognized || v.qualitative) ? "rgba(158,147,132,0.14)" : `${color}1f`, border: `1px solid ${(v.unrecognized || v.qualitative) ? "rgba(158,147,132,0.4)" : `${color}3a`}`, color: (v.unrecognized || v.qualitative) ? C.textDim : color }}>
+          {v.unrecognized ? "Review manually" : v.qualitative ? "Reported" : statusLabel(v.status)}
         </span>
         {v.critical && (
           <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", padding: "4px 10px", borderRadius: "100px", background: "rgba(224,112,106,0.16)", border: "1px solid rgba(224,112,106,0.55)", color: C.low }}>

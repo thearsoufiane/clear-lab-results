@@ -50,6 +50,9 @@ export type Analysis = {
     /** Deterministic flagger: couldn't classify this marker (no known range +
      *  no printed range) — surfaced in a "review manually" group, not as normal. */
     unrecognized?: boolean;
+    /** Non-numeric/qualitative result (e.g. "Negative") passed through unjudged;
+     *  shown in its own group and excluded from "% in range" math. */
+    qualitative?: boolean;
   }>;
   screenings: Array<{
     name: string;

@@ -325,7 +325,11 @@ function Dashboard() {
 
   const latest = reports.length ? reports[reports.length - 1] : null;
   const latestValues: AnalysisValue[] = (latest?.analysis?.values as AnalysisValue[]) ?? [];
-  const markersInRange = latestValues.length ? Math.round((latestValues.filter((v) => isInRange(v.status)).length / latestValues.length) * 100) : null;
+  // "% in range" only counts markers we actually graded — exclude unrecognized
+  // and qualitative (non-numeric) so the stat isn't reassuring about markers we
+  // couldn't assess.
+  const gradedValues = latestValues.filter((v) => !(v as { unrecognized?: boolean }).unrecognized && !(v as { qualitative?: boolean }).qualitative);
+  const markersInRange = gradedValues.length ? Math.round((gradedValues.filter((v) => isInRange(v.status)).length / gradedValues.length) * 100) : null;
 
   // focus marker: protocol's top focus area matched in the latest report, else first flagged, else first value
   const focus: AnalysisValue | null = (() => {

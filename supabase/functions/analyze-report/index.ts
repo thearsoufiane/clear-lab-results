@@ -46,6 +46,10 @@ type AnalyzePayload = {
 type ExtractionResult = {
   title?: string;
   biomarkers?: Array<{ name?: string; value?: number | string; unit?: string; reportedRange?: string | null }>;
+  // Non-numeric / qualitative results (urinalysis dipstick, serology, blood
+  // type, "Negative"/"Trace"/"Positive"). We can't math-flag these, so they
+  // pass straight through to the output unchanged rather than being dropped.
+  qualitative?: Array<{ name?: string; value?: string; unit?: string; reportedRange?: string | null }>;
   screenings?: Array<{ name: string; detail: string; urgency: string }>;
   cancer_screening_flags?: Array<{ title: string; explanation: string; action_steps?: string[]; references?: string[] }>;
   doctor_questions?: string[];
@@ -80,9 +84,15 @@ ${patient}
 
 Extract EVERY biomarker / test result that appears, including normal-looking ones. For each, capture:
 - "name": the marker name exactly as printed (e.g. "Ferritin", "Glucosio").
-- "value": the NUMERIC result as a number only (e.g. 487, 5.4). If the result is non-numeric/qualitative (e.g. "Negative", "Trace"), OMIT that marker entirely — do not invent a number.
+- "value": the NUMERIC result as a number only (e.g. 487, 5.4). If the result is non-numeric/qualitative, do NOT put it here — put it in "qualitative" instead (see below).
 - "unit": the unit as printed (e.g. "ng/mL"), or "" if none.
 - "reportedRange": the reference range PRINTED ON THE REPORT next to this value, copied verbatim as a string (e.g. "20-250", "< 200", "> 40"). If no range is printed for that marker, use null. Do NOT supply a range from your own knowledge — only what the report shows.
+
+QUALITATIVE results — capture, never drop. Any result that is NOT a number
+(e.g. "Negative", "Positive", "Trace", "Clear", "Yellow", blood type "O+",
+urinalysis dipstick values) goes in a separate "qualitative" array, copied
+verbatim. Do not numericize them, do not judge them, do not omit them. Each:
+{ "name": "...", "value": "Negative", "unit": "" , "reportedRange": "Negative" | null }.
 
 You MAY still produce these report-level items (these legitimately require judgment and are kept):
 - "title": a short title for the report.
@@ -94,6 +104,7 @@ Respond ONLY with this JSON (no markdown):
 {
   "title": "string",
   "biomarkers": [ { "name": "Ferritin", "value": 487, "unit": "ng/mL", "reportedRange": "20-250" } ],
+  "qualitative": [ { "name": "Urine glucose", "value": "Negative", "unit": "", "reportedRange": "Negative" } ],
   "screenings": [ { "name": "string", "detail": "why for THIS patient", "urgency": "urgent|routine|informational" } ],
   "cancer_screening_flags": [ { "title": "string", "explanation": "string", "action_steps": ["..."], "references": ["PMID: 12345678"] } ],
   "doctor_questions": ["..."]
@@ -134,10 +145,19 @@ function toFrontendStatus(s: FlaggedBiomarker["status"]): { status: string; crit
   }
 }
 
+// Deterministic 0–100 wellness score from the FLAGGED statuses only.
+// Each graded marker contributes a weight, score = round(100 * mean(weights)):
+//   normal        -> 1.0  (full credit)
+//   low / high     -> 0.5  (half credit — out of range but not critical)
+//   critical_*     -> 0.0  (no credit)
+// Markers we did NOT deterministically grade are EXCLUDED from the mean entirely
+// (not counted as healthy): `unrecognized` here, and qualitative markers never
+// enter `flagged` so they're already excluded. Returns null if nothing graded.
 function deterministicHealthScore(flagged: FlaggedBiomarker[]): number | null {
-  if (!flagged.length) return null;
-  const w = flagged.map((b) =>
-    b.status === "normal" || b.status === "unrecognized" ? 1
+  const graded = flagged.filter((b) => b.status !== "unrecognized");
+  if (!graded.length) return null;
+  const w = graded.map((b) =>
+    b.status === "normal" ? 1
     : b.status === "critical_low" || b.status === "critical_high" ? 0
     : 0.5,
   );
@@ -253,11 +273,28 @@ Deno.serve(async (req) => {
       return v;
     });
 
+    // Qualitative (non-numeric) results pass straight through, unjudged. They
+    // carry `qualitative: true` so the UI can show them in their own group and
+    // exclude them from "% in range" (we didn't deterministically grade them).
+    const qualitativeValues = (extracted.qualitative ?? [])
+      .filter((q) => q.name && q.value != null && String(q.value).trim() !== "")
+      .map((q) => ({
+        name: String(q.name).trim(),
+        value: `${String(q.value).trim()}${q.unit ? " " + String(q.unit).trim() : ""}`.trim(),
+        status: "normal",
+        qualitative: true,
+        explanation: q.reportedRange
+          ? `Reported as "${String(q.value).trim()}" (reference: ${q.reportedRange}). Qualitative result — not numerically graded.`
+          : `Reported as "${String(q.value).trim()}". Qualitative result — not numerically graded.`,
+        action_steps: [],
+        references: [],
+      }));
+
     const analysis = {
       title: extracted.title || payload.fileName || "Lab report",
       summary: llmOutput.summary ?? "",
       health_score: deterministicHealthScore(flagged),
-      values,
+      values: [...values, ...qualitativeValues],
       screenings: extracted.screenings ?? [],
       cancer_screening_flags: extracted.cancer_screening_flags ?? [],
       doctor_questions: extracted.doctor_questions ?? [],
