@@ -83,8 +83,11 @@ export async function loadMemberMeta(): Promise<Map<string, MemberMeta>> {
   for (const r of (data as { member_id: string; created_at: string; analysis: Analysis }[]) ?? []) {
     if (!r.member_id || m.has(r.member_id)) continue; // first per member = latest
     const vals = (r.analysis?.values as Analysis["values"]) ?? [];
-    const flagged = vals.filter((v) => v.status !== "normal").length;
-    m.set(r.member_id, { flagged, total: vals.length, inRange: vals.length ? Math.round(((vals.length - flagged) / vals.length) * 100) : 0, last: r.created_at });
+    // only grade markers we deterministically assessed — exclude unrecognized
+    // and qualitative so "% in range" isn't reassuring about ungraded markers.
+    const graded = vals.filter((v) => !v.unrecognized && !v.qualitative);
+    const flagged = graded.filter((v) => v.status !== "normal").length;
+    m.set(r.member_id, { flagged, total: graded.length, inRange: graded.length ? Math.round(((graded.length - flagged) / graded.length) * 100) : 0, last: r.created_at });
   }
   return m;
 }
