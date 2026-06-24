@@ -270,6 +270,10 @@ Deno.serve(async (req) => {
       if (b.rangeUsed.low != null && b.rangeUsed.high != null) {
         v.normal_range = { min: b.rangeUsed.low, max: b.rangeUsed.high };
       }
+      // diagnostic: which range decided the status — "reported" (from the PDF),
+      // "static" (the 17-marker DB), or "none". Lets you verify reportedRange
+      // capture; harmless extra JSON the frontend ignores.
+      v.range_source = b.rangeUsed.source;
       return v;
     });
 
