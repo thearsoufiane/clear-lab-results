@@ -113,7 +113,38 @@ export const REFERENCE_RANGES: Record<string, RangeDef> = {
     low: 60,
     unit: "mL/min/1.73m2",
     criticalLow: 15,
-    aliases: ["egfr", "estimated gfr", "glomerular filtration rate"],
+    aliases: ["egfr", "estimated gfr", "gfr", "glomerular filtration rate"],
+  },
+  sodium: {
+    low: 135,
+    high: 145,
+    unit: "mEq/L",
+    criticalLow: 120,
+    criticalHigh: 160,
+    aliases: ["sodium", "serum sodium"],
+  },
+  potassium: {
+    low: 3.5,
+    high: 5.0,
+    unit: "mEq/L",
+    criticalLow: 2.5,
+    criticalHigh: 6.5,
+    aliases: ["potassium", "serum potassium"],
+  },
+  calcium: {
+    low: 8.5,
+    high: 10.5,
+    unit: "mg/dL",
+    criticalLow: 6.0,
+    criticalHigh: 13.0,
+    aliases: ["calcium", "serum calcium", "total calcium"],
+  },
+  bun: {
+    low: 7,
+    high: 20,
+    unit: "mg/dL",
+    criticalHigh: 100,
+    aliases: ["bun", "blood urea nitrogen", "urea nitrogen"],
   },
   wbc: {
     low: 4.0,
@@ -140,14 +171,52 @@ for (const [key, def] of Object.entries(REFERENCE_RANGES)) {
     ALIAS_INDEX[alias] = key;
   }
 }
+// Aliases sorted longest-first (by word count) for the containment pass, so a
+// specific alias ("ldl cholesterol") wins over a generic one ("cholesterol").
+const ALIASES_BY_SPECIFICITY = Object.keys(ALIAS_INDEX).sort(
+  (a, b) => b.split(" ").length - a.split(" ").length || b.length - a.length,
+);
 
+function clean(s: string): string {
+  return s.toLowerCase().trim().replace(/[^\w\s-]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+/**
+ * Match a printed biomarker name to a canonical key. Handles real-world naming
+ * like "Thyroid Stimulating Hormone (TSH)" or "Glomerular Filtration Rate (GFR)"
+ * that the old exact-string match missed.
+ *
+ * 1. EXACT match on each candidate: the full cleaned name, each parenthetical
+ *    abbreviation ("(TSH)" -> "tsh"), and the name with parentheticals stripped.
+ * 2. Whole-token containment: an alias matches if all its words appear as a
+ *    contiguous run of WHOLE words in the name. Whole-word (not substring) so
+ *    "salt"/"cobalt" never match "alt" and "vitamin k" never matches a "k".
+ */
 export function normalizeBiomarkerName(raw: string): string | null {
-  const cleaned = raw
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, " ");
-  return ALIAS_INDEX[cleaned] ?? null;
+  const full = clean(raw);
+
+  const candidates = new Set<string>();
+  candidates.add(full);
+  for (const m of raw.matchAll(/\(([^)]+)\)/g)) candidates.add(clean(m[1]));
+  candidates.add(clean(raw.replace(/\([^)]*\)/g, "")));
+
+  for (const c of candidates) {
+    if (c && ALIAS_INDEX[c]) return ALIAS_INDEX[c];
+  }
+
+  const tokens = full.split(" ").filter(Boolean);
+  for (const alias of ALIASES_BY_SPECIFICITY) {
+    const aw = alias.split(" ");
+    if (aw.length > tokens.length) continue;
+    for (let i = 0; i + aw.length <= tokens.length; i++) {
+      let hit = true;
+      for (let j = 0; j < aw.length; j++) {
+        if (tokens[i + j] !== aw[j]) { hit = false; break; }
+      }
+      if (hit) return ALIAS_INDEX[alias];
+    }
+  }
+  return null;
 }
 
 export function getStaticRange(canonicalKey: string): RangeDef | null {

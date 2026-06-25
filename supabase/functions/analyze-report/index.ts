@@ -40,6 +40,9 @@ type AnalyzePayload = {
   mediaType?: string;
   fileName?: string;
   profile?: Profile;
+  /** When true, the response also includes `_debug` with the raw extraction
+   *  output (incl. reportedRange per marker) + the deterministic flags. Test only. */
+  debug?: boolean;
 };
 
 /** What the extraction (vision) call returns — extraction only, NO status. */
@@ -86,7 +89,7 @@ Extract EVERY biomarker / test result that appears, including normal-looking one
 - "name": the marker name exactly as printed (e.g. "Ferritin", "Glucosio").
 - "value": the NUMERIC result as a number only (e.g. 487, 5.4). If the result is non-numeric/qualitative, do NOT put it here — put it in "qualitative" instead (see below).
 - "unit": the unit as printed (e.g. "ng/mL"), or "" if none.
-- "reportedRange": the reference range PRINTED ON THE REPORT next to this value, copied verbatim as a string (e.g. "20-250", "< 200", "> 40"). If no range is printed for that marker, use null. Do NOT supply a range from your own knowledge — only what the report shows.
+- "reportedRange": the reference range PRINTED ON THE REPORT for THIS marker's row, copied verbatim as a string. Lab reports almost always have a column labelled "Reference Range", "Normal Range", "Reference Interval", "Bio. Ref. Interval", or similar — read that column on the same row as the value (e.g. "20-250", "0.40-4.50", "13.0 - 17.0", "< 200", "> 40"). Use null ONLY if the report genuinely prints no range for that marker. NEVER supply a range from your own knowledge — only what the report shows.
 
 QUALITATIVE results — capture, never drop. Any result that is NOT a number
 (e.g. "Negative", "Positive", "Trace", "Clear", "Yellow", blood type "O+",
@@ -306,6 +309,19 @@ Deno.serve(async (req) => {
       // or the guardrail caught something.
       needs_review: !validation.valid || flagged.some((b) => b.status === "unrecognized"),
     };
+
+    // Test-only: surface the raw extraction (incl. reportedRange the model
+    // captured) + the deterministic flags, so you can see exactly what the
+    // extraction step produced before flagging.
+    if (payload.debug) {
+      (analysis as Record<string, unknown>)._debug = {
+        extraction: extracted,
+        flagged: flagged.map((b) => ({
+          rawName: b.rawName, canonicalName: b.canonicalName, value: b.value,
+          rangeUsed: b.rangeUsed, status: b.status,
+        })),
+      };
+    }
 
     return jsonResponse(analysis);
   } catch (err) {
