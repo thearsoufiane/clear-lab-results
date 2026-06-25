@@ -222,3 +222,58 @@ export function normalizeBiomarkerName(raw: string): string | null {
 export function getStaticRange(canonicalKey: string): RangeDef | null {
   return REFERENCE_RANGES[canonicalKey] ?? null;
 }
+
+/** Normalize a unit string for comparison: lowercase, strip spaces, fold the
+ *  micro sign (µ) to "u" so "µmol/L" and "umol/L" match. */
+export function normalizeUnit(unit: string): string {
+  return unit.toLowerCase().replace(/µ/g, "u").replace(/\s+/g, "").trim();
+}
+
+/**
+ * Per-analyte unit conversion factors, keyed by canonical marker and a
+ * "<from>-><to>" pair of NORMALIZED units. The factor differs per analyte
+ * (it depends on molecular weight), so there is no single mmol/L<->mg/dL
+ * constant — cholesterol is 38.67, glucose 18.018, triglycerides 88.57, etc.
+ * Only markers that genuinely appear in two unit systems are listed; anything
+ * not here returns null from convertValue() and is flagged unrecognized rather
+ * than compared against a mismatched-unit threshold.
+ */
+const UNIT_CONVERSIONS: Record<string, Record<string, number>> = {
+  // Lipid panel — mmol/L <-> mg/dL (factor 38.67 for cholesterol fractions).
+  total_cholesterol: { "mmol/l->mg/dl": 38.67, "mg/dl->mmol/l": 1 / 38.67 },
+  ldl: { "mmol/l->mg/dl": 38.67, "mg/dl->mmol/l": 1 / 38.67 },
+  hdl: { "mmol/l->mg/dl": 38.67, "mg/dl->mmol/l": 1 / 38.67 },
+  // Triglycerides use a different molecular weight -> different factor.
+  triglycerides: { "mmol/l->mg/dl": 88.57, "mg/dl->mmol/l": 1 / 88.57 },
+  // Glucose — mmol/L <-> mg/dL.
+  glucose: { "mmol/l->mg/dl": 18.018, "mg/dl->mmol/l": 1 / 18.018 },
+  // Creatinine — µmol/L <-> mg/dL (the SI unit outside the US is µmol/L).
+  creatinine: { "umol/l->mg/dl": 1 / 88.42, "mg/dl->umol/l": 88.42 },
+  // Calcium — mmol/L <-> mg/dL (atomic-weight based factor ~4).
+  calcium: { "mmol/l->mg/dl": 4.0, "mg/dl->mmol/l": 1 / 4.0 },
+  // Electrolytes — mmol/L and mEq/L are numerically identical for monovalent
+  // ions (sodium, potassium), so the factor is exactly 1.
+  sodium: { "mmol/l->meq/l": 1, "meq/l->mmol/l": 1 },
+  potassium: { "mmol/l->meq/l": 1, "meq/l->mmol/l": 1 },
+};
+
+/**
+ * Convert `value` from `fromUnit` to `toUnit` for a given canonical marker.
+ * - Returns the value unchanged if the (normalized) units already match.
+ * - Returns the converted value if a known factor exists for this marker.
+ * - Returns null if the units differ and no conversion is known — the caller
+ *   MUST NOT compare across units in that case (fall back to unrecognized).
+ */
+export function convertValue(
+  canonicalKey: string,
+  value: number,
+  fromUnit: string,
+  toUnit: string,
+): number | null {
+  const from = normalizeUnit(fromUnit);
+  const to = normalizeUnit(toUnit);
+  if (from === to) return value;
+  const factor = UNIT_CONVERSIONS[canonicalKey]?.[`${from}->${to}`];
+  if (factor === undefined) return null;
+  return value * factor;
+}

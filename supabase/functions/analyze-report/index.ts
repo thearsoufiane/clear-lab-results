@@ -264,7 +264,7 @@ Deno.serve(async (req) => {
         name: b.rawName,
         value: `${b.value}${b.unit ? " " + b.unit : ""}`.trim(),
         status,
-        explanation: expl?.explanation ?? (unrecognized ? "This marker could not be automatically classified and should be reviewed manually." : ""),
+        explanation: expl?.explanation ?? (unrecognized ? (b.reason ? `Could not be automatically classified — ${b.reason}. Please review manually.` : "This marker could not be automatically classified and should be reviewed manually.") : ""),
         action_steps: expl?.action_steps ?? [],
         references: expl?.references ?? [],
       };
@@ -318,7 +318,7 @@ Deno.serve(async (req) => {
         extraction: extracted,
         flagged: flagged.map((b) => ({
           rawName: b.rawName, canonicalName: b.canonicalName, value: b.value,
-          rangeUsed: b.rangeUsed, status: b.status,
+          unit: b.unit, rangeUsed: b.rangeUsed, status: b.status, reason: b.reason,
         })),
       };
     }

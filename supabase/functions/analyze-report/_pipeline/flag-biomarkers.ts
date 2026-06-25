@@ -3,7 +3,13 @@
 // This is the layer that replaces "ask the LLM to judge if 58 is normal HDL"
 // with "math decides the status, the LLM only explains it."
 
-import { normalizeBiomarkerName, getStaticRange, RangeDef } from "./reference-ranges.ts";
+import {
+  normalizeBiomarkerName,
+  getStaticRange,
+  normalizeUnit,
+  convertValue,
+  RangeDef,
+} from "./reference-ranges.ts";
 
 export type FlagStatus = "low" | "normal" | "high" | "critical_low" | "critical_high" | "unrecognized";
 
@@ -21,6 +27,9 @@ export interface FlaggedBiomarker {
   unit: string;
   rangeUsed: { low?: number; high?: number; source: "reported" | "static" | "none" };
   status: FlagStatus;
+  /** Set when status is "unrecognized" for a diagnosable reason (e.g. a unit
+   *  mismatch with no known conversion), so the explanation/UI can say why. */
+  reason?: string;
 }
 
 // If a value is this many multiples beyond the range edge, and no explicit
@@ -86,40 +95,67 @@ export function flagBiomarker(raw: RawBiomarker): FlaggedBiomarker {
   const canonicalName = normalizeBiomarkerName(raw.name);
   const staticDef = canonicalName ? getStaticRange(canonicalName) : null;
 
-  let rangeUsed: FlaggedBiomarker["rangeUsed"];
-  let parsedRange: { low?: number; high?: number } | null = null;
-
-  if (raw.reportedRange) {
-    parsedRange = parseReportedRange(raw.reportedRange);
-    if (parsedRange) {
-      rangeUsed = { ...parsedRange, source: "reported" };
-    }
-  }
-
-  if (!parsedRange && staticDef) {
-    parsedRange = { low: staticDef.low, high: staticDef.high };
-    rangeUsed = { ...parsedRange, source: "static" };
-  }
-
-  if (!parsedRange) {
-    rangeUsed = { source: "none" };
-  }
-
-  const status: FlagStatus =
-    !canonicalName && !parsedRange
-      ? "unrecognized"
-      : parsedRange
-      ? statusFromRange(raw.value, parsedRange, staticDef)
-      : "unrecognized";
-
-  return {
+  // Display the value in whatever unit it was reported in — we only convert
+  // internally for comparison, never for what the user sees.
+  const base = {
     rawName: raw.name,
     canonicalName,
     value: raw.value,
     unit: raw.unit ?? staticDef?.unit ?? "",
-    rangeUsed: rangeUsed!,
-    status,
   };
+
+  // 1. Prefer the range printed on the report. It sits on the same row as the
+  //    value, so it's in the value's own unit — the value/range comparison
+  //    needs no conversion. But the static critical/panic thresholds are in
+  //    the canonical unit, so only apply them if we know the units agree;
+  //    otherwise fall back to the far-outside inference on the reported range.
+  if (raw.reportedRange) {
+    const parsed = parseReportedRange(raw.reportedRange);
+    if (parsed) {
+      const criticalSafe =
+        !staticDef ||
+        !raw.unit ||
+        normalizeUnit(raw.unit) === normalizeUnit(staticDef.unit);
+      return {
+        ...base,
+        rangeUsed: { ...parsed, source: "reported" },
+        status: statusFromRange(raw.value, parsed, criticalSafe ? staticDef : null),
+      };
+    }
+  }
+
+  // 2. Fall back to the static DB range. This lives in the marker's canonical
+  //    unit, so the value must be in that unit — convert it if it isn't, and
+  //    refuse to compare (unrecognized) if we have no known conversion. This is
+  //    the guard against "0.93 mmol/L HDL vs a 40 mg/dL floor -> critical_low".
+  if (staticDef) {
+    let compareValue = raw.value;
+    if (raw.unit && normalizeUnit(raw.unit) !== normalizeUnit(staticDef.unit)) {
+      const converted = canonicalName
+        ? convertValue(canonicalName, raw.value, raw.unit, staticDef.unit)
+        : null;
+      if (converted === null) {
+        return {
+          ...base,
+          rangeUsed: { source: "none" },
+          status: "unrecognized",
+          reason:
+            `unit mismatch: reported in "${raw.unit}", reference range is in ` +
+            `"${staticDef.unit}", and no known conversion exists — not flagged ` +
+            `to avoid a false abnormal result`,
+        };
+      }
+      compareValue = converted;
+    }
+    return {
+      ...base,
+      rangeUsed: { low: staticDef.low, high: staticDef.high, source: "static" },
+      status: statusFromRange(compareValue, { low: staticDef.low, high: staticDef.high }, staticDef),
+    };
+  }
+
+  // 3. Nothing to compare against — unknown marker, no printed range.
+  return { ...base, rangeUsed: { source: "none" }, status: "unrecognized" };
 }
 
 export function flagAllBiomarkers(raws: RawBiomarker[]): FlaggedBiomarker[] {
