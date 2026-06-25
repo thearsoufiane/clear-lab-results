@@ -1,6 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 
 export const SUPABASE_URL = "https://lxbpwjktchbdoyphnbvt.supabase.co";
+
+/** Base URL for edge-function calls. Override with VITE_FUNCTIONS_URL (in a
+ *  .env.local read by `vite dev`) to point a local frontend at a locally-served
+ *  function — e.g. VITE_FUNCTIONS_URL=http://localhost:54321/functions/v1
+ *  while running `supabase functions serve analyze-report`. Defaults to remote. */
+export const FUNCTIONS_URL: string =
+  ((typeof import.meta !== "undefined" && (import.meta as { env?: Record<string, string> }).env?.VITE_FUNCTIONS_URL) ||
+    `${SUPABASE_URL}/functions/v1`);
 export const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4YnB3amt0Y2hiZG95cGhuYnZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMzE4MTMsImV4cCI6MjA5MzgwNzgxM30.V8svnORZiLD2Ttvfv9obxVbPCYBEOHiAxQVB0t9csjE";
 
@@ -44,6 +52,15 @@ export type Analysis = {
     references?: string[];
     normal_range?: { min: number; max: number };
     optimal_range?: { min: number; max: number };
+    /** Deterministic flagger: value is in the critical/panic zone (rendered as an
+     *  urgent indicator on top of the normal high/low pill). Enum stays unchanged. */
+    critical?: boolean;
+    /** Deterministic flagger: couldn't classify this marker (no known range +
+     *  no printed range) — surfaced in a "review manually" group, not as normal. */
+    unrecognized?: boolean;
+    /** Non-numeric/qualitative result (e.g. "Negative") passed through unjudged;
+     *  shown in its own group and excluded from "% in range" math. */
+    qualitative?: boolean;
   }>;
   screenings: Array<{
     name: string;

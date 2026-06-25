@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { X, Upload, FileText, Image as ImageIcon } from "lucide-react";
 import { fileToBase64 } from "@/lib/pdf";
-import { supabase, SUPABASE_ANON_KEY, SUPABASE_URL, type Analysis } from "@/lib/supabase";
+import { supabase, SUPABASE_ANON_KEY, FUNCTIONS_URL, type Analysis } from "@/lib/supabase";
 import { LR_UI_CSS, LR_FONT_LINKS, LrDefs, GlassPanel, GradientButton, Gauge } from "@/components/lr-ui";
 
 const STEPS = [
@@ -119,7 +119,7 @@ export function UploadModal({
       }
       console.log("[analyze] invoking edge function", { mimeType, hasSession: true });
       const t0 = performance.now();
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/analyze-report`, {
+      const response = await fetch(`${FUNCTIONS_URL}/analyze-report`, {
         method: "POST",
         signal: controller.signal,
         headers: {

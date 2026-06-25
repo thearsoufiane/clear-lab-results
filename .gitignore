@@ -30,3 +30,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# local env (OpenAI key for functions serve + VITE_FUNCTIONS_URL for dev)
+.env.local
+.env.*.local

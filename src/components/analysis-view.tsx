@@ -93,8 +93,14 @@ export function AnalysisView({
   /** Rendered after the markers but before the educational disclaimer (the 90-day CTA). */
   ctaSlot?: ReactNode;
 }) {
-  const needsAttention = a.values.filter(v => ["low", "high", "elevated", "deficient"].includes(v.status));
-  const lookingGood = a.values.filter(v => v.status === "normal");
+  // Unrecognized (couldn't classify) and qualitative (non-numeric) markers each
+  // get their own group; they're kept out of the graded normal/attention buckets
+  // rather than faked into "normal".
+  const unrecognized = a.values.filter(v => v.unrecognized);
+  const qualitative = a.values.filter(v => v.qualitative && !v.unrecognized);
+  const graded = a.values.filter(v => !v.unrecognized && !v.qualitative);
+  const needsAttention = graded.filter(v => ["low", "high", "elevated", "deficient"].includes(v.status));
+  const lookingGood = graded.filter(v => v.status === "normal");
   // Trends ("was X") are a paid feature — only surface previous values when unlocked.
   const trendValues = isPaid ? prevValues : undefined;
   const reportDate = dateLabel || new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
@@ -166,6 +172,32 @@ export function AnalysisView({
           <SectionHead icon="✓" title="Looking good" count={lookingGood.length} tint={C.normal} />
           <div className="lr-stagger">
             {lookingGood.map((v, i) => <BiomarkerCard key={i} value={v} prevValues={trendValues} />)}
+          </div>
+          <hr style={{ border: "none", borderTop: `1px solid ${C.hairline}`, margin: "30px 0" }} />
+        </div>
+      )}
+
+      {qualitative.length > 0 && (
+        <div style={{ marginBottom: "10px" }}>
+          <SectionHead icon="≈" title="Other results" count={qualitative.length} tint={C.textDim} />
+          <div style={{ fontSize: "13px", color: C.textFaint, margin: "-6px 0 14px" }}>
+            Non-numeric results, shown as reported. These aren't auto-graded.
+          </div>
+          <div className="lr-stagger">
+            {qualitative.map((v, i) => <BiomarkerCard key={i} value={v} prevValues={trendValues} />)}
+          </div>
+          <hr style={{ border: "none", borderTop: `1px solid ${C.hairline}`, margin: "30px 0" }} />
+        </div>
+      )}
+
+      {unrecognized.length > 0 && (
+        <div style={{ marginBottom: "10px" }}>
+          <SectionHead icon="?" title="Couldn't auto-classify" count={unrecognized.length} tint={C.textDim} />
+          <div style={{ fontSize: "13px", color: C.textFaint, margin: "-6px 0 14px" }}>
+            We couldn't match these to a known reference range — review them with your provider.
+          </div>
+          <div className="lr-stagger">
+            {unrecognized.map((v, i) => <BiomarkerCard key={i} value={v} prevValues={trendValues} />)}
           </div>
           <hr style={{ border: "none", borderTop: `1px solid ${C.hairline}`, margin: "30px 0" }} />
         </div>
@@ -299,8 +331,15 @@ function BiomarkerCard({ value: v, prevValues }: { value: MarkerValue; prevValue
           <div style={{ position: "absolute", top: "50%", left: `${dotPos}%`, transform: "translate(-50%, -50%)", width: "14px", height: "14px", borderRadius: "50%", border: `3px solid ${C.bg}`, background: color, boxShadow: `0 0 0 1px ${color}, 0 0 12px ${color}88` }} />
         </div>
       )}
-      <div style={{ display: "inline-block", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", padding: "4px 10px", borderRadius: "100px", marginBottom: "10px", background: `${color}1f`, border: `1px solid ${color}3a`, color }}>
-        {statusLabel(v.status)}
+      <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "10px", flexWrap: "wrap" }}>
+        <span style={{ display: "inline-block", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", padding: "4px 10px", borderRadius: "100px", background: (v.unrecognized || v.qualitative) ? "rgba(158,147,132,0.14)" : `${color}1f`, border: `1px solid ${(v.unrecognized || v.qualitative) ? "rgba(158,147,132,0.4)" : `${color}3a`}`, color: (v.unrecognized || v.qualitative) ? C.textDim : color }}>
+          {v.unrecognized ? "Review manually" : v.qualitative ? "Reported" : statusLabel(v.status)}
+        </span>
+        {v.critical && (
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", padding: "4px 10px", borderRadius: "100px", background: "rgba(224,112,106,0.16)", border: "1px solid rgba(224,112,106,0.55)", color: C.low }}>
+            ⚠ Critical
+          </span>
+        )}
       </div>
       <div style={{ fontSize: "0.96rem", color: C.text, opacity: 0.86, lineHeight: 1.65 }}>{v.explanation}</div>
       {v.action_steps && v.action_steps.length > 0 && (
