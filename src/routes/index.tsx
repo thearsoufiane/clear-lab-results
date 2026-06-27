@@ -466,7 +466,7 @@ const html = `<style>
     <a class="btn btn-amber" href="/get-started">Try for free →</a>
     <a class="btn btn-ghost" href="#sample">See a sample report</a>
   </div>
-  <div class="hero-note"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Your data is never stored. Processed, then immediately deleted · HIPAA-compliant</div>
+  <div class="hero-note"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Your uploaded file isn't retained — it's processed to generate your results, which are saved to your private account.</div>
 
   <div class="dash-stage">
     <div class="dash-fit">
@@ -567,7 +567,6 @@ const html = `<style>
 <section class="trust"><div class="wrap">
   <div class="trust-lab">Built to clinical standards</div>
   <div class="trust-row">
-    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>HIPAA compliant</span>
     <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>GDPR compliant</span>
     <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>Any lab · 80+ languages</span>
     <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 12h8M12 8v8"/></svg>Zero data retention</span>
@@ -850,11 +849,11 @@ const html = `<style>
     <div class="foot-col"><h4>Product</h4><a href="/for-you">For individuals</a><a href="/for-doctors">For doctors</a><a href="/for-labs">For labs</a><a href="#coach">Meet Anna</a></div>
     <div class="foot-col"><h4>Learn</h4><a href="/learn/ferritin">Low ferritin</a><a href="/learn/vitamin-d">Vitamin D</a><a href="/learn/tsh-thyroid">Thyroid / TSH</a><a href="/learn/crp">High CRP</a><a href="/learn/a1c">A1c</a></div>
     <div class="foot-col"><h4>Company</h4><a href="#">About</a><a href="#">Trust center</a><a href="#">Contact</a></div>
-    <div class="foot-col"><h4>Legal</h4><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="#">Subprocessors</a></div>
+    <div class="foot-col"><h4>Legal</h4><a href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
   </div>
   <div class="foot-bottom">
     <div class="foot-badges">
-      <span class="badge">HIPAA</span><span class="badge">GDPR</span>
+      <span class="badge">GDPR</span>
     </div>
     <div class="foot-meta">© 2026 labread · hello@labread.health · X / Twitter</div>
   </div>

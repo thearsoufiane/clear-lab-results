@@ -154,7 +154,6 @@ export function LegalPage({ kind }: { kind: "terms" | "privacy" }) {
         <span>© 2026 labread</span>
         <Link to="/terms">Terms</Link>
         <Link to="/privacy">Privacy</Link>
-        <span>HIPAA-compliant</span>
       </footer>
     </div>
   );
