@@ -569,7 +569,6 @@ const html = `<style>
   <div class="trust-row">
     <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>HIPAA compliant</span>
     <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>GDPR compliant</span>
-    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>SOC 2 aligned</span>
     <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>Any lab · 80+ languages</span>
     <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 12h8M12 8v8"/></svg>Zero data retention</span>
   </div>
@@ -855,7 +854,7 @@ const html = `<style>
   </div>
   <div class="foot-bottom">
     <div class="foot-badges">
-      <span class="badge">HIPAA</span><span class="badge">GDPR</span><span class="badge">SOC 2</span>
+      <span class="badge">HIPAA</span><span class="badge">GDPR</span>
     </div>
     <div class="foot-meta">© 2026 labread · hello@labread.health · X / Twitter</div>
   </div>
