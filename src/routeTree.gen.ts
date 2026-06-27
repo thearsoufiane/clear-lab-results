@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TryFreeRouteImport } from './routes/try-free'
+import { Route as TrustCenterRouteImport } from './routes/trust-center'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ProtocolRouteImport } from './routes/protocol'
 import { Route as ProgressRouteImport } from './routes/progress'
@@ -40,6 +41,11 @@ import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 const TryFreeRoute = TryFreeRouteImport.update({
   id: '/try-free',
   path: '/try-free',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrustCenterRoute = TrustCenterRouteImport.update({
+  id: '/trust-center',
+  path: '/trust-center',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -192,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/progress': typeof ProgressRoute
   '/protocol': typeof ProtocolRoute
   '/terms': typeof TermsRoute
+  '/trust-center': typeof TrustCenterRoute
   '/try-free': typeof TryFreeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -221,6 +228,7 @@ export interface FileRoutesByTo {
   '/progress': typeof ProgressRoute
   '/protocol': typeof ProtocolRoute
   '/terms': typeof TermsRoute
+  '/trust-center': typeof TrustCenterRoute
   '/try-free': typeof TryFreeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -251,6 +259,7 @@ export interface FileRoutesById {
   '/progress': typeof ProgressRoute
   '/protocol': typeof ProtocolRoute
   '/terms': typeof TermsRoute
+  '/trust-center': typeof TrustCenterRoute
   '/try-free': typeof TryFreeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -282,6 +291,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/protocol'
     | '/terms'
+    | '/trust-center'
     | '/try-free'
     | '/blog/$slug'
     | '/learn/a1c'
@@ -311,6 +321,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/protocol'
     | '/terms'
+    | '/trust-center'
     | '/try-free'
     | '/blog/$slug'
     | '/learn/a1c'
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/protocol'
     | '/terms'
+    | '/trust-center'
     | '/try-free'
     | '/blog/$slug'
     | '/learn/a1c'
@@ -370,6 +382,7 @@ export interface RootRouteChildren {
   ProgressRoute: typeof ProgressRoute
   ProtocolRoute: typeof ProtocolRoute
   TermsRoute: typeof TermsRoute
+  TrustCenterRoute: typeof TrustCenterRoute
   TryFreeRoute: typeof TryFreeRoute
   BlogSlugRoute: typeof BlogSlugRoute
   LearnA1cRoute: typeof LearnA1cRoute
@@ -388,6 +401,13 @@ declare module '@tanstack/react-router' {
       path: '/try-free'
       fullPath: '/try-free'
       preLoaderRoute: typeof TryFreeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trust-center': {
+      id: '/trust-center'
+      path: '/trust-center'
+      fullPath: '/trust-center'
+      preLoaderRoute: typeof TrustCenterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -594,6 +614,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgressRoute: ProgressRoute,
   ProtocolRoute: ProtocolRoute,
   TermsRoute: TermsRoute,
+  TrustCenterRoute: TrustCenterRoute,
   TryFreeRoute: TryFreeRoute,
   BlogSlugRoute: BlogSlugRoute,
   LearnA1cRoute: LearnA1cRoute,
