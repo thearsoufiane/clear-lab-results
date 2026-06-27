@@ -850,7 +850,7 @@ const html = `<style>
     </div>
     <div class="foot-col"><h4>Product</h4><a href="/for-you">For individuals</a><a href="/for-doctors">For doctors</a><a href="/for-labs">For labs</a><a href="#coach">Meet Anna</a></div>
     <div class="foot-col"><h4>Learn</h4><a href="/learn/ferritin">Low ferritin</a><a href="/learn/vitamin-d">Vitamin D</a><a href="/learn/tsh-thyroid">Thyroid / TSH</a><a href="/learn/crp">High CRP</a><a href="/learn/a1c">A1c</a></div>
-    <div class="foot-col"><h4>Company</h4><a href="#">About</a><a href="#">Trust center</a><a href="#">Contact</a></div>
+    <div class="foot-col"><h4>Company</h4><a href="/blog">Blog</a><a href="#">About</a><a href="#">Trust center</a><a href="#">Contact</a></div>
     <div class="foot-col"><h4>Legal</h4><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="#">Subprocessors</a></div>
   </div>
   <div class="foot-bottom">
