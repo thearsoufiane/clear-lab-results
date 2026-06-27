@@ -28,12 +28,14 @@ import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalysesRouteImport } from './routes/analyses'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as LearnVitaminDRouteImport } from './routes/learn/vitamin-d'
 import { Route as LearnTshThyroidRouteImport } from './routes/learn/tsh-thyroid'
 import { Route as LearnFerritinRouteImport } from './routes/learn/ferritin'
 import { Route as LearnCrpRouteImport } from './routes/learn/crp'
 import { Route as LearnA1cRouteImport } from './routes/learn/a1c'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 
 const TryFreeRoute = TryFreeRouteImport.update({
   id: '/try-free',
@@ -130,6 +132,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportIdRoute = ReportIdRouteImport.update({
   id: '/report/$id',
   path: '/report/$id',
@@ -160,6 +167,11 @@ const LearnA1cRoute = LearnA1cRouteImport.update({
   path: '/learn/a1c',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -181,12 +193,14 @@ export interface FileRoutesByFullPath {
   '/protocol': typeof ProtocolRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
   '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -208,12 +222,14 @@ export interface FileRoutesByTo {
   '/protocol': typeof ProtocolRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
   '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
+  '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -236,12 +252,14 @@ export interface FileRoutesById {
   '/protocol': typeof ProtocolRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
   '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -265,12 +283,14 @@ export interface FileRouteTypes {
     | '/protocol'
     | '/terms'
     | '/try-free'
+    | '/blog/$slug'
     | '/learn/a1c'
     | '/learn/crp'
     | '/learn/ferritin'
     | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
     | '/report/$id'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -292,12 +312,14 @@ export interface FileRouteTypes {
     | '/protocol'
     | '/terms'
     | '/try-free'
+    | '/blog/$slug'
     | '/learn/a1c'
     | '/learn/crp'
     | '/learn/ferritin'
     | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
     | '/report/$id'
+    | '/blog'
   id:
     | '__root__'
     | '/'
@@ -319,12 +341,14 @@ export interface FileRouteTypes {
     | '/protocol'
     | '/terms'
     | '/try-free'
+    | '/blog/$slug'
     | '/learn/a1c'
     | '/learn/crp'
     | '/learn/ferritin'
     | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
     | '/report/$id'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -347,12 +371,14 @@ export interface RootRouteChildren {
   ProtocolRoute: typeof ProtocolRoute
   TermsRoute: typeof TermsRoute
   TryFreeRoute: typeof TryFreeRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   LearnA1cRoute: typeof LearnA1cRoute
   LearnCrpRoute: typeof LearnCrpRoute
   LearnFerritinRoute: typeof LearnFerritinRoute
   LearnTshThyroidRoute: typeof LearnTshThyroidRoute
   LearnVitaminDRoute: typeof LearnVitaminDRoute
   ReportIdRoute: typeof ReportIdRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -490,6 +516,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/report/$id': {
       id: '/report/$id'
       path: '/report/$id'
@@ -532,6 +565,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnA1cRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -555,12 +595,14 @@ const rootRouteChildren: RootRouteChildren = {
   ProtocolRoute: ProtocolRoute,
   TermsRoute: TermsRoute,
   TryFreeRoute: TryFreeRoute,
+  BlogSlugRoute: BlogSlugRoute,
   LearnA1cRoute: LearnA1cRoute,
   LearnCrpRoute: LearnCrpRoute,
   LearnFerritinRoute: LearnFerritinRoute,
   LearnTshThyroidRoute: LearnTshThyroidRoute,
   LearnVitaminDRoute: LearnVitaminDRoute,
   ReportIdRoute: ReportIdRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
