@@ -7,7 +7,17 @@ import { Logo } from "@/components/logo";
 import { HistorySidebar } from "@/components/history-sidebar";
 import { ArrowLeft, FileText, ChevronRight, AlertTriangle, User } from "lucide-react";
 
-export const Route = createFileRoute("/history")({ component: HistoryPage });
+export const Route = createFileRoute("/history")({
+  head: () => ({
+    meta: [
+      { title: "Your report history | labread.health" },
+      { name: "description", content: "Browse your past blood test analyses and track changes over time." },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [{ rel: "canonical", href: "https://labread.health/history" }],
+  }),
+  component: HistoryPage,
+});
 
 function HistoryPage() {
   const { user, loading } = useAuth();
