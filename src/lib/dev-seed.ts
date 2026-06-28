@@ -139,6 +139,14 @@ const MEMBERS = [
 
 const PROFILES = [{ id: USER_ID, user_id: USER_ID, plan: "personal" }];
 
+// A short Anna exchange — the first turn names "Ferritin" so the chat surface
+// drops an inline gauge mid-conversation (data-in-dialogue).
+const CHAT_MESSAGES = [
+  { role: "assistant", content: "Your Ferritin came back at 38. Three weeks ago you were at 22 — that's real movement.", created_at: new Date(Date.now() - 3 * 60_000).toISOString(), member_id: MEMBER_ID },
+  { role: "user", content: "is that good?", created_at: new Date(Date.now() - 2 * 60_000).toISOString(), member_id: MEMBER_ID },
+  { role: "assistant", content: "It's comfortably in range now. Let's keep it climbing — stay with the iron-rich dinners a little longer.", created_at: new Date(Date.now() - 1 * 60_000).toISOString(), member_id: MEMBER_ID },
+];
+
 const TABLES: Record<string, Record<string, unknown>[]> = {
   members: MEMBERS,
   reports: REPORTS,
@@ -146,6 +154,7 @@ const TABLES: Record<string, Record<string, unknown>[]> = {
   protocol_habits: HABITS,
   daily_checkins: RECENT_CHECKINS,
   profiles: PROFILES,
+  health_chat_messages: CHAT_MESSAGES,
 };
 
 // Minimal chainable query builder: filters are ignored (single seeded member),
@@ -154,7 +163,13 @@ const TABLES: Record<string, Record<string, unknown>[]> = {
 function builder(table: string) {
   let single: Record<string, unknown> | null | undefined;
   if (table === "daily_checkins") single = TODAY_CHECKIN; // maybeSingle = today
-  const rows = () => (TABLES[table] ?? []).slice();
+  // Fixtures are stored ascending by their sort column; honor descending
+  // .order() so callers that take [0]/maybeSingle as "newest" get the newest.
+  let desc = false;
+  const rows = () => {
+    const r = (TABLES[table] ?? []).slice();
+    return desc ? r.reverse() : r;
+  };
   const first = () => (single !== undefined ? single : rows()[0] ?? null);
 
   const api: Record<string, unknown> = {
@@ -166,7 +181,10 @@ function builder(table: string) {
     in: () => api,
     gte: () => api,
     lte: () => api,
-    order: () => api,
+    order: (_col: string, opts?: { ascending?: boolean }) => {
+      if (opts && opts.ascending === false) desc = true;
+      return api;
+    },
     limit: () => api,
     range: () => api,
     maybeSingle: async () => ({ data: first(), error: null }),

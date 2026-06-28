@@ -9,10 +9,15 @@ const TABS = [
   { to: "/chat", label: "Coach", icon: MessageCircle },
 ] as const;
 
+// Screens rebuilt to the vision ship their own bottom chrome (lr TabBar or a
+// composer), so the legacy nav steps aside there. Extend as screens land.
+const REBUILT = ["/dashboard", "/checkin", "/chat"];
+
 /**
  * Persistent bottom tab bar for the four main app screens.
  * Renders only when the user is authenticated AND on one of the tab routes
- * (so it's hidden on /, /auth, and non-tab pages like /report or /profile).
+ * (so it's hidden on /, /auth, and non-tab pages like /report or /profile),
+ * and never on a route that has been rebuilt with its own bottom chrome.
  */
 export function BottomNav() {
   const { user } = useAuth();
@@ -20,6 +25,7 @@ export function BottomNav() {
 
   const activeTab = TABS.find((t) => pathname === t.to || pathname.startsWith(`${t.to}/`));
   if (!user || !activeTab) return null;
+  if (REBUILT.some((r) => pathname === r || pathname.startsWith(`${r}/`))) return null;
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 bg-card border-t border-border/60">
