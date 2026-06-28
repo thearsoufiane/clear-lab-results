@@ -23,24 +23,28 @@ export const LR_FONT_LINKS = [
 
 export const LR_UI_CSS = `
   .lr-ui{
-    --bg:#0B0907;--bg-2:#100D0A;--surface:#15110A;--surface-2:#1C160D;--surface-3:#231B10;
-    --line:rgba(245,166,35,.12);--line-soft:rgba(245,166,35,.07);--ink-line:rgba(244,236,223,.08);
-    --cream:#F4ECDF;--muted:#9E9384;--faint:#6F6557;
-    --amber:#F5A623;--amber-lite:#FFC069;--amber-deep:#E8743B;
-    --grad:linear-gradient(135deg,#FFC069,#F5853F,#E8743B);
-    --green:#6FCF97;--warn:#E3A94A;--red:#E0706A;
+    /* ember on void — canonical labread tokens (see CLAUDE.md / docs).
+       One accent family only: amber -> coal. No green/red; status reads as
+       temperature within the ember family. Glass is white-at-low-opacity. */
+    --bg:#0B0907;--bg-2:#120D0A;--surface:rgba(255,255,255,.055);--surface-2:rgba(255,255,255,.09);--surface-3:rgba(255,255,255,.12);
+    --line:rgba(255,255,255,.10);--line-soft:rgba(255,255,255,.06);--line-warm:rgba(255,138,40,.22);--ink-line:rgba(246,236,225,.08);
+    --cream:#F6ECE1;--muted:rgba(246,236,225,.56);--faint:rgba(246,236,225,.34);
+    --amber:#FF7A18;--amber-lite:#FFB066;--amber-deep:#B23A0C;
+    --grad:linear-gradient(135deg,#FFB066,#FF7A18,#B23A0C);
+    --green:#FFB066;--warn:#FF9D45;--red:#B23A0C;
     --serif:'Fraunces',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
     color:var(--cream);font-family:var(--sans);
   }
   .lr-ui *{box-sizing:border-box}
   .lr-ui h1,.lr-ui h2,.lr-ui h3,.lr-ui h4{font-family:var(--serif);font-weight:500;letter-spacing:-.01em;line-height:1.08}
   .lr-ui .lr-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
-  .lr-ui .lr-glass{background:var(--surface);border:1px solid var(--line);border-radius:18px;
-    box-shadow:0 1px 0 rgba(255,255,255,.025) inset, 0 24px 60px rgba(0,0,0,.4)}
+  .lr-ui .lr-glass{background:var(--surface);border:1px solid var(--line);border-radius:20px;
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 24px 60px rgba(0,0,0,.4)}
   .lr-ui .lr-gbtn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--sans);
     font-weight:600;font-size:15px;border:none;border-radius:999px;padding:13px 24px;cursor:pointer;
-    background:var(--grad);color:#1a0f02;box-shadow:0 0 30px rgba(245,133,63,.28);transition:.18s}
-  .lr-ui .lr-gbtn:hover{transform:translateY(-1px);box-shadow:0 0 46px rgba(245,133,63,.42)}
+    background:var(--grad);color:#1a0f02;box-shadow:0 0 30px rgba(255,122,24,.28);transition:.18s}
+  .lr-ui .lr-gbtn:hover{transform:translateY(-1px);box-shadow:0 0 46px rgba(255,122,24,.42)}
   .lr-ui .lr-gbtn:active{transform:translateY(0)}
   .lr-ui .lr-gbtn:focus-visible{outline:2px solid var(--amber-lite);outline-offset:2px}
   .lr-ui .lr-gbtn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;filter:saturate(.7)}
@@ -107,8 +111,8 @@ export function LrDefs() {
     <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
       <defs>
         <linearGradient id="lrGaugeGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#FFC069" />
-          <stop offset="1" stopColor="#E8743B" />
+          <stop offset="0" stopColor="#FFB066" />
+          <stop offset="1" stopColor="#B23A0C" />
         </linearGradient>
       </defs>
     </svg>
@@ -154,14 +158,14 @@ export function Gauge({
         const r1 = c - 2, r2 = c - 6;
         const x1 = c + Math.cos(a) * (big ? r1 : r1 - 2), y1 = c + Math.sin(a) * (big ? r1 : r1 - 2);
         const x2 = c + Math.cos(a) * r2, y2 = c + Math.sin(a) * r2;
-        return <line key={i} x1={x1.toFixed(1)} y1={y1.toFixed(1)} x2={x2.toFixed(1)} y2={y2.toFixed(1)} stroke="rgba(245,166,35,.22)" strokeWidth={1.2} opacity={big ? 0.4 : 0.18} />;
+        return <line key={i} x1={x1.toFixed(1)} y1={y1.toFixed(1)} x2={x2.toFixed(1)} y2={y2.toFixed(1)} stroke="rgba(255,176,102,.22)" strokeWidth={1.2} opacity={big ? 0.4 : 0.18} />;
       })
     : null;
   return (
     <div style={{ position: "relative", width: size, height: size, display: "inline-grid", placeItems: "center" }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className={spin ? "lr-spin" : undefined}>
         {ticks && <g>{tickEls}</g>}
-        <circle cx={c} cy={c} r={r} fill="none" stroke={trackColor || "rgba(245,166,35,.14)"} strokeWidth={stroke} />
+        <circle cx={c} cy={c} r={r} fill="none" stroke={trackColor || "rgba(255,255,255,.09)"} strokeWidth={stroke} />
         <circle
           cx={c} cy={c} r={r} fill="none" stroke="url(#lrGaugeGrad)" strokeWidth={stroke} strokeLinecap="round"
           strokeDasharray={circ} strokeDashoffset={spin ? circ * 0.72 : off}

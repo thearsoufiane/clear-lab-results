@@ -21,13 +21,13 @@ export const Route = createFileRoute("/dashboard")({
 /* ===== verbatim CSS from labread-app-dashboard.html, mount-scoped via <style> ===== */
 const dashCss = `
   .lr-dash *{box-sizing:border-box;margin:0;padding:0}
-  body:has(.lr-dash){background:#0B0907;color:#F4ECDF;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body:has(.lr-dash){background:#0B0907;color:#F6ECE1;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
   .lr-dash a{text-decoration:none;color:inherit}
   @media(min-width:901px){html:has(.lr-dash),body:has(.lr-dash){height:100%;overflow:hidden}}
 
-  .lr-dash{--bg:#0B0907;--bg-2:#100D0A;--surface:#15110A;--surface-2:#17120C;--line:rgba(245,166,35,.13);--line-soft:rgba(245,166,35,.07);
-    --cream:#F4ECDF;--muted:#9E9384;--faint:#6F6557;--amber:#F5A623;--amber-lite:#FFC069;--grad:linear-gradient(135deg,#FFC069,#F5853F,#E8743B);
-    --green:#6FCF97;--warn:#E3A94A;--red:#E0706A;
+  .lr-dash{--bg:#0B0907;--bg-2:#100D0A;--surface:#15110A;--surface-2:#17120C;--line:rgba(255,255,255,.13);--line-soft:rgba(255,255,255,.07);
+    --cream:#F6ECE1;--muted:#9E9384;--faint:#6F6557;--amber:#FF7A18;--amber-lite:#FFB066;--grad:linear-gradient(135deg,#FFB066,#FF7A18,#B23A0C);
+    --green:#FFB066;--warn:#FF9D45;--red:#B23A0C;
     --serif:'Fraunces',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
     color:var(--cream);font-family:var(--sans)}
 
@@ -47,15 +47,15 @@ const dashCss = `
   .s-nav{display:flex;flex-direction:column;gap:2px}
   .s-nav a{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);padding:11px 12px;border-radius:10px;transition:.15s}
   .s-nav a:hover{color:var(--cream);background:rgba(255,255,255,.03)}
-  .s-nav a.on{background:rgba(245,133,63,.1);color:var(--cream)}
+  .s-nav a.on{background:rgba(255,122,24,.1);color:var(--cream)}
   .s-nav a svg{width:17px;height:17px;stroke:currentColor;opacity:.75;fill:none;stroke-width:1.9}
   .s-nav a.on svg{stroke:var(--amber);opacity:1}
-  .s-streak{margin-top:auto;border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(245,133,63,.05)}
+  .s-streak{margin-top:auto;border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,122,24,.05)}
   .s-streak .big{font-family:var(--serif);font-size:26px;display:flex;align-items:baseline;gap:7px}
   .s-streak .big small{font-size:12px;color:var(--muted);font-family:var(--sans)}
   .s-streak .sub{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:3px;letter-spacing:.04em}
   .s-new{border:1px dashed var(--line);border-radius:12px;padding:14px;text-align:center;font-size:13.5px;color:var(--muted);cursor:pointer;transition:.15s;background:none;width:100%;font-family:inherit}
-  .s-new:hover{border-color:rgba(245,166,35,.4);color:var(--cream)}
+  .s-new:hover{border-color:rgba(255,255,255,.4);color:var(--cream)}
   .s-new b{color:var(--amber-lite);font-weight:600}
 
   /* ===== MAIN ===== */
@@ -101,7 +101,7 @@ const dashCss = `
   .mini .t{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
   .mini .v{font-family:var(--serif);font-size:28px;display:flex;align-items:baseline;gap:5px}
   .mini .v small{font-size:13px;color:var(--muted);font-family:var(--sans)}
-  .mini.act{border-color:rgba(245,166,35,.3);background:rgba(245,133,63,.05)}
+  .mini.act{border-color:rgba(255,255,255,.3);background:rgba(255,122,24,.05)}
   .mini .go{font-family:var(--mono);font-size:11px;color:var(--amber-lite);margin-top:9px;display:inline-block;cursor:pointer}
 
   /* ===== COACH BAR ===== */
@@ -125,7 +125,7 @@ const dashCss = `
     .appbar-m{display:flex;position:fixed;top:0;left:0;right:0;height:56px;align-items:center;justify-content:space-between;
       padding:0 16px;background:rgba(11,9,7,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft);z-index:40}
     .appbar-m .brand{display:flex;align-items:center;gap:9px}
-    .appbar-m .logo-mark{width:30px;height:30px;filter:drop-shadow(0 0 10px rgba(245,133,63,.4))}
+    .appbar-m .logo-mark{width:30px;height:30px;filter:drop-shadow(0 0 10px rgba(255,122,24,.4))}
     .appbar-m .word{font-family:var(--serif);font-size:20px;font-weight:600}
     .appbar-m .av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:600;color:#1a0f02}
 
@@ -403,9 +403,9 @@ function Dashboard() {
       <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
         <defs>
           <linearGradient id="lmAmber" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#FFC069" />
-            <stop offset=".55" stopColor="#F5853F" />
-            <stop offset="1" stopColor="#E8743B" />
+            <stop offset="0" stopColor="#FFB066" />
+            <stop offset=".55" stopColor="#FF7A18" />
+            <stop offset="1" stopColor="#B23A0C" />
           </linearGradient>
           <symbol id="lm" viewBox="0 0 120 120">
             <rect x="36" y="24" width="13" height="62" rx="3.5" fill="url(#lmAmber)" />
@@ -527,8 +527,8 @@ function Dashboard() {
                   <div className="spark">
                     {sparkPoints && sparkLast ? (
                       <svg viewBox="0 0 150 56" preserveAspectRatio="none">
-                        <polyline points={sparkPoints} fill="none" stroke="#6FCF97" strokeWidth="2" />
-                        <circle cx={sparkLast[0]} cy={sparkLast[1]} r="3.5" fill="#6FCF97" />
+                        <polyline points={sparkPoints} fill="none" stroke="#FFB066" strokeWidth="2" />
+                        <circle cx={sparkLast[0]} cy={sparkLast[1]} r="3.5" fill="#FFB066" />
                       </svg>
                     ) : null}
                   </div>
@@ -589,8 +589,8 @@ function Dashboard() {
             <svg viewBox="0 0 120 120">
               <defs>
                 <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stopColor="#FFC069" />
-                  <stop offset="1" stopColor="#E8743B" />
+                  <stop offset="0" stopColor="#FFB066" />
+                  <stop offset="1" stopColor="#B23A0C" />
                 </linearGradient>
               </defs>
               <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.08)" strokeWidth="9" />
