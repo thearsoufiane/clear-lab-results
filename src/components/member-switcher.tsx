@@ -50,6 +50,9 @@ const css = `
   .lr-ui .ms-danger{font-family:var(--mono);font-size:11px;color:var(--red);cursor:pointer;margin-top:16px;background:none;border:none;padding:0}
   .lr-ui .ms-warn{border:1px solid rgba(224,112,106,.35);background:rgba(224,112,106,.07);border-radius:12px;padding:13px;margin-top:14px;font-size:13px;color:var(--cream);line-height:1.5}
   .lr-ui .ms-err{color:var(--red);font-size:13px;margin-top:10px}
+  .lr-ui .ms-consent{display:flex;gap:10px;align-items:flex-start;margin-top:8px;padding:12px;border:1px solid var(--line-warm);border-radius:12px;background:rgba(245,133,63,.05);font-size:12.5px;color:var(--cream);line-height:1.45;cursor:pointer}
+  .lr-ui .ms-consent input{margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--amber)}
+  .lr-ui .ms-consent b{color:var(--amber-lite);font-weight:600}
   @media(max-width:560px){
     .lr-ui .ms-ov{place-items:end center;padding:0}
     .lr-ui .ms-panel{max-width:none;border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));animation:msSheet .26s cubic-bezier(.2,.8,.2,1)}
@@ -215,10 +218,14 @@ export function AddEditMemberModal({
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [confirmRemove, setConfirmRemove] = useState(false);
+  // Per-person consent is required before adding a new family member (their
+  // health data). Edits don't re-prompt (consent already captured on add).
+  const [consent, setConsent] = useState(false);
 
   async function save() {
     if (!user) return;
     if (!name.trim()) { setErr("Please enter a name."); return; }
+    if (!isEdit && !consent) { setErr("Please confirm you have this person's consent before adding them."); return; }
     setSaving(true); setErr(null);
     // TODO: enforce plan limits (Personal 1 / Family up to 5 / Household more)
     const payload = {
@@ -234,7 +241,7 @@ export function AddEditMemberModal({
         onClose();
       } else {
         const { data, error } = await supabase.from("members")
-          .insert({ owner_user_id: user.id, ...payload }).select("id").single();
+          .insert({ owner_user_id: user.id, ...payload, consent_at: new Date().toISOString() }).select("id").single();
         if (error) throw error;
         await reload();
         setActiveMember(data.id as string);
@@ -321,11 +328,18 @@ export function AddEditMemberModal({
             </div>
           </div>
 
+          {!isEdit && (
+            <label className="ms-consent">
+              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
+              <span>I confirm I have <b>{name.trim() || "this person"}</b>'s consent to add their blood test results to my labread account, and that each person's data stays private to their own profile.</span>
+            </label>
+          )}
+
           {err && <p className="ms-err">{err}</p>}
 
           <div className="ms-actions">
             <button className="ms-cancel" onClick={onClose}>Cancel</button>
-            <GradientButton style={{ flex: 2 }} onClick={save} disabled={saving}>
+            <GradientButton style={{ flex: 2 }} onClick={save} disabled={saving || (!isEdit && !consent)}>
               {saving ? "Saving…" : isEdit ? "Save changes" : "Add member"}
             </GradientButton>
           </div>
