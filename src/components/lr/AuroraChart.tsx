@@ -54,22 +54,28 @@ export function AuroraChart({
         <defs>
           {series.map((s, i) => (
             <linearGradient key={i} id={`${uid}-fill-${i}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor={s.color} stopOpacity="0.5" />
+              <stop offset="0" stopColor={s.color} stopOpacity="0.34" />
               <stop offset="1" stopColor={s.color} stopOpacity="0" />
             </linearGradient>
           ))}
-          <filter id={blur}>
-            <feGaussianBlur stdDeviation="1.4" />
+          <filter id={blur} x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.2" />
+          </filter>
+          <filter id={`${blur}-stroke`} x="-20%" y="-50%" width="140%" height="200%">
+            <feGaussianBlur stdDeviation="2.2" />
           </filter>
         </defs>
+        {/* low fill opacity + screen blend keeps every ridge translucent, so one
+            reads behind another; each gets a faint bright glow on its top edge. */}
         {series.map((s, i) => {
           const c = coords(s.points);
           const line = linePath(c);
           const area = `${line} L${width},${height} L0,${height} Z`;
           return (
-            <g key={i}>
+            <g key={i} style={{ mixBlendMode: "screen" }}>
               <path d={area} fill={`url(#${uid}-fill-${i})`} filter={`url(#${blur})`} />
-              <path d={line} fill="none" stroke={s.color} strokeWidth="1.4" opacity="0.85" />
+              <path d={line} fill="none" stroke={s.color} strokeWidth="2.4" opacity="0.5" filter={`url(#${blur}-stroke)`} />
+              <path d={line} fill="none" stroke={s.color} strokeWidth="1.3" opacity="0.95" />
             </g>
           );
         })}

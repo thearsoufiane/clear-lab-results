@@ -66,7 +66,7 @@ export function Gauge({
           <stop offset="0.5" stopColor="#FF7A18" />
           <stop offset="1" stopColor="#FFB066" />
         </linearGradient>
-        <filter id={glow}>
+        <filter id={glow} x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="2.6" result="b" />
           <feMerge>
             <feMergeNode in="b" />

@@ -66,7 +66,7 @@ export function MemberAvatar({ member, size = 42 }: { member: Member; size?: num
   return (
     <span
       className="ms-av"
-      style={{ width: size, height: size, fontSize: size * 0.34, background: member.color, boxShadow: `0 0 0 2px var(--bg), 0 0 0 4px ${member.color}55` }}
+      style={{ width: size, height: size, fontSize: size * 0.34, background: member.color, borderRadius: "50%", display: "grid", placeItems: "center", fontFamily: "var(--mono)", fontWeight: 600, color: "#1a0f02", flexShrink: 0, boxShadow: `0 0 0 2px var(--bg), 0 0 0 4px ${member.color}55` }}
     >
       {memberInitials(member.name)}
     </span>
