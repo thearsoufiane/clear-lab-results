@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>labread — onboarding &amp; family vision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0B0907; --void-2:#120D0A; --ash:#1A1411;
+    --ember-core:#FF7A18; --ember-hot:#FF9D45; --ember-glow:#FFB066;
+    --ember-deep:#B23A0C; --coal:#5E2208;
+    --bone:#F6ECE1; --smoke:rgba(246,236,225,.56); --whisper:rgba(246,236,225,.34);
+    --glass:rgba(255,255,255,.055); --glass-2:rgba(255,255,255,.09);
+    --line:rgba(255,255,255,.10); --line-warm:rgba(255,138,40,.22);
+    --serif:"Fraunces",Georgia,serif; --sans:"Inter",-apple-system,system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:#0a0807;color:var(--bone);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .page{max-width:1240px;margin:0 auto;padding:0 24px 120px}
+
+  .hero{position:relative;padding:96px 0 56px;text-align:center;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:-40% 0 auto 0;height:120%;
+    background:radial-gradient(60% 50% at 50% 30%, rgba(255,122,24,.34), transparent 70%),radial-gradient(40% 30% at 30% 50%, rgba(178,58,12,.30), transparent 70%),radial-gradient(40% 30% at 72% 44%, rgba(255,176,102,.18), transparent 70%);
+    filter:blur(8px);z-index:0;animation:breathe 9s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:.78;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+  .hero>*{position:relative;z-index:1}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--ember-glow)}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,8vw,88px);line-height:.98;letter-spacing:-.02em;margin:18px 0 0}
+  .hero h1 em{font-style:italic;color:var(--ember-hot)}
+  .hero p{max-width:560px;margin:24px auto 0;color:var(--smoke);font-size:17px}
+  .hero .meta{margin-top:30px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .chip{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--smoke);padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--glass);backdrop-filter:blur(8px)}
+
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin:88px 0 8px;flex-wrap:wrap}
+  .sec-head .n{font-family:var(--mono);font-size:13px;color:var(--ember-core);letter-spacing:.1em}
+  .sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4vw,40px);letter-spacing:-.01em}
+  .sec-sub{color:var(--smoke);max-width:660px;margin-bottom:36px;font-size:15px}
+
+  .screens{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+  .screen-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .screen-label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--whisper);text-align:center}
+  .screen-label b{color:var(--smoke);font-weight:600}
+  .phone{position:relative;width:100%;max-width:280px;aspect-ratio:295/620;background:#000;border-radius:42px;padding:7px;box-shadow:0 0 0 2px rgba(255,255,255,.06),0 40px 90px -30px rgba(255,90,10,.45),0 30px 60px -40px #000}
+  .glass-screen{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;color:var(--bone);font-size:11px;
+    background:radial-gradient(120% 80% at 50% 18%, rgba(255,122,24,.28), transparent 58%),radial-gradient(90% 60% at 18% 64%, rgba(178,58,12,.30), transparent 60%),radial-gradient(100% 70% at 86% 78%, rgba(255,176,102,.16), transparent 60%),linear-gradient(180deg,#140e0a,#0b0807 70%)}
+  .island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:74px;height:20px;background:#000;border-radius:14px;z-index:5}
+  .statusbar{position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:10px;font-weight:600;z-index:4}
+  .statusbar .r{display:flex;gap:5px;align-items:center;font-family:var(--mono);font-size:9px}
+  .scr{position:absolute;inset:34px 0 0 0;padding:8px 16px 0;overflow:hidden}
+
+  .gcard{background:var(--glass);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(14px);padding:13px}
+  .pill{display:inline-flex;align-items:center;gap:5px;background:var(--glass-2);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:10px;color:var(--smoke);backdrop-filter:blur(10px)}
+  .pill.on{background:linear-gradient(120deg,rgba(255,122,24,.34),rgba(178,58,12,.22));border-color:var(--line-warm);color:var(--bone)}
+  .ico{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--glass-2);border:1px solid var(--line);font-size:12px}
+  .eyebrow-sm{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--whisper)}
+  .h-serif{font-family:var(--serif);font-weight:400;letter-spacing:-.01em}
+  .cta{margin-top:auto;width:100%;justify-content:center;padding:12px;font-family:var(--serif);font-size:12px}
+
+  /* upload */
+  .dropzone{margin-top:14px;border:1.5px dashed var(--line-warm);border-radius:22px;padding:26px 14px;text-align:center;background:radial-gradient(80% 70% at 50% 30%,rgba(255,122,24,.16),transparent 70%)}
+  .dz-orb{width:58px;height:58px;border-radius:50%;margin:0 auto 12px;background:linear-gradient(135deg,#FF9D45,#B23A0C);display:grid;place-items:center;font-size:22px;color:#1a0e06;box-shadow:0 0 26px rgba(255,140,50,.5)}
+  .uprow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .uprow:last-child{border-bottom:0}
+  .uprow .t{flex:1;font-size:11px;font-weight:600}
+  .uprow .s{font-size:9px;color:var(--smoke);font-weight:400}
+
+  /* analyzing */
+  .report{position:relative;height:150px;border-radius:16px;overflow:hidden;margin-top:14px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--line);padding:14px}
+  .report .ln{height:6px;border-radius:4px;background:rgba(246,236,225,.14);margin-bottom:9px}
+  .scanline{position:absolute;left:0;right:0;height:34px;top:30%;background:linear-gradient(180deg,transparent,rgba(255,150,60,.45),transparent);box-shadow:0 0 24px rgba(255,150,60,.6)}
+
+  /* form */
+  .field{display:flex;align-items:center;justify-content:space-between;padding:12px 13px;background:var(--glass);border:1px solid var(--line);border-radius:14px;margin-bottom:9px}
+  .field .lab{font-size:9px;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--whisper)}
+  .field .val{font-size:12px;font-weight:600;margin-top:2px}
+  .field .val.ph{color:var(--whisper);font-weight:400}
+  .seg{display:flex;gap:6px}
+  .seg .s{font-size:10px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:var(--smoke)}
+  .seg .s.on{background:linear-gradient(120deg,rgba(255,122,24,.34),rgba(178,58,12,.22));border-color:var(--line-warm);color:var(--bone)}
+  .goals{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+
+  /* family */
+  .switcher{display:flex;gap:9px;margin-top:12px;overflow:hidden}
+  .av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:17px;flex:none;border:1.5px solid var(--line)}
+  .av.you{background:linear-gradient(135deg,#FF7A18,#B23A0C);color:#1a0e06;border-color:transparent;box-shadow:0 0 16px rgba(255,140,50,.45)}
+  .av.mom{background:linear-gradient(135deg,#FFB066,#7A2D0B);color:#1a0e06;border-color:transparent}
+  .av.add{border-style:dashed;color:var(--ember-glow);font-size:20px;font-family:var(--sans)}
+  .swcol{display:flex;flex-direction:column;align-items:center;gap:5px}
+  .swcol .nm{font-size:8.5px;color:var(--smoke)}
+  .swcol.active .nm{color:var(--ember-glow)}
+  .member{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--glass);margin-bottom:9px}
+  .member .mav{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--serif);font-size:14px}
+  .member .info{flex:1}
+  .member .info .n{font-size:11.5px;font-weight:600}
+  .member .info .d{font-size:9px;color:var(--smoke)}
+  .slot-empty{display:flex;align-items:center;gap:11px;padding:12px;border:1.5px dashed var(--line-warm);border-radius:16px;background:rgba(255,122,24,.05)}
+
+  .tabbar{position:absolute;left:14px;right:14px;bottom:12px;height:50px;border-radius:24px;background:rgba(20,14,10,.6);border:1px solid var(--line);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:space-around;z-index:6}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:8px;color:var(--whisper)}
+  .tab .d{font-size:14px;line-height:1}
+  .tab.on{color:var(--ember-glow)}
+  .tab.on .d{filter:drop-shadow(0 0 6px rgba(255,150,60,.9))}
+
+  /* panel */
+  .lang{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;margin-top:8px}
+  .panel{background:var(--void-2);border:1px solid var(--line);border-radius:24px;padding:26px}
+  .panel h3{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember-core);margin-bottom:18px}
+  .flow{display:flex;flex-direction:column}
+  .flow-step{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)}
+  .flow-step:last-child{border-bottom:0}
+  .flow-step .k{font-family:var(--mono);font-size:11px;color:var(--ember-glow);width:26px;flex:none;padding-top:2px}
+  .flow-step .body b{display:block;font-family:var(--serif);font-size:17px;margin-bottom:3px}
+  .flow-step .body span{font-size:13px;color:var(--smoke)}
+  .guard{border:1px solid var(--line-warm);background:rgba(255,122,24,.06);border-radius:16px;padding:16px;margin-bottom:14px}
+  .guard:last-child{margin-bottom:0}
+  .guard .t{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ember-glow);margin-bottom:8px}
+  .guard p{font-size:13px;color:var(--smoke);line-height:1.5}
+  .guard b{color:var(--bone)}
+
+  .footer{margin-top:90px;text-align:center;color:var(--whisper);font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+
+  @media(max-width:1080px){.screens{grid-template-columns:repeat(2,1fr);gap:36px}.lang{grid-template-columns:1fr}}
+  @media(max-width:620px){.screens{grid-template-columns:1fr;justify-items:center}}
+  @media(prefers-reduced-motion:reduce){.hero::before{animation:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="eyebrow">labread · first moment &amp; family</div>
+    <h1>From a PDF<br>to <em>a person.</em></h1>
+    <p>The first thing every user does — hand labread a report and a little about themselves — and the circle they bring with them.</p>
+    <div class="meta">
+      <span class="chip">Scan · PDF · Photo</span>
+      <span class="chip">Anna reads it</span>
+      <span class="chip">Up to 2 family members</span>
+    </div>
+  </header>
+
+  <div class="sec-head"><span class="n">01</span><h2>Upload &amp; about you</h2></div>
+  <p class="sec-sub">Three taps from a lab report to a living profile. The upload is the magical moment — make it feel like handing your results to someone who actually understands them.</p>
+
+  <div class="screens">
+
+    <!-- 1. UPLOAD -->
+    <div class="screen-wrap">
+      <div class="phone"><div class="glass-screen">
+        <div class="island"></div>
+        <div class="statusbar"><span>9:41</span><span class="r">5G ▰▰▰ 80</span></div>
+        <div class="scr" style="display:flex;flex-direction:column">
+          <div class="eyebrow-sm">[ step 1 of 3 ]</div>
+          <div class="h-serif" style="font-size:25px;margin-top:6px;line-height:1.05">Add your<br>blood test</div>
+
+          <div class="dropzone">
+            <div class="dz-orb">⤒</div>
+            <div class="h-serif" style="font-size:15px">Drop it here</div>
+            <div class="eyebrow-sm" style="margin-top:4px">pdf · jpg · png</div>
+          </div>
+
+          <div class="gcard" style="margin-top:12px;padding:4px 13px">
+            <div class="uprow"><div class="ico" style="background:linear-gradient(135deg,#FF9D45,#B23A0C);border:0">⊡</div><div><div class="t">Scan with camera</div><div class="s">point at the printout</div></div></div>
+            <div class="uprow"><div class="ico">▤</div><div><div class="t">Upload a PDF<div class="s">from files or email</div></div></div></div>
+            <div class="uprow"><div class="ico">▦</div><div><div class="t">Choose a photo<div class="s">from your library</div></div></div></div>
+          </div>
+
+          <div class="eyebrow-sm" style="margin-top:12px;text-align:center">we read 30+ common lab formats</div>
+          <div class="pill on cta" style="margin-top:12px;margin-bottom:0">Continue</div>
+        </div>
+      </div></div>
+      <div class="screen-label"><b>Upload</b><br>scan · pdf · photo</div>
+    </div>
+
+    <!-- 2. ANALYZING -->
+    <div class="screen-wrap">
+      <div class="phone"><div class="glass-screen">
+        <div class="island"></div>
+        <div class="statusbar"><span>9:41</span><span class="r">5G ▰▰▰ 80</span></div>
+        <div class="scr" style="display:flex;flex-direction:column">
+          <div class="eyebrow-sm" style="color:var(--ember-glow)">[ reading ]</div>
+          <div class="h-serif" style="font-size:24px;margin-top:6px;line-height:1.08">Making sense<br>of your blood.</div>
+
+          <div class="report">
+            <div class="ln" style="width:60%"></div>
+            <div class="ln" style="width:90%"></div>
+            <div class="ln" style="width:75%"></div>
+            <div class="ln" style="width:85%"></div>
+            <div class="ln" style="width:50%"></div>
+            <div class="scanline"></div>
+          </div>
+
+          <div class="gcard" style="margin-top:14px;display:flex;gap:9px;align-items:center">
+            <div class="ico" style="background:linear-gradient(135deg,#FF7A18,#B23A0C);border:0;color:#1a0e06">A</div>
+            <div style="flex:1"><div class="eyebrow-sm">anna</div><div class="h-serif" style="font-size:12px;line-height:1.25">Found <b style="font-style:normal">24 biomarkers.</b> Flagging what needs attention…</div></div>
+          </div>
+
+          <div style="margin-top:14px;display:flex;gap:8px">
+            <span class="pill on" style="flex:1;justify-content:center">✓ Iron panel</span>
+            <span class="pill on" style="flex:1;justify-content:center">✓ Thyroid</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <span class="pill" style="flex:1;justify-content:center">◴ Vitamins…</span>
+            <span class="pill" style="flex:1;justify-content:center">◴ Lipids…</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="screen-label"><b>Anna reads it</b><br>the magical beat</div>
+    </div>
+
+    <!-- 3. ABOUT YOU -->
+    <div class="screen-wrap">
+      <div class="phone"><div class="glass-screen">
+        <div class="island"></div>
+        <div class="statusbar"><span>9:41</span><span class="r">5G ▰▰▰ 80</span></div>
+        <div class="scr" style="display:flex;flex-direction:column;overflow-y:auto">
+          <div class="eyebrow-sm">[ step 3 of 3 ]</div>
+          <div class="h-serif" style="font-size:24px;margin-top:6px;line-height:1.05">A little<br>about you</div>
+          <div class="eyebrow-sm" style="margin-top:6px">this sharpens every range we show you</div>
+
+          <div style="margin-top:12px">
+            <div class="field"><div><div class="lab">name</div><div class="val">Amine</div></div><span style="color:var(--whisper)">›</span></div>
+            <div class="field"><div><div class="lab">age</div><div class="val">28</div></div><span style="color:var(--whisper)">›</span></div>
+            <div class="field"><div class="lab">biological sex<div class="seg" style="margin-top:7px"><span class="s on">Male</span><span class="s">Female</span></div></div></div>
+          </div>
+
+          <div class="eyebrow-sm" style="margin-top:6px">what matters to you?</div>
+          <div class="goals">
+            <span class="pill on">Energy ⚡</span><span class="pill">Sleep 🌙</span>
+            <span class="pill on">Iron 🩸</span><span class="pill">Heart ♥</span>
+            <span class="pill">Hormones ◐</span><span class="pill">Longevity ✦</span>
+          </div>
+
+          <div class="pill on cta" style="margin-top:14px;margin-bottom:12px">Meet your results →</div>
+        </div>
+      </div></div>
+      <div class="screen-label"><b>About you</b><br>personalize the ranges</div>
+    </div>
+
+    <!-- 4. FAMILY -->
+    <div class="screen-wrap">
+      <div class="phone"><div class="glass-screen">
+        <div class="island"></div>
+        <div class="statusbar"><span>9:41</span><span class="r">5G ▰▰▰ 80</span></div>
+        <div class="scr">
+          <div class="h-serif" style="font-size:24px">Your circle</div>
+          <div class="eyebrow-sm" style="margin-top:4px">switch profile · up to 2 family members</div>
+
+          <div class="switcher">
+            <div class="swcol active"><div class="av you">A</div><div class="nm">You</div></div>
+            <div class="swcol"><div class="av mom">M</div><div class="nm">Mom</div></div>
+            <div class="swcol"><div class="av add">+</div><div class="nm">Add</div></div>
+          </div>
+
+          <div class="eyebrow-sm" style="margin:16px 0 7px">members</div>
+
+          <div class="member" style="border-color:var(--line-warm)">
+            <div class="mav" style="background:linear-gradient(135deg,#FF7A18,#B23A0C);color:#1a0e06">A</div>
+            <div class="info"><div class="n">Amine · you</div><div class="d">Day 47 · vitality 74</div></div>
+            <span class="pill" style="padding:3px 8px">owner</span>
+          </div>
+
+          <div class="member">
+            <div class="mav" style="background:linear-gradient(135deg,#FFB066,#7A2D0B);color:#1a0e06">M</div>
+            <div class="info"><div class="n">Mom</div><div class="d">Day 12 · 2 markers to watch</div></div>
+            <span style="color:var(--whisper)">›</span>
+          </div>
+
+          <div class="slot-empty">
+            <div class="mav" style="border:1.5px dashed var(--line-warm);color:var(--ember-glow)">+</div>
+            <div class="info"><div class="n" style="color:var(--ember-glow)">Add a family member</div><div class="d">1 slot left</div></div>
+          </div>
+
+          <div class="gcard" style="margin-top:12px;padding:11px;border-color:var(--line-warm)">
+            <div class="eyebrow-sm" style="color:var(--ember-glow)">their data, their consent</div>
+            <div style="font-size:9.5px;color:var(--smoke);margin-top:5px;line-height:1.4">Each member has their own private record and protocol. You manage — you don't merge.</div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="d">◉</span>Home</div>
+          <div class="tab"><span class="d">◈</span>Protocol</div>
+          <div class="tab"><span class="d">◆</span>Challenges</div>
+          <div class="tab on"><span class="d">◐</span>You</div>
+        </div>
+      </div></div>
+      <div class="screen-label"><b>Family circle</b><br>you + up to 2 members</div>
+    </div>
+
+  </div>
+
+  <!-- LOGIC -->
+  <div class="sec-head"><span class="n">02</span><h2>How these parts behave</h2></div>
+  <p class="sec-sub">The rules under the screens — especially around family, where health data and consent matter for your CNDP rebuild.</p>
+
+  <div class="lang">
+    <div class="panel">
+      <h3>The first-run path</h3>
+      <div class="flow">
+        <div class="flow-step"><div class="k">01</div><div class="body"><b>Hand it over</b><span>Scan, PDF, or photo. One screen, three ways in — no account wall before they see value.</span></div></div>
+        <div class="flow-step"><div class="k">02</div><div class="body"><b>Anna reads it</b><span>The scan animation isn't decoration — it's the moment trust forms. "Found 24 biomarkers" earns the next tap.</span></div></div>
+        <div class="flow-step"><div class="k">03</div><div class="body"><b>About you</b><span>Age and biological sex change which ranges are "normal," so asking is honest, not nosy. Goals shape the first protocol.</span></div></div>
+        <div class="flow-step"><div class="k">04</div><div class="body"><b>Meet your results</b><span>Land straight on the glowing Home from the first vision. The payoff arrives within a minute of opening the app.</span></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Family rules</h3>
+      <div class="guard">
+        <div class="t">separate, not merged</div>
+        <p>Each profile is <b>its own private record</b> with its own report, protocol, and challenges. Switching profiles swaps the whole app context — you never see two people's blood blended together.</p>
+      </div>
+      <div class="guard">
+        <div class="t">consent is the gate</div>
+        <p>Adding a member means processing <b>their</b> health data. The flow captures a clear consent step per person — the right foundation for a CNDP-registered relaunch, and a real trust signal.</p>
+      </div>
+      <div class="guard">
+        <div class="t">the cap is a setting</div>
+        <p>Shown here as <b>you + 2</b>. The limit is one number in config — easy to lift to 3, or tie larger circles to a paid tier later.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">labread · onboarding &amp; family vision · v1 north star</div>
+
+</div>
+</body>
+</html>

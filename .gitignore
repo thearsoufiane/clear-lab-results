@@ -34,3 +34,7 @@ dist-ssr
 # local env (OpenAI key for functions serve + VITE_FUNCTIONS_URL for dev)
 .env.local
 .env.*.local
+
+# Supabase CLI local state
+supabase/.temp/
+supabase/.branches/

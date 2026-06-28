@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>labread — design vision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0B0907;
+    --void-2:#120D0A;
+    --ash:#1A1411;
+    --ember-core:#FF7A18;
+    --ember-hot:#FF9D45;
+    --ember-glow:#FFB066;
+    --ember-deep:#B23A0C;
+    --coal:#5E2208;
+    --bone:#F6ECE1;
+    --smoke:rgba(246,236,225,.56);
+    --whisper:rgba(246,236,225,.34);
+    --glass:rgba(255,255,255,.055);
+    --glass-2:rgba(255,255,255,.09);
+    --line:rgba(255,255,255,.10);
+    --line-warm:rgba(255,138,40,.22);
+    --serif:"Fraunces",Georgia,serif;
+    --sans:"Inter",-apple-system,system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:#0a0807;
+    color:var(--bone);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .page{max-width:1240px;margin:0 auto;padding:0 24px 120px}
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative;
+    padding:96px 0 64px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:-40% 0 auto 0;height:120%;
+    background:
+      radial-gradient(60% 50% at 50% 30%, rgba(255,122,24,.34), transparent 70%),
+      radial-gradient(40% 30% at 30% 50%, rgba(178,58,12,.30), transparent 70%),
+      radial-gradient(40% 30% at 72% 44%, rgba(255,176,102,.18), transparent 70%);
+    filter:blur(8px);
+    z-index:0;
+    animation:breathe 9s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{opacity:.78;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+  .hero > *{position:relative;z-index:1}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--ember-glow);
+  }
+  .hero h1{
+    font-family:var(--serif);font-weight:400;font-size:clamp(46px,8vw,92px);
+    line-height:.98;letter-spacing:-.02em;margin:18px 0 0;
+  }
+  .hero h1 em{font-style:italic;color:var(--ember-hot)}
+  .hero p{
+    max-width:560px;margin:24px auto 0;color:var(--smoke);font-size:17px;
+  }
+  .hero .meta{
+    margin-top:30px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+  }
+  .chip{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--smoke);padding:8px 14px;border:1px solid var(--line);border-radius:999px;
+    background:var(--glass);backdrop-filter:blur(8px);
+  }
+
+  /* ============ SECTION SHELL ============ */
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin:88px 0 8px;flex-wrap:wrap}
+  .sec-head .n{font-family:var(--mono);font-size:13px;color:var(--ember-core);letter-spacing:.1em}
+  .sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4vw,40px);letter-spacing:-.01em}
+  .sec-sub{color:var(--smoke);max-width:640px;margin-bottom:36px;font-size:15px}
+
+  /* ============ PHONE FRAMES ============ */
+  .screens{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:28px;
+  }
+  .screen-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .screen-label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--whisper);text-align:center}
+  .screen-label b{color:var(--smoke);font-weight:600}
+  .phone{
+    position:relative;width:100%;max-width:280px;aspect-ratio:295/620;
+    background:#000;border-radius:42px;padding:7px;
+    box-shadow:0 0 0 2px rgba(255,255,255,.06),0 40px 90px -30px rgba(255,90,10,.45),0 30px 60px -40px #000;
+  }
+  .glass-screen{
+    position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;
+    background:
+      radial-gradient(120% 80% at 50% 18%, rgba(255,122,24,.28), transparent 58%),
+      radial-gradient(90% 60% at 18% 64%, rgba(178,58,12,.30), transparent 60%),
+      radial-gradient(100% 70% at 86% 78%, rgba(255,176,102,.16), transparent 60%),
+      linear-gradient(180deg,#140e0a,#0b0807 70%);
+    color:var(--bone);
+    font-size:11px;
+  }
+  /* dynamic island */
+  .island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:74px;height:20px;background:#000;border-radius:14px;z-index:5}
+  .statusbar{position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:10px;font-weight:600;z-index:4;font-family:var(--sans)}
+  .statusbar .r{display:flex;gap:5px;align-items:center;font-family:var(--mono);font-size:9px}
+  .scr{position:absolute;inset:34px 0 0 0;padding:8px 16px 0;overflow:hidden}
+
+  /* shared glass card */
+  .gcard{
+    background:var(--glass);border:1px solid var(--line);border-radius:20px;
+    backdrop-filter:blur(14px);padding:13px;
+  }
+  .pill{
+    display:inline-flex;align-items:center;gap:5px;
+    background:var(--glass-2);border:1px solid var(--line);border-radius:999px;
+    padding:6px 11px;font-size:10px;color:var(--smoke);backdrop-filter:blur(10px);
+  }
+  .pill.on{background:linear-gradient(120deg,rgba(255,122,24,.34),rgba(178,58,12,.22));border-color:var(--line-warm);color:var(--bone)}
+  .ico{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--glass-2);border:1px solid var(--line);font-size:12px}
+  .eyebrow-sm{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--whisper)}
+  .h-serif{font-family:var(--serif);font-weight:400;letter-spacing:-.01em}
+
+  /* tab bar */
+  .tabbar{
+    position:absolute;left:14px;right:14px;bottom:12px;height:50px;border-radius:24px;
+    background:rgba(20,14,10,.6);border:1px solid var(--line);backdrop-filter:blur(18px);
+    display:flex;align-items:center;justify-content:space-around;z-index:6;
+  }
+  .tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:8px;color:var(--whisper)}
+  .tab .d{font-size:14px;line-height:1}
+  .tab.on{color:var(--ember-glow)}
+  .tab.on .d{filter:drop-shadow(0 0 6px rgba(255,150,60,.9))}
+
+  /* score ring */
+  .ringwrap{display:flex;justify-content:center;margin:6px 0 4px}
+
+  /* SCREEN 1 home */
+  .day{font-family:var(--serif);font-size:34px;line-height:1;font-weight:500}
+  .day small{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--smoke);margin-top:5px}
+  .checkrow{display:flex;gap:7px;margin-top:11px;overflow:hidden}
+  .legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+  .legend span{display:flex;align-items:center;gap:4px;font-size:8px;color:var(--smoke)}
+  .dot{width:6px;height:6px;border-radius:50%}
+
+  /* SCREEN 3 protocol checklist */
+  .task{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .task:last-child{border-bottom:0}
+  .cbox{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--whisper);flex:none;display:grid;place-items:center;font-size:10px}
+  .cbox.done{background:linear-gradient(135deg,var(--ember-core),var(--ember-deep));border-color:transparent;color:#1a0e06}
+  .task .t{font-size:10.5px;flex:1}
+  .task.done .t{color:var(--smoke);text-decoration:line-through;text-decoration-color:var(--whisper)}
+
+  /* story card */
+  .story-img{height:118px;border-radius:16px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:11px;
+    background:radial-gradient(120% 90% at 30% 20%, #ff8a2c, transparent 60%),linear-gradient(160deg,#c2410c,#3a1505 80%);}
+  .story-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(8,5,3,.7))}
+  .story-img .cap{position:relative;z-index:2;font-family:var(--serif);font-size:15px;line-height:1.05;text-transform:uppercase;font-weight:500}
+  .story-img .cap em{font-style:italic;text-transform:none;color:#ffd9b0}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+
+  /* ============ DESIGN LANGUAGE ============ */
+  .lang{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}
+  .panel{background:var(--void-2);border:1px solid var(--line);border-radius:24px;padding:26px}
+  .panel h3{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember-core);margin-bottom:18px}
+  .swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .sw{border-radius:14px;height:74px;border:1px solid var(--line);padding:9px;display:flex;flex-direction:column;justify-content:flex-end}
+  .sw .nm{font-family:var(--mono);font-size:8.5px;letter-spacing:.05em}
+  .sw .hx{font-family:var(--mono);font-size:8.5px;opacity:.7}
+  .type-row{padding:14px 0;border-bottom:1px solid var(--line)}
+  .type-row:last-child{border-bottom:0}
+  .type-row .role{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--whisper);margin-bottom:6px}
+  .sig-list{list-style:none;display:flex;flex-direction:column;gap:14px}
+  .sig-list li{display:flex;gap:12px;font-size:13px;color:var(--smoke);line-height:1.45}
+  .sig-list .k{font-family:var(--mono);font-size:10px;color:var(--ember-glow);letter-spacing:.1em;text-transform:uppercase;flex:none;width:84px;padding-top:2px}
+  .sig-list b{color:var(--bone);font-weight:600}
+  .full{grid-column:1/-1}
+  .motion-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .motion-tag{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--smoke);padding:9px 13px;border:1px solid var(--line-warm);border-radius:10px;background:rgba(255,122,24,.06)}
+
+  .footer{margin-top:90px;text-align:center;color:var(--whisper);font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+
+  @media(max-width:1080px){
+    .screens{grid-template-columns:repeat(2,1fr);gap:36px}
+  }
+  @media(max-width:620px){
+    .screens{grid-template-columns:1fr;justify-items:center}
+    .lang{grid-template-columns:1fr}
+    .swatches{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .hero::before{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="eyebrow">labread · product design vision</div>
+    <h1>Your blood,<br>rendered as <em>living light.</em></h1>
+    <p>Not a clinical dashboard. A warm, breathing companion that turns a lab report into a 90-day journey — and looks unmistakably like labread.</p>
+    <div class="meta">
+      <span class="chip">iOS + Android</span>
+      <span class="chip">Ember on void</span>
+      <span class="chip">Fraunces · Inter · JetBrains Mono</span>
+      <span class="chip">Anna, your guide</span>
+    </div>
+  </header>
+
+  <!-- ===================== SCREENS ===================== -->
+  <div class="sec-head">
+    <span class="n">01</span>
+    <h2>The app, four ways</h2>
+  </div>
+  <p class="sec-sub">The same language across every surface: a near-black floor lit from within by embers, glass that floats above the glow, and biology drawn as soft light instead of charts.</p>
+
+  <div class="screens">
+
+    <!-- SCREEN 1 — HOME -->
+    <div class="screen-wrap">
+      <div class="phone"><div class="glass-screen">
+        <div class="island"></div>
+        <div class="statusbar"><span>9:41</span><span class="r">5G ▰▰▰ 80</span></div>
+        <div class="scr">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div class="day">Day 47<small>of your 90-day protocol</small></div>
+            <div style="display:flex;gap:7px">
+              <div class="ico">✦</div><div class="ico">A</div>
+            </div>
+          </div>
+
+          <div class="ringwrap">
+            <svg width="118" height="118" viewBox="0 0 118 118">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#FFB066"/><stop offset="1" stop-color="#B23A0C"/>
+                </linearGradient>
+                <filter id="glow1"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <circle cx="59" cy="59" r="48" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="7"/>
+              <circle cx="59" cy="59" r="48" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="301" stroke-dashoffset="78" transform="rotate(-90 59 59)" filter="url(#glow1)"/>
+              <text x="59" y="55" text-anchor="middle" font-family="Fraunces" font-size="30" fill="#F6ECE1">74</text>
+              <text x="59" y="72" text-anchor="middle" font-family="JetBrains Mono" font-size="7.5" letter-spacing="1.5" fill="rgba(246,236,225,.55)">VITALITY</text>
+            </svg>
+          </div>
+
+          <div style="text-align:center;margin:-2px 0 4px" class="eyebrow-sm">how do you feel today?</div>
+          <div class="checkrow">
+            <span class="pill">◴ Drained</span>
+            <span class="pill on">◑ Steady</span>
+            <span class="pill">◉ Charged</span>
+          </div>
+
+          <div class="gcard" style="margin-top:11px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span class="eyebrow-sm">marker trends</span><span class="eyebrow-sm">90d</span>
+            </div>
+            <svg width="100%" height="60" viewBox="0 0 232 60" preserveAspectRatio="none" style="margin-top:6px">
+              <defs>
+                <linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF7A18" stop-opacity=".55"/><stop offset="1" stop-color="#FF7A18" stop-opacity="0"/></linearGradient>
+                <linearGradient id="rg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB066" stop-opacity=".4"/><stop offset="1" stop-color="#FFB066" stop-opacity="0"/></linearGradient>
+                <filter id="softg"><feGaussianBlur stdDeviation="1.4"/></filter>
+              </defs>
+              <path d="M0,46 C40,40 60,18 100,24 C140,30 170,8 232,16 L232,60 L0,60 Z" fill="url(#rg)" filter="url(#softg)"/>
+              <path d="M0,52 C50,50 80,34 120,40 C170,47 200,30 232,36 L232,60 L0,60 Z" fill="url(#rg2)" filter="url(#softg)"/>
+              <path d="M0,46 C40,40 60,18 100,24 C140,30 170,8 232,16" fill="none" stroke="#FFB066" stroke-width="1.4" opacity=".8"/>
+            </svg>
+            <div class="legend">
+              <span><i class="dot" style="background:#FF7A18"></i>Ferritin</span>
+              <span><i class="dot" style="background:#FFB066"></i>Vit D</span>
+              <span><i class="dot" style="background:#B23A0C"></i>CRP</span>
+            </div>
+          </div>
+
+          <div class="gcard" style="margin-top:9px;padding:11px 13px">
+            <div style="display:flex;gap:8px;align-items:center">
+              <div class="ico" style="background:linear-gradient(135deg,#FF7A18,#B23A0C);border:0;color:#1a0e06">A</div>
+              <div style="flex:1">
+                <div class="eyebrow-sm">anna</div>
+                <div class="h-serif" style="font-size:11.5px;line-height:1.25">Your ferritin is climbing. Keep the iron-rich dinners going.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab on"><span class="d">◉</span>Home</div>
+          <div class="tab"><span class="d">◈</span>Protocol</div>
+          <div class="tab"><span class="d">❝</span>Stories</div>
+          <div class="tab"><span class="d">◐</span>You</div>
+        </div>
+      </div></div>
+      <div class="screen-label"><b>Home</b><br>your day, at a glance</div>
+    </div>
+
+    <!-- SCREEN 2 — BIOMARKER DETAIL -->
+    <div class="screen-wrap">
+      <div class="phone"><div class="glass-screen">
+        <div class="island"></div>
+        <div class="statusbar"><span>9:41</span><span class="r">5G ▰▰▰ 80</span></div>
+        <div class="scr">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="ico">‹</div>
+            <span class="eyebrow-sm">biomarker</span>
+            <div class="ico">⤴</div>
+          </div>
+          <div class="h-serif" style="font-size:26px;margin-top:14px">Ferritin</div>
+          <div class="eyebrow-sm" style="margin-top:3px">iron stores · expires in 34 days</div>
+
+          <div class="ringwrap" style="margin-top:8px">
+            <svg width="160" height="100" viewBox="0 0 160 100">
+              <defs>
+                <linearGradient id="gauge" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#B23A0C"/><stop offset=".5" stop-color="#FF7A18"/><stop offset="1" stop-color="#FFB066"/>
+                </linearGradient>
+                <filter id="glow2"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <path d="M16,90 A64,64 0 0 1 144,90" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="9" stroke-linecap="round"/>
+              <path d="M16,90 A64,64 0 0 1 144,90" fill="none" stroke="url(#gauge)" stroke-width="9" stroke-linecap="round"
+                stroke-dasharray="201" stroke-dashoffset="70" filter="url(#glow2)"/>
+              <circle cx="112" cy="36" r="5" fill="#fff" filter="url(#glow2)"/>
+              <text x="80" y="74" text-anchor="middle" font-family="Fraunces" font-size="34" fill="#F6ECE1">38</text>
+              <text x="80" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="rgba(246,236,225,.55)">ng/mL · OPTIMAL</text>
+            </svg>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--whisper);padding:0 6px">
+            <span>15 low</span><span>30 — 120 optimal</span><span>200 high</span>
+          </div>
+
+          <div class="gcard" style="margin-top:14px;border-color:var(--line-warm)">
+            <div class="eyebrow-sm" style="color:var(--ember-glow)">anna's read</div>
+            <div class="h-serif" style="font-size:13px;line-height:1.35;margin-top:7px">
+              You sat low in March. Forty-seven days of protocol later, you're <em style="font-style:italic;color:var(--ember-hot)">comfortably in range.</em>
+            </div>
+          </div>
+
+          <div class="pill on" style="margin-top:12px;width:100%;justify-content:center;padding:11px">⟳ Re-test recommended · book reminder</div>
+        </div>
+      </div></div>
+      <div class="screen-label"><b>Biomarker detail</b><br>one number, made human</div>
+    </div>
+
+    <!-- SCREEN 3 — PROTOCOL -->
+    <div class="screen-wrap">
+      <div class="phone"><div class="glass-screen">
+        <div class="island"></div>
+        <div class="statusbar"><span>9:41</span><span class="r">5G ▰▰▰ 80</span></div>
+        <div class="scr">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="h-serif" style="font-size:24px">Protocol</div>
+            <span class="pill on">🔥 12-day streak</span>
+          </div>
+
+          <div class="gcard" style="margin-top:12px;display:flex;align-items:center;gap:13px">
+            <svg width="68" height="68" viewBox="0 0 68 68">
+              <defs><filter id="glow3"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+              <circle cx="34" cy="34" r="27" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/>
+              <circle cx="34" cy="34" r="27" fill="none" stroke="url(#g1)" stroke-width="5" stroke-linecap="round"
+                stroke-dasharray="170" stroke-dashoffset="81" transform="rotate(-90 34 34)" filter="url(#glow3)"/>
+              <text x="34" y="33" text-anchor="middle" font-family="Fraunces" font-size="17" fill="#F6ECE1">47</text>
+              <text x="34" y="44" text-anchor="middle" font-family="JetBrains Mono" font-size="6.5" fill="rgba(246,236,225,.55)">/ 90</text>
+            </svg>
+            <div>
+              <div class="eyebrow-sm">days complete</div>
+              <div class="h-serif" style="font-size:15px;margin-top:2px">Halfway to 90% off</div>
+              <div style="font-size:9.5px;color:var(--smoke);margin-top:3px">1,180 pts earned</div>
+            </div>
+          </div>
+
+          <div class="eyebrow-sm" style="margin:14px 0 4px">today · day 47</div>
+          <div class="gcard">
+            <div class="task done"><div class="cbox done">✓</div><div class="t">Iron-rich breakfast</div></div>
+            <div class="task done"><div class="cbox done">✓</div><div class="t">10k steps</div></div>
+            <div class="task"><div class="cbox"></div><div class="t">Vitamin D + K2</div></div>
+            <div class="task"><div class="cbox"></div><div class="t">Sleep before 23:00</div></div>
+          </div>
+
+          <div class="gcard" style="margin-top:10px;text-align:center;padding:10px">
+            <span class="eyebrow-sm">complete all 4 to keep your streak</span>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="d">◉</span>Home</div>
+          <div class="tab on"><span class="d">◈</span>Protocol</div>
+          <div class="tab"><span class="d">❝</span>Stories</div>
+          <div class="tab"><span class="d">◐</span>You</div>
+        </div>
+      </div></div>
+      <div class="screen-label"><b>90-day protocol</b><br>daily actions · streaks · points</div>
+    </div>
+
+    <!-- SCREEN 4 — STORIES -->
+    <div class="screen-wrap">
+      <div class="phone"><div class="glass-screen">
+        <div class="island"></div>
+        <div class="statusbar"><span>9:41</span><span class="r">5G ▰▰▰ 80</span></div>
+        <div class="scr">
+          <div class="eyebrow-sm">[ real people · real reports ]</div>
+          <div class="h-serif" style="font-size:24px;margin-top:6px;line-height:1.05">Stories from<br>the protocol</div>
+
+          <div class="gcard" style="margin-top:13px;padding:9px">
+            <div class="story-img">
+              <div class="cap">FROM EXHAUSTED<br>TO <em>finally myself</em></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:9px">
+              <div class="ico" style="width:24px;height:24px;font-size:9px">L</div>
+              <div style="flex:1">
+                <div style="font-size:10px;font-weight:600">Leïla · Casablanca</div>
+                <div class="eyebrow-sm">day 90 · ferritin doubled</div>
+              </div>
+              <span class="pill" style="padding:4px 9px">♡ 214</span>
+            </div>
+          </div>
+
+          <div class="eyebrow-sm" style="margin:14px 0 0">what people are working on</div>
+          <div class="tags">
+            <span class="pill">energy ⚡</span>
+            <span class="pill">iron 🩸</span>
+            <span class="pill">sleep 🌙</span>
+            <span class="pill on">thyroid 🦋</span>
+            <span class="pill">gut 🌿</span>
+            <span class="pill">stress 🧠</span>
+          </div>
+
+          <div class="pill on" style="margin-top:16px;width:100%;justify-content:center;padding:12px;font-family:var(--serif);font-size:12px">Share your story →</div>
+          <div class="eyebrow-sm" style="text-align:center;margin-top:7px">featured stories appear on labread.health</div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="d">◉</span>Home</div>
+          <div class="tab"><span class="d">◈</span>Protocol</div>
+          <div class="tab on"><span class="d">❝</span>Stories</div>
+          <div class="tab"><span class="d">◐</span>You</div>
+        </div>
+      </div></div>
+      <div class="screen-label"><b>Stories &amp; community</b><br>the trust + brand engine</div>
+    </div>
+
+  </div>
+
+  <!-- ===================== DESIGN LANGUAGE ===================== -->
+  <div class="sec-head">
+    <span class="n">02</span>
+    <h2>The design language</h2>
+  </div>
+  <p class="sec-sub">Lock these and every screen — built by you or by Claude Code — stays unmistakably labread.</p>
+
+  <div class="lang">
+    <div class="panel">
+      <h3>Palette · ember on void</h3>
+      <div class="swatches">
+        <div class="sw" style="background:#0B0907"><span class="nm">Void</span><span class="hx">#0B0907</span></div>
+        <div class="sw" style="background:#1A1411"><span class="nm">Ash</span><span class="hx">#1A1411</span></div>
+        <div class="sw" style="background:linear-gradient(135deg,#FF7A18,#B23A0C)"><span class="nm" style="color:#1a0e06">Ember core</span><span class="hx" style="color:#2a1206">#FF7A18</span></div>
+        <div class="sw" style="background:#FFB066"><span class="nm" style="color:#2a1206">Ember glow</span><span class="hx" style="color:#3a1c08">#FFB066</span></div>
+        <div class="sw" style="background:#B23A0C"><span class="nm">Coal deep</span><span class="hx">#B23A0C</span></div>
+        <div class="sw" style="background:#F6ECE1"><span class="nm" style="color:#1a0e06">Bone</span><span class="hx" style="color:#5e2208">#F6ECE1</span></div>
+      </div>
+      <p style="font-size:12.5px;color:var(--smoke);margin-top:16px;line-height:1.5">One accent family — amber through coal — never a second hue. Glass is white at 5–9% opacity, never a flat grey. Color means something: warmer = more vital.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Typography · three voices</h3>
+      <div class="type-row">
+        <div class="role">Fraunces — the soul</div>
+        <div class="h-serif" style="font-size:26px">Day 47, and <em style="font-style:italic;color:var(--ember-hot)">rising.</em></div>
+        <div style="font-size:11px;color:var(--smoke);margin-top:4px">Emotional headlines, big numbers, the italic accent word. Used with restraint.</div>
+      </div>
+      <div class="type-row">
+        <div class="role">Inter — the interface</div>
+        <div style="font-size:15px;font-weight:600">Steady · Charged · Re-test recommended</div>
+        <div style="font-size:11px;color:var(--smoke);margin-top:4px">Buttons, body, labels. Quiet and legible so the glow can shine.</div>
+      </div>
+      <div class="type-row">
+        <div class="role">JetBrains Mono — the instrument</div>
+        <div style="font-family:var(--mono);font-size:13px;letter-spacing:.12em">[ FERRITIN ] 38 ng/mL · 74 VITALITY</div>
+        <div style="font-size:11px;color:var(--smoke);margin-top:4px">Eyebrows in brackets, data, units, the console feel.</div>
+      </div>
+    </div>
+
+    <div class="panel full">
+      <h3>The signature · biology as light</h3>
+      <ul class="sig-list">
+        <li><span class="k">Living glow</span><span>The screen is lit from <b>behind the content</b> by warm radial embers that slowly breathe (9s loop). It's the single thing every labread screen shares — and what no clinical app does.</span></li>
+        <li><span class="k">Gauges</span><span>Every biomarker is a <b>glowing arc</b>, not a bar. A bright bloom marks where you sit. Optimal looks warm and alive; out-of-range never feels like a scolding.</span></li>
+        <li><span class="k">Ridges</span><span>Multi-marker trends are drawn as soft, layered <b>aurora ridges</b> — translucent gradient mountains, exactly like the reference. Data you'd want to screenshot.</span></li>
+        <li><span class="k">Glass</span><span>Cards and pills <b>float</b> above the glow with heavy blur and a 1px warm hairline. Generous 20px+ radii everywhere. Nothing is square.</span></li>
+        <li><span class="k">Anna</span><span>A single ember-gradient avatar. She speaks in <b>Fraunces</b>, short and human — the warm second person in the room, never a chatbot bubble.</span></li>
+      </ul>
+      <div class="motion-row">
+        <span class="motion-tag">ambient: glow breathes 9s</span>
+        <span class="motion-tag">load: numbers count up</span>
+        <span class="motion-tag">gauges: arc sweeps in</span>
+        <span class="motion-tag">scroll: panels rise + fade</span>
+        <span class="motion-tag">respect: prefers-reduced-motion</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">labread · design vision · v1 north star</div>
+
+</div>
+</body>
+</html>
