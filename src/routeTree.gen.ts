@@ -15,6 +15,7 @@ import { Route as ProtocolRouteImport } from './routes/protocol'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as LrShowcaseRouteImport } from './routes/lr-showcase'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as ForYouRouteImport } from './routes/for-you'
@@ -63,6 +64,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LrShowcaseRoute = LrShowcaseRouteImport.update({
+  id: '/lr-showcase',
+  path: '/lr-showcase',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryRoute = HistoryRouteImport.update({
@@ -175,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/for-you': typeof ForYouRoute
   '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
+  '/lr-showcase': typeof LrShowcaseRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/for-you': typeof ForYouRoute
   '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
+  '/lr-showcase': typeof LrShowcaseRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/for-you': typeof ForYouRoute
   '/get-started': typeof GetStartedRoute
   '/history': typeof HistoryRoute
+  '/lr-showcase': typeof LrShowcaseRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
     | '/for-you'
     | '/get-started'
     | '/history'
+    | '/lr-showcase'
     | '/privacy'
     | '/profile'
     | '/progress'
@@ -286,6 +296,7 @@ export interface FileRouteTypes {
     | '/for-you'
     | '/get-started'
     | '/history'
+    | '/lr-showcase'
     | '/privacy'
     | '/profile'
     | '/progress'
@@ -313,6 +324,7 @@ export interface FileRouteTypes {
     | '/for-you'
     | '/get-started'
     | '/history'
+    | '/lr-showcase'
     | '/privacy'
     | '/profile'
     | '/progress'
@@ -341,6 +353,7 @@ export interface RootRouteChildren {
   ForYouRoute: typeof ForYouRoute
   GetStartedRoute: typeof GetStartedRoute
   HistoryRoute: typeof HistoryRoute
+  LrShowcaseRoute: typeof LrShowcaseRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
@@ -397,6 +410,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lr-showcase': {
+      id: '/lr-showcase'
+      path: '/lr-showcase'
+      fullPath: '/lr-showcase'
+      preLoaderRoute: typeof LrShowcaseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/history': {
@@ -549,6 +569,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForYouRoute: ForYouRoute,
   GetStartedRoute: GetStartedRoute,
   HistoryRoute: HistoryRoute,
+  LrShowcaseRoute: LrShowcaseRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
