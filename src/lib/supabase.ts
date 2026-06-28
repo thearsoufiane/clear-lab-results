@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { SEED, mockSupabase } from "./dev-seed";
 
 export const SUPABASE_URL = "https://lxbpwjktchbdoyphnbvt.supabase.co";
 
@@ -14,6 +15,8 @@ export const SUPABASE_ANON_KEY =
 
 // Only initialize Supabase on the client side to avoid SSR WebSocket issues
 export const supabase = (() => {
+  // Dev-only seeded mock client (see dev-seed.ts) — never active in prod builds.
+  if (SEED) return mockSupabase as any;
   if (typeof window === "undefined") {
     // SSR: return a dummy client that will be replaced on the client
     return {
