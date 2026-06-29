@@ -10,11 +10,14 @@ export function VitalityRing({
   size = 118,
   label = "VITALITY",
   caption,
+  display,
 }: {
   score: number;
   size?: number;
   label?: string;
   caption?: string;
+  /** Override the big center number (e.g. a day-of-90 "47"); fill still tracks `score`. */
+  display?: string;
 }) {
   const uid = useId().replace(/[:]/g, "");
   const grad = `vr-${uid}`;
@@ -30,7 +33,7 @@ export function VitalityRing({
     const r = requestAnimationFrame(() => setOff(100 - pct));
     return () => cancelAnimationFrame(r);
   }, [pct, reduced]);
-  const display = useCountUp(Math.round(pct));
+  const roundScore = useCountUp(Math.round(pct));
 
   return (
     <svg viewBox="0 0 118 118" width={size} height={size} style={{ display: "block", overflow: "visible" }}>
@@ -64,7 +67,7 @@ export function VitalityRing({
         className="lr-arc"
       />
       <text x="59" y={caption ? 54 : 58} textAnchor="middle" fontFamily="var(--serif)" fontSize="30" fill="var(--bone)">
-        {display}
+        {display ?? roundScore}
       </text>
       <text x="59" y={caption ? 70 : 73} textAnchor="middle" fontFamily="var(--mono)" fontSize="7.5" letterSpacing="1.5" fill="var(--smoke)">
         {label}

@@ -11,7 +11,7 @@ const TABS = [
 
 // Screens rebuilt to the vision ship their own bottom chrome (lr TabBar or a
 // composer), so the legacy nav steps aside there. Extend as screens land.
-const REBUILT = ["/dashboard", "/checkin", "/chat"];
+const REBUILT = ["/dashboard", "/checkin", "/chat", "/protocol"];
 
 /**
  * Persistent bottom tab bar for the four main app screens.
