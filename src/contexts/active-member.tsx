@@ -16,8 +16,9 @@ export type Member = {
   created_at: string;
 };
 
-/** Brand accent palette offered in the add/edit member modal. */
-export const MEMBER_COLORS = ["#F5A623", "#6FCF97", "#E0706A", "#5B8DEF", "#B57EDC", "#E3A94A", "#4FD1C5", "#F58FB4"];
+/** Member accent palette — one ember family only (amber → coal), never a
+ *  second hue. Warm variants keep profiles distinguishable while on-brand. */
+export const MEMBER_COLORS = ["#FF7A18", "#FFB066", "#FF9D45", "#E8843C", "#B23A0C", "#C2410C", "#FFC98A", "#7A2D0B"];
 
 type Ctx = {
   members: Member[];
@@ -55,7 +56,7 @@ export function ActiveMemberProvider({ children }: { children: ReactNode }) {
       const name = (meta.full_name as string) || (user.email ? user.email.split("@")[0] : "") || "Me";
       const { data: created } = await supabase
         .from("members")
-        .insert({ owner_user_id: user.id, name, relationship: "self", color: "#F5A623" })
+        .insert({ owner_user_id: user.id, name, relationship: "self", color: "#FF7A18" })
         .select("*").maybeSingle();
       if (created) {
         list = [created as Member, ...list];
