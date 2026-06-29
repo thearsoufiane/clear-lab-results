@@ -38,8 +38,18 @@ export function Gauge({
   const grad = `g-${uid}`;
   const glow = `gl-${uid}`;
   const reduced = useReducedMotion();
-  const max = scaleMax ?? Math.max(rangeHigh * 1.8, value * 1.2);
-  const f = clamp((value - scaleMin) / (max - scaleMin || 1), 0, 1);
+  // Position is OPTIMALITY, not raw value: in-range sits in the warm half of the
+  // arc (bright = alive), below-optimal toward the cool left, above-optimal at
+  // the hot end. So an optimal marker reads warm, never "low". scaleMin/scaleMax
+  // are accepted for API compatibility but not needed for this mapping.
+  void scaleMin; void scaleMax;
+  const span = rangeHigh - rangeLow || 1;
+  const f =
+    value < rangeLow
+      ? clamp(0.5 * (value / (rangeLow || value || 1)), 0.08, 0.49)
+      : value <= rangeHigh
+        ? 0.5 + 0.42 * ((value - rangeLow) / span)
+        : clamp(0.92 + 0.08 * Math.min(1, (value - rangeHigh) / span), 0.92, 1);
 
   // pathLength normalized to 100 so dashoffset math is geometry-independent.
   const [off, setOff] = useState(reduced ? 100 * (1 - f) : 100);
