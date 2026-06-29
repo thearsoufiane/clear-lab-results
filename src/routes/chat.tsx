@@ -230,10 +230,10 @@ function ChatPage() {
                     const mk = markerInText(m.content);
                     if (!mk) return null;
                     return (
-                      <GlassCard style={{ marginTop: 10, padding: 12 }}>
-                        <Gauge value={mk.num} unit={mk.unit} rangeLow={mk.low} rangeHigh={mk.high} status={gaugeStatus(mk.status)} label={gaugeLabel(mk.status)} size={200} />
-                        <div style={{ textAlign: "center" }}>
-                          <Eyebrow>{mk.unit ? `${mk.unit} · ` : ""}optimal {mk.low}–{mk.high}</Eyebrow>
+                      <GlassCard style={{ marginTop: 10, padding: "14px 12px 12px" }}>
+                        <Gauge value={mk.num} unit={mk.unit} rangeLow={mk.low} rangeHigh={mk.high} status={gaugeStatus(mk.status)} size={216} showLabel={false} />
+                        <div style={{ textAlign: "center", marginTop: 2 }}>
+                          <Eyebrow>{mk.unit ? `${mk.unit} · ` : ""}{gaugeLabel(mk.status).toLowerCase()} range {mk.low}–{mk.high}</Eyebrow>
                         </div>
                       </GlassCard>
                     );

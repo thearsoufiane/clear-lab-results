@@ -20,6 +20,7 @@ export function Gauge({
   label,
   size = 180,
   showValue = true,
+  showLabel = true,
 }: {
   value: number;
   unit?: string;
@@ -31,6 +32,7 @@ export function Gauge({
   label?: string;
   size?: number;
   showValue?: boolean;
+  showLabel?: boolean;
 }) {
   const uid = useId().replace(/[:]/g, "");
   const grad = `g-${uid}`;
@@ -90,13 +92,15 @@ export function Gauge({
       <circle cx={bx} cy={by} r="5" fill="#fff" filter={`url(#${glow})`} />
       {showValue && (
         <>
-          <text x="80" y="74" textAnchor="middle" fontFamily="var(--serif)" fontSize="30" fill="var(--bone)">
+          <text x="80" y={showLabel ? 74 : 82} textAnchor="middle" fontFamily="var(--serif)" fontSize="30" fill="var(--bone)">
             {display}
           </text>
-          <text x="80" y="90" textAnchor="middle" fontFamily="var(--mono)" fontSize="8" fill="var(--smoke)">
-            {unit ? `${unit} · ` : ""}
-            {statusLabel}
-          </text>
+          {showLabel && (
+            <text x="80" y="90" textAnchor="middle" fontFamily="var(--mono)" fontSize="8" fill="var(--smoke)">
+              {unit ? `${unit} · ` : ""}
+              {statusLabel}
+            </text>
+          )}
         </>
       )}
     </svg>
