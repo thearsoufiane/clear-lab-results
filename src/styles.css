@@ -291,7 +291,7 @@
    lr/* primitives — shared motion (see src/components/lr).
    All honor prefers-reduced-motion.
    ============================================================ */
-@keyframes lr-breathe { 0%,100% { opacity:.78; transform:scale(1); } 50% { opacity:1; transform:scale(1.05); } }
+@keyframes lr-breathe { 0%,100% { opacity:.6; transform:scale(1); } 50% { opacity:1; transform:scale(1.07); } }
 @keyframes lr-orb-pulse { 0%,100% { transform:scale(1); opacity:.92; } 50% { transform:scale(1.06); opacity:1; } }
 @keyframes lr-think { 0%,100% { opacity:.35; transform:scale(1); } 50% { opacity:1; transform:scale(1.25); } }
 .lr-breathe { animation: lr-breathe 9s ease-in-out infinite; }

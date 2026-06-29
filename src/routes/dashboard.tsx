@@ -234,6 +234,15 @@ function Dashboard() {
   const annaLine = focus
     ? `Your ${focus.name.toLowerCase()} is ${trendUp == null ? "holding steady" : trendUp ? "climbing" : "easing"}.`
     : "";
+  // Anna gives a short, actionable nudge — not a definition. Templated per
+  // marker for now (the brief's constrained-explanation pattern).
+  const FOCUS_ACTION: Record<string, string> = {
+    "ferritin": "Keep the iron-rich dinners going.",
+    "vitamin d": "Keep the midday sun and your D3 going.",
+    "vitamin b12": "Keep B12-rich foods on the plate.",
+    "crp": "Keep the anti-inflammatory habits steady.",
+  };
+  const annaAction = focus ? (FOCUS_ACTION[norm(focus.name)] ?? "Stay with the habits that are working.") : "";
 
   const doneCount = completed.length;
   const tab = (key: string, label: string, icon: string, to: string, active = false) => ({
@@ -295,7 +304,7 @@ function Dashboard() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <Eyebrow color="var(--ember-glow)">anna</Eyebrow>
                   <div style={{ fontFamily: "var(--serif)", fontSize: 15, lineHeight: 1.3, marginTop: 3 }}>
-                    {annaLine} {focus.explanation}
+                    {annaLine} {annaAction}
                   </div>
                 </div>
               </GlassCard>
