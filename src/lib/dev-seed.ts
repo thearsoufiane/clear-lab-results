@@ -133,8 +133,13 @@ const RECENT_CHECKINS = Array.from({ length: 12 }, (_, i) => ({
   completed_habit_ids: i === 0 ? ["h1", "h2"] : HABIT_IDS,
 }));
 
+const MOM_ID = "22222222-2222-2222-2222-222222222222";
 const MEMBERS = [
   { id: MEMBER_ID, owner_user_id: USER_ID, name: "Amine", relationship: "self", dob: null, age: 28, sex: "male", color: "#FF7A18", created_at: iso(120), consent_at: iso(120) },
+  // a second profile so Family shows the You · Mom · Add row + "1 slot left".
+  // Member-only (no reports/protocol) — the mock client can't filter .eq by
+  // member, so seeding her data would leak into Amine's screens.
+  { id: MOM_ID, owner_user_id: USER_ID, name: "Mom", relationship: "parent", dob: null, age: 58, sex: "female", color: "#FFB066", created_at: iso(60), consent_at: iso(60) },
 ];
 
 const PROFILES = [{ id: USER_ID, user_id: USER_ID, plan: "personal" }];

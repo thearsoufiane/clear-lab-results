@@ -1,68 +1,43 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/lib/supabase";
 import { useActiveMember, RELATIONSHIP_LABEL, type Member } from "@/contexts/active-member";
 import { MemberAvatar, AddEditMemberModal, loadMemberMeta } from "@/components/member-switcher";
-import { LrUi, GlassPanel, Eyebrow, Gauge, Reveal, LR_FONT_LINKS } from "@/components/lr-ui";
-import { ArrowLeft, Plus } from "lucide-react";
+import { LivingGlow, GlassCard, Pill, Eyebrow, TabBar } from "@/components/lr";
+import { Plus, Check } from "lucide-react";
 
 export const Route = createFileRoute("/family")({
   head: () => ({
     meta: [
-      { title: "Your family | labread.health" },
-      { name: "description", content: "Everyone under one roof — each profile's health at a glance." },
+      { title: "Your circle | labread.health" },
+      { name: "description", content: "Switch profiles — each family member keeps their own private record." },
       { name: "robots", content: "noindex" },
     ],
-    links: [{ rel: "canonical", href: "https://labread.health/family" }, ...LR_FONT_LINKS],
+    links: [{ rel: "canonical", href: "https://labread.health/family" }],
   }),
   component: FamilyPage,
 });
 
 const DAY_MS = 86_400_000;
-type Meta = { flagged: number; total: number; inRange: number; last: string | null };
+// you + 2. One config constant — lift it (or tie to a paid tier) to allow more.
+const MEMBER_CAP = 3;
 
-const css = `
-  .lr-ui .fam-hero{position:relative;text-align:center;padding:8px 0 4px}
-  .lr-ui .fam-hero::before{content:"";position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:560px;max-width:120%;height:360px;
-    background:radial-gradient(ellipse at center,rgba(245,133,63,.16),transparent 64%);filter:blur(26px);pointer-events:none;z-index:0}
-  .lr-ui .fam-hero > *{position:relative;z-index:1}
-  .lr-ui .fam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:26px}
-  .lr-ui .fam-card{padding:22px;text-align:center;position:relative;transition:.2s}
-  .lr-ui .fam-card:hover{transform:translateY(-3px);border-color:rgba(245,166,35,.3)}
-  .lr-ui .fam-nm{font-family:var(--serif);font-size:20px;margin-top:14px}
-  .lr-ui .fam-rel{font-family:var(--mono);font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
-  .lr-ui .fam-pill{font-family:var(--mono);font-size:10px;border-radius:999px;padding:4px 10px;border:1px solid;display:inline-block;margin-top:12px}
-  .lr-ui .fam-pill.ok{color:var(--green);border-color:rgba(111,207,151,.3);background:rgba(111,207,151,.08)}
-  .lr-ui .fam-pill.flag{color:var(--red);border-color:rgba(224,112,106,.3);background:rgba(224,112,106,.08)}
-  .lr-ui .fam-pill.none{color:var(--faint);border-color:var(--line-soft)}
-  .lr-ui .fam-meta{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  .lr-ui .fam-meta b{color:var(--amber-lite);font-weight:500}
-  .lr-ui .fam-switch{margin-top:16px;width:100%;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--cream);border-radius:999px;
-    padding:11px;font-size:13.5px;cursor:pointer;font-family:inherit;transition:.15s}
-  .lr-ui .fam-switch:hover{border-color:rgba(245,166,35,.45);background:rgba(245,133,63,.06)}
-  .lr-ui .fam-switch.active{background:var(--grad);color:#1a0f02;font-weight:600;border-color:transparent}
-  .lr-ui .fam-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:230px;border:1px dashed var(--line);
-    border-radius:18px;cursor:pointer;color:var(--amber-lite);background:rgba(255,255,255,.01);transition:.15s;font-family:inherit;font-size:14px}
-  .lr-ui .fam-add:hover{border-color:rgba(245,166,35,.5);background:rgba(245,133,63,.04)}
-  .lr-ui .fam-add .ic{width:48px;height:48px;border-radius:14px;background:rgba(245,133,63,.1);border:1px solid var(--line);display:grid;place-items:center}
-`;
+type Meta = { flagged: number; total: number; inRange: number; last: string | null };
 
 function FamilyPage() {
   const { user, loading } = useAuth();
-  const { members, setActiveMember } = useActiveMember();
+  const { members, activeMemberId, setActiveMember } = useActiveMember();
   const nav = useNavigate();
   const [meta, setMeta] = useState<Map<string, Meta>>(new Map());
   const [protoDay, setProtoDay] = useState<Map<string, number>>(new Map());
-  const [loaded, setLoaded] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
 
   useEffect(() => { if (!loading && !user) nav({ to: "/auth" }); }, [user, loading, nav]);
 
   const load = useCallback(async () => {
     if (!user) return;
-    const m = await loadMemberMeta();
-    setMeta(m);
+    setMeta(await loadMemberMeta());
     const { data: protos } = await supabase
       .from("health_protocols").select("member_id, starts_at").eq("status", "active").order("created_at", { ascending: false });
     const pd = new Map<string, number>();
@@ -72,74 +47,143 @@ function FamilyPage() {
       pd.set(p.member_id, Math.max(1, Math.min(90, elapsed + 1)));
     }
     setProtoDay(pd);
-    setLoaded(true);
   }, [user]);
 
   useEffect(() => { load(); }, [load, members.length]);
 
   if (loading || !user) return null;
 
+  const slotsLeft = Math.max(0, MEMBER_CAP - members.length);
   const switchTo = (m: Member) => { setActiveMember(m.id); nav({ to: "/dashboard" }); };
 
+  const statusLine = (m: Member): string => {
+    const md = meta.get(m.id);
+    const day = protoDay.get(m.id);
+    const parts: string[] = [];
+    if (day) parts.push(`Day ${day}`);
+    if (md) parts.push(md.flagged === 0 ? `${md.inRange}% in range` : `${md.flagged} to watch`);
+    else parts.push("no test yet");
+    return parts.join(" · ");
+  };
+
+  const tab = (key: string, label: string, icon: string, to: string, active = false) => ({
+    key, label, icon, active, onClick: () => nav({ to }),
+  });
+
   return (
-    <LrUi style={{ minHeight: "100vh", background: "var(--bg)" }} revealDeps={[loaded, members.length]}>
-      {LR_FONT_LINKS.map((l, i) => <link key={i} {...l} />)}
-      <style dangerouslySetInnerHTML={{ __html: css }} />
+    <div style={{ minHeight: "100dvh", background: "var(--void)", color: "var(--bone)", fontFamily: "var(--sans)" }}>
+      <LivingGlow />
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 440, margin: "0 auto", padding: "calc(env(safe-area-inset-top) + 22px) 18px 130px" }}>
+        <h1 style={{ fontFamily: "var(--serif)", fontWeight: 500, fontSize: 30, lineHeight: 1 }}>Your circle</h1>
+        <Eyebrow style={{ display: "block", marginTop: 8 }}>switch profile · up to {MEMBER_CAP - 1} family members</Eyebrow>
 
-      <div style={{ maxWidth: 940, margin: "0 auto", padding: "22px 18px 80px" }}>
-        <Link to="/dashboard" style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--muted)", display: "inline-flex", alignItems: "center", gap: 6 }}>
-          <ArrowLeft size={14} /> Dashboard
-        </Link>
-
-        <div className="fam-hero" style={{ marginTop: 24 }}>
-          <Eyebrow>One account, the whole household</Eyebrow>
-          <h1 style={{ fontSize: "clamp(32px,6vw,52px)", marginTop: 12 }}>Your <span style={{ fontStyle: "italic", color: "var(--amber-lite)" }}>family.</span></h1>
-          <p style={{ color: "var(--muted)", fontSize: 16, marginTop: 12, maxWidth: 440, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>
-            Everyone under one roof. Each profile keeps its own results, protocol, and progress — private and encrypted.
-          </p>
+        {/* switcher row */}
+        <div style={{ display: "flex", gap: 14, marginTop: 18, overflowX: "auto", paddingBottom: 4 }}>
+          {members.map((m) => {
+            const active = m.id === activeMemberId;
+            return (
+              <button
+                key={m.id}
+                onClick={() => switchTo(m)}
+                style={{ all: "unset", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flex: "none" }}
+              >
+                <span style={{ borderRadius: "50%", padding: 2, boxShadow: active ? "0 0 0 1.5px var(--ember-glow), 0 0 16px rgba(255,150,60,.45)" : "0 0 0 1.5px var(--line)" }}>
+                  <MemberAvatar member={m} size={46} />
+                </span>
+                <span style={{ fontSize: 11, color: active ? "var(--ember-glow)" : "var(--smoke)" }}>
+                  {m.relationship === "self" ? "You" : m.name.split(" ")[0]}
+                </span>
+              </button>
+            );
+          })}
+          {slotsLeft > 0 && (
+            <button
+              onClick={() => setAddOpen(true)}
+              style={{ all: "unset", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flex: "none" }}
+            >
+              <span style={{ width: 46, height: 46, borderRadius: "50%", display: "grid", placeItems: "center", border: "1.5px dashed var(--line-warm)", color: "var(--ember-glow)" }}>
+                <Plus size={20} />
+              </span>
+              <span style={{ fontSize: 11, color: "var(--ember-glow)" }}>Add</span>
+            </button>
+          )}
         </div>
 
-        <div className="fam-grid">
+        <Eyebrow style={{ display: "block", margin: "22px 0 8px" }}>members</Eyebrow>
+
+        {/* member rows */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
           {members.map((m) => {
-            const md = meta.get(m.id);
-            const inRange = md ? md.inRange : 0;
-            const day = protoDay.get(m.id);
+            const active = m.id === activeMemberId;
+            const isSelf = m.relationship === "self";
             return (
-              <Reveal key={m.id}>
-                <GlassPanel className="fam-card">
-                  <Gauge pct={inRange} size={104} stroke={7} ticks>
-                    <MemberAvatar member={m} size={60} />
-                  </Gauge>
-                  <div className="fam-nm">{m.name}</div>
-                  <div className="fam-rel">{RELATIONSHIP_LABEL[m.relationship]}</div>
-                  <div>
-                    {md ? (
-                      <span className={"fam-pill " + (md.flagged === 0 ? "ok" : "flag")}>{md.flagged === 0 ? "all normal" : `${md.flagged} flagged`}</span>
-                    ) : (
-                      <span className="fam-pill none">no test yet</span>
-                    )}
+              <GlassCard
+                key={m.id}
+                emphasis={active}
+                onClick={() => switchTo(m)}
+                style={{ display: "flex", alignItems: "center", gap: 12, padding: 13, cursor: "pointer" }}
+              >
+                <MemberAvatar member={m} size={40} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13.5, fontWeight: 600 }}>
+                    {m.name}{isSelf ? " · you" : ""}
                   </div>
-                  <div className="fam-meta">
-                    {md ? <span><b>{inRange}%</b> in range</span> : <span>—</span>}
-                    {md?.last && <span>· {new Date(md.last).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>}
-                    {day && <span>· <b>Day {day}</b>/90</span>}
-                  </div>
-                  <button className="fam-switch" onClick={() => switchTo(m)}>View {m.relationship === "self" ? "yourself" : m.name.split(" ")[0]}</button>
-                </GlassPanel>
-              </Reveal>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 10.5, color: "var(--smoke)", marginTop: 2 }}>{statusLine(m)}</div>
+                </div>
+                {isSelf ? (
+                  <Pill style={{ padding: "3px 9px", fontSize: 10 }}>owner</Pill>
+                ) : active ? (
+                  <Check size={16} style={{ color: "var(--ember-glow)" }} />
+                ) : (
+                  <span style={{ color: "var(--whisper)" }}>›</span>
+                )}
+              </GlassCard>
             );
           })}
 
-          <Reveal>
-            <button className="fam-add" onClick={() => setAddOpen(true)}>
-              <span className="ic"><Plus size={22} style={{ color: "var(--amber-lite)" }} /></span>
-              Add a family member
+          {/* empty slot */}
+          {slotsLeft > 0 && (
+            <button
+              onClick={() => setAddOpen(true)}
+              style={{
+                all: "unset", cursor: "pointer", display: "flex", alignItems: "center", gap: 12, padding: 13,
+                border: "1.5px dashed var(--line-warm)", borderRadius: 16, background: "rgba(255,122,24,.05)",
+              }}
+            >
+              <span style={{ width: 40, height: 40, borderRadius: "50%", flex: "none", display: "grid", placeItems: "center", border: "1.5px dashed var(--line-warm)", color: "var(--ember-glow)" }}>
+                <Plus size={18} />
+              </span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ember-glow)" }}>Add a family member</div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: 10.5, color: "var(--smoke)", marginTop: 2 }}>{slotsLeft} slot{slotsLeft === 1 ? "" : "s"} left</div>
+              </div>
             </button>
-          </Reveal>
+          )}
         </div>
+
+        {/* their data, their consent */}
+        <GlassCard emphasis style={{ marginTop: 14, padding: 14 }}>
+          <Eyebrow color="var(--ember-glow)">their data, their consent</Eyebrow>
+          <div style={{ fontSize: 12.5, color: "var(--smoke)", marginTop: 6, lineHeight: 1.5 }}>
+            Each member has their own private record, protocol and progress. Adding someone captures their consent first — you manage, you don't merge.
+          </div>
+        </GlassCard>
+
+        <p style={{ marginTop: 18, textAlign: "center", fontFamily: "var(--mono)", fontSize: 9, letterSpacing: ".08em", color: "var(--whisper)" }}>
+          labread is informational and not a medical diagnosis.
+        </p>
       </div>
 
+      <TabBar
+        items={[
+          tab("home", "Home", "◉", "/dashboard"),
+          tab("protocol", "Protocol", "◈", "/protocol"),
+          tab("anna", "Anna", "✦", "/chat"),
+          tab("you", "You", "◐", "/family", true),
+        ]}
+      />
+
       {addOpen && <AddEditMemberModal member={null} standalone onClose={() => setAddOpen(false)} afterSave={() => setAddOpen(false)} />}
-    </LrUi>
+    </div>
   );
 }

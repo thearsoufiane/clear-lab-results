@@ -222,7 +222,7 @@ function ProtocolScreen() {
           tab("home", "Home", "◉", "/dashboard"),
           tab("protocol", "Protocol", "◈", "/protocol", true),
           tab("anna", "Anna", "✦", "/chat"),
-          tab("you", "You", "◐", "/profile"),
+          tab("you", "You", "◐", "/family"),
         ]}
       />
     </div>

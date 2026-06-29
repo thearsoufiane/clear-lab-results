@@ -373,7 +373,7 @@ function Dashboard() {
           tab("home", "Home", "◉", "/dashboard", true),
           tab("protocol", "Protocol", "◈", "/protocol"),
           tab("anna", "Anna", "✦", "/chat"),
-          tab("you", "You", "◐", "/profile"),
+          tab("you", "You", "◐", "/family"),
         ]}
       />
 

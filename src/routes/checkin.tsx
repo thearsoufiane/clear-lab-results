@@ -180,7 +180,7 @@ function CheckinPage() {
           tab("home", "Home", "◉", "/dashboard"),
           tab("protocol", "Protocol", "◈", "/protocol"),
           tab("anna", "Anna", "✦", "/chat", true),
-          tab("you", "You", "◐", "/profile"),
+          tab("you", "You", "◐", "/family"),
         ]}
       />
     </div>
