@@ -152,8 +152,31 @@ const CHAT_MESSAGES = [
   { role: "assistant", content: "It's comfortably in range now. Let's keep it climbing — stay with the iron-rich dinners a little longer.", created_at: new Date(Date.now() - 1 * 60_000).toISOString(), member_id: MEMBER_ID },
 ];
 
+// ---- challenges & rewards economy ----
+const CHALLENGES = [
+  { id: "ch-iron", name: "21-Day Iron Reset", length_days: 21, points_reward: 2100, offer_pct: 20, theme: "iron", icon: "🩸", sort_order: 1 },
+  { id: "ch-energy", name: "30-Day Energy Rebuild", length_days: 30, points_reward: 3000, offer_pct: 30, theme: "energy", icon: "⚡", sort_order: 2 },
+  { id: "ch-metabolic", name: "60-Day Metabolic", length_days: 60, points_reward: 6000, offer_pct: 50, theme: "metabolic", icon: "🔥", sort_order: 3 },
+  { id: "ch-transformation", name: "90-Day Transformation", length_days: 90, points_reward: 9000, offer_pct: 90, theme: "transformation", icon: "✦", sort_order: 4 },
+];
+const ENROLLMENTS = [
+  { id: "en-1", member_id: MEMBER_ID, challenge_id: "ch-iron", current_day: 14, streak: 14, status: "active", started_at: iso(13) },
+];
+const POINTS_LEDGER = [
+  { id: "pl-1", member_id: MEMBER_ID, points: 1400, reason: "Iron Reset · days 1–14", created_at: iso(1) },
+  { id: "pl-2", member_id: MEMBER_ID, points: 1880, reason: "Earlier challenges", created_at: iso(40) },
+];
+const OFFERS = [
+  { id: "of-1", member_id: MEMBER_ID, pct: 20, source: "21-Day Iron Reset", unlocked_at: iso(20), redeemed_at: null },
+  { id: "of-2", member_id: MEMBER_ID, pct: 30, source: "30-Day Energy Rebuild", unlocked_at: iso(9), redeemed_at: null },
+];
+
 const TABLES: Record<string, Record<string, unknown>[]> = {
   members: MEMBERS,
+  challenges: CHALLENGES,
+  enrollments: ENROLLMENTS,
+  points_ledger: POINTS_LEDGER,
+  offers: OFFERS,
   reports: REPORTS,
   health_protocols: PROTOCOLS,
   protocol_habits: HABITS,

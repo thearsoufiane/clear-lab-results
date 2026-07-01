@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useActiveMember } from "@/contexts/active-member";
 import { supabase } from "@/lib/supabase";
 import { LivingGlow, GlassCard, VitalityRing, Pill, Eyebrow, EmberButton, TabBar } from "@/components/lr";
+import { appTabs } from "@/components/app-tabs";
 
 export const Route = createFileRoute("/protocol")({
   head: () => ({
@@ -124,10 +125,6 @@ function ProtocolScreen() {
   const doneCount = completed.length;
   const allDone = habits.length > 0 && doneCount >= habits.length;
 
-  const tab = (key: string, label: string, icon: string, to: string, active = false) => ({
-    key, label, icon, active, onClick: () => nav({ to }),
-  });
-
   return (
     <div style={{ minHeight: "100dvh", background: "var(--void)", color: "var(--bone)", fontFamily: "var(--sans)" }}>
       <LivingGlow />
@@ -217,14 +214,7 @@ function ProtocolScreen() {
         )}
       </div>
 
-      <TabBar
-        items={[
-          tab("home", "Home", "◉", "/dashboard"),
-          tab("protocol", "Protocol", "◈", "/protocol", true),
-          tab("anna", "Anna", "✦", "/chat"),
-          tab("you", "You", "◐", "/family"),
-        ]}
-      />
+      <TabBar items={appTabs(nav, "protocol")} />
     </div>
   );
 }

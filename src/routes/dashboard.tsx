@@ -9,6 +9,7 @@ import {
   LivingGlow, GlassCard, VitalityRing, AuroraChart, AnnaOrb, Pill, EmberButton, Eyebrow, TabBar,
   type AuroraSeries,
 } from "@/components/lr";
+import { appTabs } from "@/components/app-tabs";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -245,9 +246,6 @@ function Dashboard() {
   const annaAction = focus ? (FOCUS_ACTION[norm(focus.name)] ?? "Stay with the habits that are working.") : "";
 
   const doneCount = completed.length;
-  const tab = (key: string, label: string, icon: string, to: string, active = false) => ({
-    key, label, icon, active, onClick: () => nav({ to }),
-  });
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--void)", color: "var(--bone)", fontFamily: "var(--sans)" }}>
@@ -377,14 +375,7 @@ function Dashboard() {
         </p>
       </div>
 
-      <TabBar
-        items={[
-          tab("home", "Home", "◉", "/dashboard", true),
-          tab("protocol", "Protocol", "◈", "/protocol"),
-          tab("anna", "Anna", "✦", "/chat"),
-          tab("you", "You", "◐", "/family"),
-        ]}
-      />
+      <TabBar items={appTabs(nav, "home")} />
 
       <UploadModal
         open={uploadOpen}

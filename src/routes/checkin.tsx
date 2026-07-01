@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { useActiveMember } from "@/contexts/active-member";
 import { LivingGlow, GlassCard, AnnaOrb, Pill, Eyebrow, EmberButton, TabBar } from "@/components/lr";
+import { appTabs } from "@/components/app-tabs";
 
 export const Route = createFileRoute("/checkin")({
   head: () => ({
@@ -129,10 +130,6 @@ function CheckinPage() {
       ? `Keep your ${(protocol!.focus_areas![0].label || protocol!.focus_areas![0].biomarker)!.toLowerCase()} momentum today.`
       : "One small, steady step today. That's all.";
 
-  const tab = (key: string, label: string, icon: string, to: string, active = false) => ({
-    key, label, icon, active, onClick: () => nav({ to }),
-  });
-
   return (
     <div style={{ minHeight: "100dvh", background: "var(--void)", color: "var(--bone)", fontFamily: "var(--sans)" }}>
       <LivingGlow intensity="hero" />
@@ -175,14 +172,7 @@ function CheckinPage() {
         </p>
       </div>
 
-      <TabBar
-        items={[
-          tab("home", "Home", "◉", "/dashboard"),
-          tab("protocol", "Protocol", "◈", "/protocol"),
-          tab("anna", "Anna", "✦", "/chat", true),
-          tab("you", "You", "◐", "/family"),
-        ]}
-      />
+      <TabBar items={appTabs(nav, "anna")} />
     </div>
   );
 }

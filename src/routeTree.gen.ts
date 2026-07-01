@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TryFreeRouteImport } from './routes/try-free'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as ProtocolRouteImport } from './routes/protocol'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -29,12 +30,15 @@ import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalysesRouteImport } from './routes/analyses'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ChallengesIndexRouteImport } from './routes/challenges.index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as LearnVitaminDRouteImport } from './routes/learn/vitamin-d'
 import { Route as LearnTshThyroidRouteImport } from './routes/learn/tsh-thyroid'
 import { Route as LearnFerritinRouteImport } from './routes/learn/ferritin'
 import { Route as LearnCrpRouteImport } from './routes/learn/crp'
 import { Route as LearnA1cRouteImport } from './routes/learn/a1c'
+import { Route as ChallengesIdIndexRouteImport } from './routes/challenges.$id.index'
+import { Route as ChallengesIdCompleteRouteImport } from './routes/challenges.$id.complete'
 
 const TryFreeRoute = TryFreeRouteImport.update({
   id: '/try-free',
@@ -44,6 +48,11 @@ const TryFreeRoute = TryFreeRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RewardsRoute = RewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtocolRoute = ProtocolRouteImport.update({
@@ -136,6 +145,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChallengesIndexRoute = ChallengesIndexRouteImport.update({
+  id: '/challenges/',
+  path: '/challenges/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportIdRoute = ReportIdRouteImport.update({
   id: '/report/$id',
   path: '/report/$id',
@@ -166,6 +180,16 @@ const LearnA1cRoute = LearnA1cRouteImport.update({
   path: '/learn/a1c',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChallengesIdIndexRoute = ChallengesIdIndexRouteImport.update({
+  id: '/challenges/$id/',
+  path: '/challenges/$id/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesIdCompleteRoute = ChallengesIdCompleteRouteImport.update({
+  id: '/challenges/$id/complete',
+  path: '/challenges/$id/complete',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -186,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/protocol': typeof ProtocolRoute
+  '/rewards': typeof RewardsRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -194,6 +219,9 @@ export interface FileRoutesByFullPath {
   '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
+  '/challenges/': typeof ChallengesIndexRoute
+  '/challenges/$id/complete': typeof ChallengesIdCompleteRoute
+  '/challenges/$id/': typeof ChallengesIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -214,6 +242,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/protocol': typeof ProtocolRoute
+  '/rewards': typeof RewardsRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -222,6 +251,9 @@ export interface FileRoutesByTo {
   '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
+  '/challenges': typeof ChallengesIndexRoute
+  '/challenges/$id/complete': typeof ChallengesIdCompleteRoute
+  '/challenges/$id': typeof ChallengesIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -243,6 +275,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/protocol': typeof ProtocolRoute
+  '/rewards': typeof RewardsRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -251,6 +284,9 @@ export interface FileRoutesById {
   '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/report/$id': typeof ReportIdRoute
+  '/challenges/': typeof ChallengesIndexRoute
+  '/challenges/$id/complete': typeof ChallengesIdCompleteRoute
+  '/challenges/$id/': typeof ChallengesIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -273,6 +309,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/protocol'
+    | '/rewards'
     | '/terms'
     | '/try-free'
     | '/learn/a1c'
@@ -281,6 +318,9 @@ export interface FileRouteTypes {
     | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
     | '/report/$id'
+    | '/challenges/'
+    | '/challenges/$id/complete'
+    | '/challenges/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -301,6 +341,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/protocol'
+    | '/rewards'
     | '/terms'
     | '/try-free'
     | '/learn/a1c'
@@ -309,6 +350,9 @@ export interface FileRouteTypes {
     | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
     | '/report/$id'
+    | '/challenges'
+    | '/challenges/$id/complete'
+    | '/challenges/$id'
   id:
     | '__root__'
     | '/'
@@ -329,6 +373,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/protocol'
+    | '/rewards'
     | '/terms'
     | '/try-free'
     | '/learn/a1c'
@@ -337,6 +382,9 @@ export interface FileRouteTypes {
     | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
     | '/report/$id'
+    | '/challenges/'
+    | '/challenges/$id/complete'
+    | '/challenges/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -358,6 +406,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
   ProtocolRoute: typeof ProtocolRoute
+  RewardsRoute: typeof RewardsRoute
   TermsRoute: typeof TermsRoute
   TryFreeRoute: typeof TryFreeRoute
   LearnA1cRoute: typeof LearnA1cRoute
@@ -366,6 +415,9 @@ export interface RootRouteChildren {
   LearnTshThyroidRoute: typeof LearnTshThyroidRoute
   LearnVitaminDRoute: typeof LearnVitaminDRoute
   ReportIdRoute: typeof ReportIdRoute
+  ChallengesIndexRoute: typeof ChallengesIndexRoute
+  ChallengesIdCompleteRoute: typeof ChallengesIdCompleteRoute
+  ChallengesIdIndexRoute: typeof ChallengesIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -382,6 +434,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rewards': {
+      id: '/rewards'
+      path: '/rewards'
+      fullPath: '/rewards'
+      preLoaderRoute: typeof RewardsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/protocol': {
@@ -510,6 +569,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/challenges/': {
+      id: '/challenges/'
+      path: '/challenges'
+      fullPath: '/challenges/'
+      preLoaderRoute: typeof ChallengesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/report/$id': {
       id: '/report/$id'
       path: '/report/$id'
@@ -552,6 +618,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnA1cRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/challenges/$id/': {
+      id: '/challenges/$id/'
+      path: '/challenges/$id'
+      fullPath: '/challenges/$id/'
+      preLoaderRoute: typeof ChallengesIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges/$id/complete': {
+      id: '/challenges/$id/complete'
+      path: '/challenges/$id/complete'
+      fullPath: '/challenges/$id/complete'
+      preLoaderRoute: typeof ChallengesIdCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -574,6 +654,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
   ProtocolRoute: ProtocolRoute,
+  RewardsRoute: RewardsRoute,
   TermsRoute: TermsRoute,
   TryFreeRoute: TryFreeRoute,
   LearnA1cRoute: LearnA1cRoute,
@@ -582,6 +663,9 @@ const rootRouteChildren: RootRouteChildren = {
   LearnTshThyroidRoute: LearnTshThyroidRoute,
   LearnVitaminDRoute: LearnVitaminDRoute,
   ReportIdRoute: ReportIdRoute,
+  ChallengesIndexRoute: ChallengesIndexRoute,
+  ChallengesIdCompleteRoute: ChallengesIdCompleteRoute,
+  ChallengesIdIndexRoute: ChallengesIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useActiveMember, RELATIONSHIP_LABEL, type Member } from "@/contexts/active-member";
 import { MemberAvatar, AddEditMemberModal, loadMemberMeta } from "@/components/member-switcher";
 import { LivingGlow, GlassCard, Pill, Eyebrow, TabBar } from "@/components/lr";
+import { appTabs } from "@/components/app-tabs";
 import { Plus, Check } from "lucide-react";
 
 export const Route = createFileRoute("/family")({
@@ -65,10 +66,6 @@ function FamilyPage() {
     else parts.push("no test yet");
     return parts.join(" · ");
   };
-
-  const tab = (key: string, label: string, icon: string, to: string, active = false) => ({
-    key, label, icon, active, onClick: () => nav({ to }),
-  });
 
   return (
     <div style={{ minHeight: "100dvh", background: "var(--void)", color: "var(--bone)", fontFamily: "var(--sans)" }}>
@@ -174,14 +171,7 @@ function FamilyPage() {
         </p>
       </div>
 
-      <TabBar
-        items={[
-          tab("home", "Home", "◉", "/dashboard"),
-          tab("protocol", "Protocol", "◈", "/protocol"),
-          tab("anna", "Anna", "✦", "/chat"),
-          tab("you", "You", "◐", "/family", true),
-        ]}
-      />
+      <TabBar items={appTabs(nav, "you")} />
 
       {addOpen && <AddEditMemberModal member={null} standalone onClose={() => setAddOpen(false)} afterSave={() => setAddOpen(false)} />}
     </div>
