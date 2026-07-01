@@ -171,8 +171,18 @@ const OFFERS = [
   { id: "of-2", member_id: MEMBER_ID, pct: 30, source: "30-Day Energy Rebuild", unlocked_at: iso(9), redeemed_at: null },
 ];
 
+// ---- community stories ----
+// `title` is what the stories table stores; the name/city/result/headline/accent
+// fields are denormalized here for rendering (real schema joins the profile).
+const STORIES = [
+  { id: "st-1", member_id: MEMBER_ID, title: "From exhausted to finally myself", body: "Six months of dragging through afternoons. My ferritin was 22 — Anna caught it, the protocol fixed it.", image_url: null, likes: 214, featured: true, created_at: iso(4), name: "Leïla", city: "Casablanca", result: "day 90 · ferritin doubled", headline: "FROM EXHAUSTED", accent: "finally myself", theme: "iron" },
+  { id: "st-2", member_id: MEMBER_ID, title: "My energy came back", body: "Vitamin D at 18 in January. Midday walks + D3, and by spring I felt like a person again.", image_url: null, likes: 138, featured: false, created_at: iso(11), name: "Youssef", city: "Rabat", result: "day 60 · vitamin D restored", headline: "MY ENERGY", accent: "came back", theme: "energy" },
+  { id: "st-3", member_id: MEMBER_ID, title: "Sleeping like I mean it", body: "Turns out my thyroid was quietly off. Steadied it, and my nights finally hold together.", image_url: null, likes: 176, featured: false, created_at: iso(20), name: "Sara", city: "Marrakesh", result: "day 45 · thyroid steadied", headline: "SLEEPING", accent: "like I mean it", theme: "thyroid" },
+];
+
 const TABLES: Record<string, Record<string, unknown>[]> = {
   members: MEMBERS,
+  stories: STORIES,
   challenges: CHALLENGES,
   enrollments: ENROLLMENTS,
   points_ledger: POINTS_LEDGER,

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TryFreeRouteImport } from './routes/try-free'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as ProtocolRouteImport } from './routes/protocol'
 import { Route as ProgressRouteImport } from './routes/progress'
@@ -48,6 +49,11 @@ const TryFreeRoute = TryFreeRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoriesRoute = StoriesRouteImport.update({
+  id: '/stories',
+  path: '/stories',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RewardsRoute = RewardsRouteImport.update({
@@ -211,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/progress': typeof ProgressRoute
   '/protocol': typeof ProtocolRoute
   '/rewards': typeof RewardsRoute
+  '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   '/progress': typeof ProgressRoute
   '/protocol': typeof ProtocolRoute
   '/rewards': typeof RewardsRoute
+  '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/progress': typeof ProgressRoute
   '/protocol': typeof ProtocolRoute
   '/rewards': typeof RewardsRoute
+  '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
   '/learn/a1c': typeof LearnA1cRoute
@@ -310,6 +319,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/protocol'
     | '/rewards'
+    | '/stories'
     | '/terms'
     | '/try-free'
     | '/learn/a1c'
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/protocol'
     | '/rewards'
+    | '/stories'
     | '/terms'
     | '/try-free'
     | '/learn/a1c'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/protocol'
     | '/rewards'
+    | '/stories'
     | '/terms'
     | '/try-free'
     | '/learn/a1c'
@@ -407,6 +419,7 @@ export interface RootRouteChildren {
   ProgressRoute: typeof ProgressRoute
   ProtocolRoute: typeof ProtocolRoute
   RewardsRoute: typeof RewardsRoute
+  StoriesRoute: typeof StoriesRoute
   TermsRoute: typeof TermsRoute
   TryFreeRoute: typeof TryFreeRoute
   LearnA1cRoute: typeof LearnA1cRoute
@@ -434,6 +447,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stories': {
+      id: '/stories'
+      path: '/stories'
+      fullPath: '/stories'
+      preLoaderRoute: typeof StoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rewards': {
@@ -655,6 +675,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgressRoute: ProgressRoute,
   ProtocolRoute: ProtocolRoute,
   RewardsRoute: RewardsRoute,
+  StoriesRoute: StoriesRoute,
   TermsRoute: TermsRoute,
   TryFreeRoute: TryFreeRoute,
   LearnA1cRoute: LearnA1cRoute,

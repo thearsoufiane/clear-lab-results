@@ -14,6 +14,7 @@ export function appTabs(nav: Nav, active: string): TabItem[] {
     t("protocol", "Protocol", "◈", "/protocol"),
     t("challenges", "Challenges", "◆", "/challenges"),
     t("anna", "Anna", "✦", "/chat"),
+    t("stories", "Stories", "❝", "/stories"),
     t("you", "You", "◐", "/family"),
   ];
 }
