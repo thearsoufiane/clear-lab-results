@@ -4,11 +4,11 @@ const STOPS: Record<"ambient" | "hero", string> = {
   // Lit-from-within by fire: bright warm blooms covering the upper third + lower
   // corners. Matches the reference intensity in design-reference/app/.
   ambient:
-    "radial-gradient(85% 65% at 50% 4%, rgba(255,122,24,.40), transparent 66%)," +
+    "radial-gradient(110% 80% at 50% -4%, rgba(255,122,24,.48), transparent 72%)," +
     "radial-gradient(60% 52% at 12% 58%, rgba(178,58,12,.34), transparent 66%)," +
     "radial-gradient(60% 52% at 90% 74%, rgba(255,176,102,.22), transparent 66%)",
   hero:
-    "radial-gradient(85% 70% at 50% 18%, rgba(255,122,24,.46), transparent 70%)," +
+    "radial-gradient(115% 85% at 50% 6%, rgba(255,122,24,.52), transparent 74%)," +
     "radial-gradient(52% 44% at 26% 50%, rgba(178,58,12,.40), transparent 72%)," +
     "radial-gradient(52% 44% at 74% 44%, rgba(255,176,102,.26), transparent 72%)",
 };

@@ -72,8 +72,10 @@ function ChallengesHub() {
                   onClick={() => nav({ to: "/challenges/$id", params: { id: active.id } })}
                   style={{
                     all: "unset", cursor: "pointer", display: "block", width: "100%", boxSizing: "border-box",
-                    position: "relative", borderRadius: 18, overflow: "hidden", padding: 14, border: "1px solid var(--line)",
-                    background: "radial-gradient(120% 100% at 25% 10%,#ff8a2c,transparent 60%),linear-gradient(150deg,#c2410c,#3a1505)",
+                    position: "relative", borderRadius: 18, overflow: "hidden", padding: 14,
+                    border: "1px solid rgba(255,190,130,.30)",
+                    background: "radial-gradient(120% 115% at 18% -5%, #FFB865, transparent 52%), radial-gradient(95% 95% at 88% 105%, #6E1C04, transparent 60%), linear-gradient(145deg, #F26A1B 8%, #B23A0C 55%, #6E1C04)",
+                    boxShadow: "0 16px 44px -14px rgba(255,110,20,.60), 0 0 0 0.5px rgba(255,180,120,.4) inset, inset 0 1px 0 rgba(255,225,190,.30)",
                   }}
                 >
                   <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: ".16em", textTransform: "uppercase", color: "rgba(255,255,255,.72)" }}>

@@ -73,7 +73,7 @@
   --ember-deep: #B23A0C;  --coal: #5E2208;
   --bone: #F6ECE1;
   --smoke: rgba(246,236,225,.56);  --whisper: rgba(246,236,225,.34);
-  --glass: rgba(255,255,255,.055);  --glass-2: rgba(255,255,255,.09);
+  --glass: rgba(255,255,255,.035);  --glass-2: rgba(255,255,255,.09);
   --line: rgba(255,255,255,.10);  --line-warm: rgba(255,138,40,.22);
   --serif: 'Fraunces', Georgia, serif;
   --sans: 'Inter', system-ui, sans-serif;
