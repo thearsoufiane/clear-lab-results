@@ -194,7 +194,7 @@ function ProgressPage() {
               {markers.map((m) => {
                 const trend = m.prev == null ? null : m.current > m.prev ? "↑" : m.current < m.prev ? "↓" : "→";
                 return (
-                  <GlassCard key={m.name} style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <GlassCard key={m.name} onClick={() => nav({ to: "/biomarker/$name", params: { name: m.name } })} style={{ display: "flex", alignItems: "center", gap: 14, cursor: "pointer" }}>
                     <Gauge value={m.current} rangeLow={m.low} rangeHigh={m.high} status={gaugeStatus(m.status)} size={132} showLabel={false} />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontFamily: "var(--serif)", fontSize: 18 }}>{m.name}</div>

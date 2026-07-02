@@ -41,6 +41,7 @@ import { Route as LearnTshThyroidRouteImport } from './routes/learn/tsh-thyroid'
 import { Route as LearnFerritinRouteImport } from './routes/learn/ferritin'
 import { Route as LearnCrpRouteImport } from './routes/learn/crp'
 import { Route as LearnA1cRouteImport } from './routes/learn/a1c'
+import { Route as BiomarkerNameRouteImport } from './routes/biomarker.$name'
 import { Route as ChallengesIdIndexRouteImport } from './routes/challenges.$id.index'
 import { Route as ChallengesIdCompleteRouteImport } from './routes/challenges.$id.complete'
 
@@ -204,6 +205,11 @@ const LearnA1cRoute = LearnA1cRouteImport.update({
   path: '/learn/a1c',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BiomarkerNameRoute = BiomarkerNameRouteImport.update({
+  id: '/biomarker/$name',
+  path: '/biomarker/$name',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChallengesIdIndexRoute = ChallengesIdIndexRouteImport.update({
   id: '/challenges/$id/',
   path: '/challenges/$id/',
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
+  '/biomarker/$name': typeof BiomarkerNameRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
@@ -274,6 +281,7 @@ export interface FileRoutesByTo {
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
+  '/biomarker/$name': typeof BiomarkerNameRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
@@ -311,6 +319,7 @@ export interface FileRoutesById {
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/try-free': typeof TryFreeRoute
+  '/biomarker/$name': typeof BiomarkerNameRoute
   '/learn/a1c': typeof LearnA1cRoute
   '/learn/crp': typeof LearnCrpRoute
   '/learn/ferritin': typeof LearnFerritinRoute
@@ -349,6 +358,7 @@ export interface FileRouteTypes {
     | '/stories'
     | '/terms'
     | '/try-free'
+    | '/biomarker/$name'
     | '/learn/a1c'
     | '/learn/crp'
     | '/learn/ferritin'
@@ -385,6 +395,7 @@ export interface FileRouteTypes {
     | '/stories'
     | '/terms'
     | '/try-free'
+    | '/biomarker/$name'
     | '/learn/a1c'
     | '/learn/crp'
     | '/learn/ferritin'
@@ -421,6 +432,7 @@ export interface FileRouteTypes {
     | '/stories'
     | '/terms'
     | '/try-free'
+    | '/biomarker/$name'
     | '/learn/a1c'
     | '/learn/crp'
     | '/learn/ferritin'
@@ -458,6 +470,7 @@ export interface RootRouteChildren {
   StoriesRoute: typeof StoriesRoute
   TermsRoute: typeof TermsRoute
   TryFreeRoute: typeof TryFreeRoute
+  BiomarkerNameRoute: typeof BiomarkerNameRoute
   LearnA1cRoute: typeof LearnA1cRoute
   LearnCrpRoute: typeof LearnCrpRoute
   LearnFerritinRoute: typeof LearnFerritinRoute
@@ -698,6 +711,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnA1cRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/biomarker/$name': {
+      id: '/biomarker/$name'
+      path: '/biomarker/$name'
+      fullPath: '/biomarker/$name'
+      preLoaderRoute: typeof BiomarkerNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/challenges/$id/': {
       id: '/challenges/$id/'
       path: '/challenges/$id'
@@ -738,6 +758,7 @@ const rootRouteChildren: RootRouteChildren = {
   StoriesRoute: StoriesRoute,
   TermsRoute: TermsRoute,
   TryFreeRoute: TryFreeRoute,
+  BiomarkerNameRoute: BiomarkerNameRoute,
   LearnA1cRoute: LearnA1cRoute,
   LearnCrpRoute: LearnCrpRoute,
   LearnFerritinRoute: LearnFerritinRoute,
