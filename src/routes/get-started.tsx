@@ -248,7 +248,7 @@ function GetStartedPage() {
       } catch {
         /* ignore */
       }
-      nav({ to: "/dashboard" });
+      nav({ to: "/onboarding" }); // new signups start the first-run flow
     })();
   }, [user, authLoading, nav]);
 
@@ -304,14 +304,14 @@ function GetStartedPage() {
         password,
         options: {
           data: { full_name: name.trim(), plan: PLAN_VALUE[chosen] },
-          emailRedirectTo: window.location.origin + "/dashboard",
+          emailRedirectTo: window.location.origin + "/onboarding",
         },
       });
       if (error) throw error;
       // If the project has email confirmation disabled, signUp returns a session
       // immediately → drop the confirmed user straight into the app.
       if (data.session) {
-        nav({ to: "/dashboard" });
+        nav({ to: "/onboarding" });
         return;
       }
       // Otherwise show the "check your email" success state.
