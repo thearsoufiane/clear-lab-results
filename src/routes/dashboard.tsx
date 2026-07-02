@@ -297,7 +297,7 @@ function Dashboard() {
 
             {/* Anna note */}
             {focus && (
-              <GlassCard emphasis style={{ marginTop: 12, display: "flex", gap: 11, alignItems: "center" }}>
+              <GlassCard emphasis onClick={() => nav({ to: "/chat" })} style={{ marginTop: 12, display: "flex", gap: 11, alignItems: "center", cursor: "pointer" }}>
                 <AnnaOrb size={34} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <Eyebrow color="var(--ember-glow)">anna</Eyebrow>
