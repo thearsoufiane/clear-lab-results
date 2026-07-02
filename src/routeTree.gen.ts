@@ -31,8 +31,11 @@ import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalysesRouteImport } from './routes/analyses'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OnboardingIndexRouteImport } from './routes/onboarding.index'
 import { Route as ChallengesIndexRouteImport } from './routes/challenges.index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
+import { Route as OnboardingAnalyzingRouteImport } from './routes/onboarding.analyzing'
+import { Route as OnboardingAboutYouRouteImport } from './routes/onboarding.about-you'
 import { Route as LearnVitaminDRouteImport } from './routes/learn/vitamin-d'
 import { Route as LearnTshThyroidRouteImport } from './routes/learn/tsh-thyroid'
 import { Route as LearnFerritinRouteImport } from './routes/learn/ferritin'
@@ -151,6 +154,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
+  id: '/onboarding/',
+  path: '/onboarding/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChallengesIndexRoute = ChallengesIndexRouteImport.update({
   id: '/challenges/',
   path: '/challenges/',
@@ -159,6 +167,16 @@ const ChallengesIndexRoute = ChallengesIndexRouteImport.update({
 const ReportIdRoute = ReportIdRouteImport.update({
   id: '/report/$id',
   path: '/report/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingAnalyzingRoute = OnboardingAnalyzingRouteImport.update({
+  id: '/onboarding/analyzing',
+  path: '/onboarding/analyzing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingAboutYouRoute = OnboardingAboutYouRouteImport.update({
+  id: '/onboarding/about-you',
+  path: '/onboarding/about-you',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnVitaminDRoute = LearnVitaminDRouteImport.update({
@@ -225,8 +243,11 @@ export interface FileRoutesByFullPath {
   '/learn/ferritin': typeof LearnFerritinRoute
   '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
+  '/onboarding/about-you': typeof OnboardingAboutYouRoute
+  '/onboarding/analyzing': typeof OnboardingAnalyzingRoute
   '/report/$id': typeof ReportIdRoute
   '/challenges/': typeof ChallengesIndexRoute
+  '/onboarding/': typeof OnboardingIndexRoute
   '/challenges/$id/complete': typeof ChallengesIdCompleteRoute
   '/challenges/$id/': typeof ChallengesIdIndexRoute
 }
@@ -258,8 +279,11 @@ export interface FileRoutesByTo {
   '/learn/ferritin': typeof LearnFerritinRoute
   '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
+  '/onboarding/about-you': typeof OnboardingAboutYouRoute
+  '/onboarding/analyzing': typeof OnboardingAnalyzingRoute
   '/report/$id': typeof ReportIdRoute
   '/challenges': typeof ChallengesIndexRoute
+  '/onboarding': typeof OnboardingIndexRoute
   '/challenges/$id/complete': typeof ChallengesIdCompleteRoute
   '/challenges/$id': typeof ChallengesIdIndexRoute
 }
@@ -292,8 +316,11 @@ export interface FileRoutesById {
   '/learn/ferritin': typeof LearnFerritinRoute
   '/learn/tsh-thyroid': typeof LearnTshThyroidRoute
   '/learn/vitamin-d': typeof LearnVitaminDRoute
+  '/onboarding/about-you': typeof OnboardingAboutYouRoute
+  '/onboarding/analyzing': typeof OnboardingAnalyzingRoute
   '/report/$id': typeof ReportIdRoute
   '/challenges/': typeof ChallengesIndexRoute
+  '/onboarding/': typeof OnboardingIndexRoute
   '/challenges/$id/complete': typeof ChallengesIdCompleteRoute
   '/challenges/$id/': typeof ChallengesIdIndexRoute
 }
@@ -327,8 +354,11 @@ export interface FileRouteTypes {
     | '/learn/ferritin'
     | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
+    | '/onboarding/about-you'
+    | '/onboarding/analyzing'
     | '/report/$id'
     | '/challenges/'
+    | '/onboarding/'
     | '/challenges/$id/complete'
     | '/challenges/$id/'
   fileRoutesByTo: FileRoutesByTo
@@ -360,8 +390,11 @@ export interface FileRouteTypes {
     | '/learn/ferritin'
     | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
+    | '/onboarding/about-you'
+    | '/onboarding/analyzing'
     | '/report/$id'
     | '/challenges'
+    | '/onboarding'
     | '/challenges/$id/complete'
     | '/challenges/$id'
   id:
@@ -393,8 +426,11 @@ export interface FileRouteTypes {
     | '/learn/ferritin'
     | '/learn/tsh-thyroid'
     | '/learn/vitamin-d'
+    | '/onboarding/about-you'
+    | '/onboarding/analyzing'
     | '/report/$id'
     | '/challenges/'
+    | '/onboarding/'
     | '/challenges/$id/complete'
     | '/challenges/$id/'
   fileRoutesById: FileRoutesById
@@ -427,8 +463,11 @@ export interface RootRouteChildren {
   LearnFerritinRoute: typeof LearnFerritinRoute
   LearnTshThyroidRoute: typeof LearnTshThyroidRoute
   LearnVitaminDRoute: typeof LearnVitaminDRoute
+  OnboardingAboutYouRoute: typeof OnboardingAboutYouRoute
+  OnboardingAnalyzingRoute: typeof OnboardingAnalyzingRoute
   ReportIdRoute: typeof ReportIdRoute
   ChallengesIndexRoute: typeof ChallengesIndexRoute
+  OnboardingIndexRoute: typeof OnboardingIndexRoute
   ChallengesIdCompleteRoute: typeof ChallengesIdCompleteRoute
   ChallengesIdIndexRoute: typeof ChallengesIdIndexRoute
 }
@@ -589,6 +628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding/': {
+      id: '/onboarding/'
+      path: '/onboarding'
+      fullPath: '/onboarding/'
+      preLoaderRoute: typeof OnboardingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/challenges/': {
       id: '/challenges/'
       path: '/challenges'
@@ -601,6 +647,20 @@ declare module '@tanstack/react-router' {
       path: '/report/$id'
       fullPath: '/report/$id'
       preLoaderRoute: typeof ReportIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/analyzing': {
+      id: '/onboarding/analyzing'
+      path: '/onboarding/analyzing'
+      fullPath: '/onboarding/analyzing'
+      preLoaderRoute: typeof OnboardingAnalyzingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/about-you': {
+      id: '/onboarding/about-you'
+      path: '/onboarding/about-you'
+      fullPath: '/onboarding/about-you'
+      preLoaderRoute: typeof OnboardingAboutYouRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn/vitamin-d': {
@@ -683,8 +743,11 @@ const rootRouteChildren: RootRouteChildren = {
   LearnFerritinRoute: LearnFerritinRoute,
   LearnTshThyroidRoute: LearnTshThyroidRoute,
   LearnVitaminDRoute: LearnVitaminDRoute,
+  OnboardingAboutYouRoute: OnboardingAboutYouRoute,
+  OnboardingAnalyzingRoute: OnboardingAnalyzingRoute,
   ReportIdRoute: ReportIdRoute,
   ChallengesIndexRoute: ChallengesIndexRoute,
+  OnboardingIndexRoute: OnboardingIndexRoute,
   ChallengesIdCompleteRoute: ChallengesIdCompleteRoute,
   ChallengesIdIndexRoute: ChallengesIdIndexRoute,
 }

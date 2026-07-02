@@ -244,6 +244,12 @@ function builder(table: string) {
 
 export const mockSupabase = {
   from: (table: string) => builder(table),
+  storage: {
+    from: () => ({
+      upload: async () => ({ data: { path: "seed/mock-report.pdf" }, error: null }),
+      getPublicUrl: () => ({ data: { publicUrl: "" } }),
+    }),
+  },
   auth: {
     getSession: async () => ({ data: { session: fakeSession }, error: null }),
     getUser: async () => ({ data: { user: fakeUser }, error: null }),

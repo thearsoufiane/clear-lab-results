@@ -298,7 +298,10 @@
 .lr-orb-pulse { animation: lr-orb-pulse 5s ease-in-out infinite; transform-origin:center; }
 .lr-think-dot { animation: lr-think 1.2s ease-in-out infinite; }
 .lr-arc { transition: stroke-dashoffset 1.1s cubic-bezier(.22,1,.36,1); }
+/* onboarding "reading" scan-line sweeping down the report card */
+@keyframes lr-scan { 0% { top: 2%; } 100% { top: 82%; } }
+.lr-scanline { animation: lr-scan 1.6s ease-in-out infinite alternate; }
 @media (prefers-reduced-motion: reduce) {
-  .lr-breathe, .lr-orb-pulse, .lr-think-dot { animation: none; }
+  .lr-breathe, .lr-orb-pulse, .lr-think-dot, .lr-scanline { animation: none; }
   .lr-arc { transition: none; }
 }
