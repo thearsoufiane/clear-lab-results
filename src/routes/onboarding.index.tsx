@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useActiveMember } from "@/contexts/active-member";
 import { supabase } from "@/lib/supabase";
+import { setPendingFile } from "@/lib/onboarding-file";
 import { LivingGlow, GlassCard, EmberButton, Eyebrow } from "@/components/lr";
 
 export const Route = createFileRoute("/onboarding/")({
@@ -25,7 +25,6 @@ const ROWS = [
 
 function UploadStep() {
   const { user, loading } = useAuth();
-  const { activeMemberId } = useActiveMember();
   const nav = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -34,19 +33,16 @@ function UploadStep() {
   useEffect(() => { if (!loading && !user) nav({ to: "/auth" }); }, [user, loading]);
 
   const advance = useCallback(async () => {
+    if (!file) return; // a real blood test is required to continue
     setBusy(true);
+    setPendingFile(file); // handed to the analyzing step, which runs analyze-report
+    // best-effort store the raw file; analysis uses the file directly, so this
+    // is not on the critical path.
     try {
-      if (file && user && activeMemberId) {
-        // best-effort: store the file + create a pending report; the analysis
-        // itself happens on the next screen (analyzeReport stub / real pipeline).
-        try {
-          if (supabase.storage) await supabase.storage.from("reports").upload(`${user.id}/${Date.now()}-${file.name}`, file);
-        } catch { /* storage optional in dev */ }
-        await supabase.from("reports").insert({ user_id: user.id, member_id: activeMemberId, title: file.name, file_name: file.name, status: "pending" });
-      }
-    } catch { /* keep the flow moving even if a write fails */ }
+      if (user && supabase.storage) await supabase.storage.from("reports").upload(`${user.id}/${Date.now()}-${file.name}`, file);
+    } catch { /* Storage optional */ }
     nav({ to: "/onboarding/analyzing" });
-  }, [file, user, activeMemberId, nav]);
+  }, [file, user, nav]);
 
   if (loading || !user) return null;
 
@@ -92,8 +88,8 @@ function UploadStep() {
 
         <div style={{ textAlign: "center", marginTop: 12 }}><Eyebrow>we read 30+ common lab formats</Eyebrow></div>
 
-        <EmberButton style={{ marginTop: "auto", width: "100%" }} onClick={advance} disabled={busy}>
-          {busy ? "One sec…" : "Continue"}
+        <EmberButton style={{ marginTop: "auto", width: "100%" }} onClick={advance} disabled={busy || !file}>
+          {busy ? "One sec…" : file ? "Continue" : "Add a file to continue"}
         </EmberButton>
       </div>
     </div>

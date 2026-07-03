@@ -52,10 +52,12 @@ function AboutYouStep() {
         await supabase.from("members").update({ name: name.trim() || "Me", age: ageNum, sex: sex || null }).eq("id", activeMemberId);
       }
       if (user) {
-        // profiles carries the account-level range inputs + goals (as conditions).
+        // profiles (keyed by id = auth uid) carries the account-level range
+        // inputs the analysis uses. Goals shape the first protocol, kept on the
+        // member context; no dedicated goals column in this schema yet.
         await supabase.from("profiles").upsert(
-          { user_id: user.id, age: ageNum, sex: sex || null, conditions: { goals: [...goals] } },
-          { onConflict: "user_id" },
+          { id: user.id, age: ageNum, biological_sex: sex || null, full_name: name.trim() || null },
+          { onConflict: "id" },
         );
       }
       await reload();

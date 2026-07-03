@@ -2,7 +2,6 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase, type Report, type Analysis } from "@/lib/supabase";
-import { UploadModal } from "@/components/upload-modal";
 import { useActiveMember } from "@/contexts/active-member";
 import { MemberSwitcher } from "@/components/member-switcher";
 import {
@@ -103,7 +102,6 @@ function Dashboard() {
 
   const todayStr = useMemo(() => localDateStr(new Date()), []);
   const [loaded, setLoaded] = useState(false);
-  const [uploadOpen, setUploadOpen] = useState(false);
   const [mood, setMood] = useState<Mood>("steady");
 
   const [reports, setReports] = useState<Report[]>([]); // ascending (oldest → newest)
@@ -187,6 +185,13 @@ function Dashboard() {
     },
     [user, protocol, completed, todayStr, streak, activeMemberId],
   );
+
+  // New-user guard: the Dashboard is not for users without bloodwork. Once data
+  // has settled, if this member has no report, send them into onboarding. Runs
+  // on every load, not just after signup.
+  useEffect(() => {
+    if (loaded && reports.length === 0) nav({ to: "/onboarding" });
+  }, [loaded, reports.length, nav]);
 
   if (loading || !user || !activeMember) return null;
 
@@ -316,7 +321,7 @@ function Dashboard() {
               Hand me your first <em style={{ fontStyle: "italic", color: "var(--ember-hot)" }}>blood test.</em>
             </div>
             <p style={{ color: "var(--smoke)", fontSize: 13, margin: "8px 0 16px" }}>I'll read it and build your 90-day plan.</p>
-            <EmberButton style={{ width: "100%" }} onClick={() => setUploadOpen(true)}>Add a blood test →</EmberButton>
+            <EmberButton style={{ width: "100%" }} onClick={() => nav({ to: "/onboarding" })}>Upload your first blood test →</EmberButton>
           </GlassCard>
         )}
 
@@ -376,17 +381,6 @@ function Dashboard() {
       </div>
 
       <TabBar items={appTabs(nav, "home")} />
-
-      <UploadModal
-        open={uploadOpen}
-        onClose={() => setUploadOpen(false)}
-        userId={user.id}
-        memberId={activeMemberId}
-        onCreated={(id) => {
-          setUploadOpen(false);
-          nav({ to: "/report/$id", params: { id } });
-        }}
-      />
     </div>
   );
 }
