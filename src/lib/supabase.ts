@@ -1,17 +1,22 @@
 import { createClient } from "@supabase/supabase-js";
 import { SEED, mockSupabase } from "./dev-seed";
 
-export const SUPABASE_URL = "https://lxbpwjktchbdoyphnbvt.supabase.co";
+const env = (typeof import.meta !== "undefined" ? (import.meta as { env?: Record<string, string> }).env : undefined) ?? {};
+
+// Project URL + anon key come from VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
+// (.env.local for dev, deploy env for prod). The literals are a fallback so the
+// app still boots if the vars aren't set.
+export const SUPABASE_URL =
+  env.VITE_SUPABASE_URL || "https://lxbpwjktchbdoyphnbvt.supabase.co";
+export const SUPABASE_ANON_KEY =
+  env.VITE_SUPABASE_ANON_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4YnB3amt0Y2hiZG95cGhuYnZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMzE4MTMsImV4cCI6MjA5MzgwNzgxM30.V8svnORZiLD2Ttvfv9obxVbPCYBEOHiAxQVB0t9csjE";
 
 /** Base URL for edge-function calls. Override with VITE_FUNCTIONS_URL (in a
  *  .env.local read by `vite dev`) to point a local frontend at a locally-served
  *  function — e.g. VITE_FUNCTIONS_URL=http://localhost:54321/functions/v1
  *  while running `supabase functions serve analyze-report`. Defaults to remote. */
-export const FUNCTIONS_URL: string =
-  ((typeof import.meta !== "undefined" && (import.meta as { env?: Record<string, string> }).env?.VITE_FUNCTIONS_URL) ||
-    `${SUPABASE_URL}/functions/v1`);
-export const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4YnB3amt0Y2hiZG95cGhuYnZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMzE4MTMsImV4cCI6MjA5MzgwNzgxM30.V8svnORZiLD2Ttvfv9obxVbPCYBEOHiAxQVB0t9csjE";
+export const FUNCTIONS_URL: string = env.VITE_FUNCTIONS_URL || `${SUPABASE_URL}/functions/v1`;
 
 // Only initialize Supabase on the client side to avoid SSR WebSocket issues
 export const supabase = (() => {
