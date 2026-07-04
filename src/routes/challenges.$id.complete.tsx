@@ -20,7 +20,7 @@ function ChallengeComplete() {
 
   const load = useCallback(async () => {
     if (!user) return;
-    const { data } = await supabase.from("challenges").select("*").order("sort_order", { ascending: true });
+    const { data } = await supabase.from("challenges").select("*").order("length_days", { ascending: true });
     setChallenges((data as Challenge[]) ?? []);
   }, [user]);
   useEffect(() => { load(); }, [load]);
@@ -28,7 +28,9 @@ function ChallengeComplete() {
   if (loading || !user) return null;
 
   const challenge = challenges.find((c) => c.id === id) ?? null;
-  const next = challenge ? challenges.find((c) => c.sort_order === challenge.sort_order + 1) ?? null : null;
+  // "next" = the next-longest challenge (list is ordered by length_days).
+  const idx = challenge ? challenges.findIndex((c) => c.id === challenge.id) : -1;
+  const next = idx >= 0 ? challenges[idx + 1] ?? null : null;
   const short = (challenge?.name ?? "Challenge").replace(/^\d+-Day\s+/, "");
   const words = short.toUpperCase().split(" ");
   const badgeL1 = words[0] ?? "";

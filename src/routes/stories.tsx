@@ -36,7 +36,7 @@ const TOPICS = [
 
 function StoriesPage() {
   const { user, loading } = useAuth();
-  const { activeMember, activeMemberId } = useActiveMember();
+  const { activeMember } = useActiveMember();
   const nav = useNavigate();
 
   const [stories, setStories] = useState<Story[]>([]);
@@ -107,7 +107,6 @@ function StoriesPage() {
 
       {composeOpen && (
         <ComposeStory
-          memberId={activeMemberId}
           userId={user.id}
           authorName={activeMember?.name}
           onClose={() => setComposeOpen(false)}
@@ -119,9 +118,9 @@ function StoriesPage() {
 }
 
 function ComposeStory({
-  memberId, userId, authorName, onClose, onSaved,
+  userId, authorName, onClose, onSaved,
 }: {
-  memberId: string | null; userId: string; authorName?: string; onClose: () => void; onSaved: (s: Story) => void;
+  userId: string; authorName?: string; onClose: () => void; onSaved: (s: Story) => void;
 }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -135,11 +134,11 @@ function ComposeStory({
 
   async function save() {
     if (!title.trim()) { setErr("Give your story a title."); return; }
-    if (!memberId) return;
+    if (!userId) return;
     setSaving(true); setErr(null);
-    // Writes featured:false — you flag the best ones for the landing page later.
+    // Stories are account-level (profile_id). featured:false — you flag the best.
     const { data, error } = await supabase.from("stories")
-      .insert({ user_id: userId, member_id: memberId, title: title.trim(), body: body.trim() || null, image_url: null, likes: 0, featured: false })
+      .insert({ profile_id: userId, title: title.trim(), body: body.trim() || null, image_url: null, likes: 0, featured: false })
       .select("*").maybeSingle();
     setSaving(false);
     if (error) { setErr(error.message); return; }

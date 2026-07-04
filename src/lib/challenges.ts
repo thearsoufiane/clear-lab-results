@@ -2,7 +2,9 @@ import { supabase } from "./supabase";
 
 export type Challenge = {
   id: string; name: string; length_days: number; points_reward: number;
-  offer_pct: number; theme: string | null; icon: string | null; sort_order: number;
+  offer_pct: number; theme: string | null;
+  // Optional — not present in every schema; icon is derived from theme.
+  icon?: string | null; sort_order?: number; description?: string | null;
 };
 export type Enrollment = { id: string; challenge_id: string; current_day: number; streak: number; status: string };
 
@@ -14,6 +16,13 @@ export const ICON_GRAD: Record<string, string> = {
   iron: "linear-gradient(135deg,#FF7A18,#B23A0C)",
 };
 
+/** Per-theme icon glyph (the schema has no `icon` column). */
+export const THEME_ICON: Record<string, string> = {
+  iron: "🩸", energy: "⚡", metabolic: "🔥", transformation: "✦",
+};
+export const challengeIcon = (c: Pick<Challenge, "theme" | "icon">) =>
+  c.icon || THEME_ICON[c.theme ?? "iron"] || "◆";
+
 /** Per-theme daily actions (no challenge_actions table yet — templated). */
 export const CHALLENGE_ACTIONS: Record<string, string[]> = {
   iron: ["Iron-rich meal", "Vitamin C with dinner"],
@@ -22,9 +31,11 @@ export const CHALLENGE_ACTIONS: Record<string, string[]> = {
   transformation: ["Complete today's protocol", "Note how you're feeling"],
 };
 
-/** Points balance = sum of the member's points_ledger. */
-export async function loadPoints(memberId: string | null): Promise<number> {
-  if (!memberId) return 0;
-  const { data } = await supabase.from("points_ledger").select("points").eq("member_id", memberId);
+/** Points balance = sum of the account's points_ledger. The economy tables
+ *  (enrollments/points_ledger/offers/stories) are scoped by profile_id
+ *  (= profiles.id = auth uid), i.e. account-level, not per family member. */
+export async function loadPoints(profileId: string | null): Promise<number> {
+  if (!profileId) return 0;
+  const { data } = await supabase.from("points_ledger").select("points").eq("profile_id", profileId);
   return ((data as { points: number }[]) ?? []).reduce((s, r) => s + (r.points ?? 0), 0);
 }

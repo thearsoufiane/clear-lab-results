@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useActiveMember } from "@/contexts/active-member";
 import { supabase } from "@/lib/supabase";
 import { LivingGlow, GlassCard, Pill, Eyebrow, TabBar } from "@/components/lr";
 import { appTabs } from "@/components/app-tabs";
@@ -30,7 +29,6 @@ const TIERS = [
 
 function RewardsWallet() {
   const { user, loading } = useAuth();
-  const { activeMemberId } = useActiveMember();
   const nav = useNavigate();
   const [loaded, setLoaded] = useState(false);
   const [points, setPoints] = useState(0);
@@ -39,15 +37,15 @@ function RewardsWallet() {
   useEffect(() => { if (!loading && !user) nav({ to: "/auth" }); }, [user, loading]);
 
   const load = useCallback(async () => {
-    if (!user || !activeMemberId) return;
+    if (!user) return;
     const [pts, { data: offs }] = await Promise.all([
-      loadPoints(activeMemberId),
-      supabase.from("offers").select("pct, source, unlocked_at, redeemed_at").eq("member_id", activeMemberId),
+      loadPoints(user.id),
+      supabase.from("offers").select("pct, source, unlocked_at, redeemed_at").eq("profile_id", user.id),
     ]);
     setPoints(pts);
     setOffers((offs as Offer[]) ?? []);
     setLoaded(true);
-  }, [user, activeMemberId]);
+  }, [user]);
   useEffect(() => { load(); }, [load]);
 
   if (loading || !user) return null;

@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate, useParams } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useActiveMember } from "@/contexts/active-member";
 import { supabase } from "@/lib/supabase";
 import { LivingGlow, GlassCard, DayGrid, Pill, Eyebrow } from "@/components/lr";
 import { ArrowLeft } from "lucide-react";
@@ -14,7 +13,6 @@ export const Route = createFileRoute("/challenges/$id/")({
 
 function ActiveChallenge() {
   const { user, loading } = useAuth();
-  const { activeMemberId } = useActiveMember();
   const { id } = useParams({ from: "/challenges/$id/" });
   const nav = useNavigate();
 
@@ -26,10 +24,10 @@ function ActiveChallenge() {
   useEffect(() => { if (!loading && !user) nav({ to: "/auth" }); }, [user, loading]);
 
   const load = useCallback(async () => {
-    if (!user || !activeMemberId) return;
+    if (!user) return;
     const [{ data: chs }, { data: en }] = await Promise.all([
-      supabase.from("challenges").select("*").order("sort_order", { ascending: true }),
-      supabase.from("enrollments").select("*").eq("member_id", activeMemberId).eq("status", "active").order("started_at", { ascending: false }).limit(1).maybeSingle(),
+      supabase.from("challenges").select("*").order("length_days", { ascending: true }),
+      supabase.from("enrollments").select("*").eq("profile_id", user.id).eq("status", "active").order("started_at", { ascending: false }).limit(1).maybeSingle(),
     ]);
     const ch = ((chs as Challenge[]) ?? []).find((c) => c.id === id) ?? null;
     setChallenge(ch);
@@ -37,7 +35,7 @@ function ActiveChallenge() {
     const actions = CHALLENGE_ACTIONS[ch?.theme ?? "iron"] ?? CHALLENGE_ACTIONS.iron;
     setDone(actions.map((_, i) => i === 0)); // first done, per the reference
     setLoaded(true);
-  }, [user, activeMemberId, id]);
+  }, [user, id]);
 
   useEffect(() => { load(); }, [load]);
 

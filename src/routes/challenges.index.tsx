@@ -1,11 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useActiveMember } from "@/contexts/active-member";
 import { supabase } from "@/lib/supabase";
 import { LivingGlow, GlassCard, Pill, Eyebrow, TabBar } from "@/components/lr";
 import { appTabs } from "@/components/app-tabs";
-import { type Challenge, type Enrollment, ICON_GRAD, loadPoints } from "@/lib/challenges";
+import { type Challenge, type Enrollment, ICON_GRAD, challengeIcon, loadPoints } from "@/lib/challenges";
 
 export const Route = createFileRoute("/challenges/")({
   head: () => ({
@@ -21,7 +20,6 @@ export const Route = createFileRoute("/challenges/")({
 
 function ChallengesHub() {
   const { user, loading } = useAuth();
-  const { activeMemberId } = useActiveMember();
   const nav = useNavigate();
 
   const [loaded, setLoaded] = useState(false);
@@ -32,17 +30,17 @@ function ChallengesHub() {
   useEffect(() => { if (!loading && !user) nav({ to: "/auth" }); }, [user, loading]);
 
   const load = useCallback(async () => {
-    if (!user || !activeMemberId) return;
+    if (!user) return;
     const [{ data: ch }, { data: en }, pts] = await Promise.all([
-      supabase.from("challenges").select("*").order("sort_order", { ascending: true }),
-      supabase.from("enrollments").select("*").eq("member_id", activeMemberId).eq("status", "active").order("started_at", { ascending: false }).limit(1).maybeSingle(),
-      loadPoints(activeMemberId),
+      supabase.from("challenges").select("*").order("length_days", { ascending: true }),
+      supabase.from("enrollments").select("*").eq("profile_id", user.id).eq("status", "active").order("started_at", { ascending: false }).limit(1).maybeSingle(),
+      loadPoints(user.id),
     ]);
     setChallenges((ch as Challenge[]) ?? []);
     setEnrollment((en as Enrollment) ?? null);
     setPoints(pts);
     setLoaded(true);
-  }, [user, activeMemberId]);
+  }, [user]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -105,7 +103,7 @@ function ChallengesHub() {
                     style={{ display: "flex", alignItems: "center", gap: 11, padding: 11, cursor: "pointer" }}
                   >
                     <span style={{ width: 34, height: 34, borderRadius: "50%", flex: "none", display: "grid", placeItems: "center", fontSize: 15, background: ICON_GRAD[c.theme ?? "iron"] ?? ICON_GRAD.iron }}>
-                      {c.icon}
+                      {challengeIcon(c)}
                     </span>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 12.5, fontWeight: 600 }}>{c.name}</div>
