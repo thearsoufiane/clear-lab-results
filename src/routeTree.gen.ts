@@ -34,6 +34,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingIndexRouteImport } from './routes/onboarding.index'
 import { Route as ChallengesIndexRouteImport } from './routes/challenges.index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
+import { Route as OnboardingResultsRouteImport } from './routes/onboarding.results'
 import { Route as OnboardingAnalyzingRouteImport } from './routes/onboarding.analyzing'
 import { Route as OnboardingAboutYouRouteImport } from './routes/onboarding.about-you'
 import { Route as LearnVitaminDRouteImport } from './routes/learn/vitamin-d'
@@ -170,6 +171,11 @@ const ReportIdRoute = ReportIdRouteImport.update({
   path: '/report/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingResultsRoute = OnboardingResultsRouteImport.update({
+  id: '/onboarding/results',
+  path: '/onboarding/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingAnalyzingRoute = OnboardingAnalyzingRouteImport.update({
   id: '/onboarding/analyzing',
   path: '/onboarding/analyzing',
@@ -252,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/onboarding/about-you': typeof OnboardingAboutYouRoute
   '/onboarding/analyzing': typeof OnboardingAnalyzingRoute
+  '/onboarding/results': typeof OnboardingResultsRoute
   '/report/$id': typeof ReportIdRoute
   '/challenges/': typeof ChallengesIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
@@ -289,6 +296,7 @@ export interface FileRoutesByTo {
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/onboarding/about-you': typeof OnboardingAboutYouRoute
   '/onboarding/analyzing': typeof OnboardingAnalyzingRoute
+  '/onboarding/results': typeof OnboardingResultsRoute
   '/report/$id': typeof ReportIdRoute
   '/challenges': typeof ChallengesIndexRoute
   '/onboarding': typeof OnboardingIndexRoute
@@ -327,6 +335,7 @@ export interface FileRoutesById {
   '/learn/vitamin-d': typeof LearnVitaminDRoute
   '/onboarding/about-you': typeof OnboardingAboutYouRoute
   '/onboarding/analyzing': typeof OnboardingAnalyzingRoute
+  '/onboarding/results': typeof OnboardingResultsRoute
   '/report/$id': typeof ReportIdRoute
   '/challenges/': typeof ChallengesIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
@@ -366,6 +375,7 @@ export interface FileRouteTypes {
     | '/learn/vitamin-d'
     | '/onboarding/about-you'
     | '/onboarding/analyzing'
+    | '/onboarding/results'
     | '/report/$id'
     | '/challenges/'
     | '/onboarding/'
@@ -403,6 +413,7 @@ export interface FileRouteTypes {
     | '/learn/vitamin-d'
     | '/onboarding/about-you'
     | '/onboarding/analyzing'
+    | '/onboarding/results'
     | '/report/$id'
     | '/challenges'
     | '/onboarding'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/learn/vitamin-d'
     | '/onboarding/about-you'
     | '/onboarding/analyzing'
+    | '/onboarding/results'
     | '/report/$id'
     | '/challenges/'
     | '/onboarding/'
@@ -478,6 +490,7 @@ export interface RootRouteChildren {
   LearnVitaminDRoute: typeof LearnVitaminDRoute
   OnboardingAboutYouRoute: typeof OnboardingAboutYouRoute
   OnboardingAnalyzingRoute: typeof OnboardingAnalyzingRoute
+  OnboardingResultsRoute: typeof OnboardingResultsRoute
   ReportIdRoute: typeof ReportIdRoute
   ChallengesIndexRoute: typeof ChallengesIndexRoute
   OnboardingIndexRoute: typeof OnboardingIndexRoute
@@ -662,6 +675,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding/results': {
+      id: '/onboarding/results'
+      path: '/onboarding/results'
+      fullPath: '/onboarding/results'
+      preLoaderRoute: typeof OnboardingResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding/analyzing': {
       id: '/onboarding/analyzing'
       path: '/onboarding/analyzing'
@@ -766,6 +786,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnVitaminDRoute: LearnVitaminDRoute,
   OnboardingAboutYouRoute: OnboardingAboutYouRoute,
   OnboardingAnalyzingRoute: OnboardingAnalyzingRoute,
+  OnboardingResultsRoute: OnboardingResultsRoute,
   ReportIdRoute: ReportIdRoute,
   ChallengesIndexRoute: ChallengesIndexRoute,
   OnboardingIndexRoute: OnboardingIndexRoute,

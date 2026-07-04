@@ -67,7 +67,7 @@ function AnalyzingStep() {
 
         // let the scan-line breathe (min ~1.6s) even if the analysis was fast
         const wait = Math.max(0, 1600 - (Date.now() - started));
-        setTimeout(() => nav({ to: "/onboarding/about-you" }), wait);
+        setTimeout(() => nav({ to: "/onboarding/results" }), wait);
       } catch (e) {
         setError((e as Error).message || "Something went wrong reading your file.");
       }
