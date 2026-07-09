@@ -628,8 +628,8 @@ function GetStartedPage() {
               <div className="suc-card">
                 Plan: <b>{success?.plan ?? "Personal"}</b> · Confirmation sent to <b>{success?.email ?? "you@email.com"}</b>
               </div>
-              <button className="cta" onClick={() => nav({ to: "/dashboard" })}>
-                Go to my dashboard <Arrow />
+              <button className="cta" onClick={() => nav({ to: "/onboarding" })}>
+                Add your blood test <Arrow />
               </button>
             </div>
 

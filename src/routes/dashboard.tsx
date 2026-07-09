@@ -190,10 +190,31 @@ function Dashboard() {
   // has settled, if this member has no report, send them into onboarding. Runs
   // on every load, not just after signup.
   useEffect(() => {
-    if (loaded && reports.length === 0) nav({ to: "/onboarding" });
+    if (loaded && reports.length === 0) nav({ to: "/onboarding", replace: true });
   }, [loaded, reports.length, nav]);
 
   if (loading || !user || !activeMember) return null;
+  // Don't render the Dashboard (or flash the empty state) until we know whether
+  // this member has bloodwork.
+  if (!loaded) return null;
+  // No report → we're redirecting to /onboarding. Render nothing but a minimal
+  // fallback that's only visible if the redirect somehow stalls.
+  if (reports.length === 0) {
+    return (
+      <div style={{ minHeight: "100dvh", background: "var(--void)", color: "var(--bone)", fontFamily: "var(--sans)", display: "grid", placeItems: "center", padding: 24 }}>
+        <LivingGlow intensity="hero" />
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 380, width: "100%", textAlign: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}><AnnaOrb size={80} /></div>
+          <Eyebrow bracket color="var(--ember-glow)">let's begin</Eyebrow>
+          <div style={{ fontFamily: "var(--serif)", fontSize: 24, lineHeight: 1.2, marginTop: 10 }}>
+            Hand me your first <em style={{ fontStyle: "italic", color: "var(--ember-hot)" }}>blood test.</em>
+          </div>
+          <p style={{ color: "var(--smoke)", fontSize: 14, margin: "10px 0 20px" }}>I'll read it and build your 90-day plan.</p>
+          <EmberButton style={{ width: "100%" }} onClick={() => nav({ to: "/onboarding", replace: true })}>Upload your first blood test →</EmberButton>
+        </div>
+      </div>
+    );
+  }
 
   /* ---------- derived values ---------- */
   const startsAt = protocol?.starts_at ?? null;
