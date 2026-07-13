@@ -4,13 +4,16 @@ import { SEED, mockSupabase } from "./dev-seed";
 const env = (typeof import.meta !== "undefined" ? (import.meta as { env?: Record<string, string> }).env : undefined) ?? {};
 
 // Project URL + anon key come from VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
-// (.env.local for dev, deploy env for prod). The literals are a fallback so the
-// app still boots if the vars aren't set.
+// (.env.local for dev, deploy env for prod). The literals are the fallback used
+// when those vars aren't injected at build time — they MUST point at the live EU
+// project (plvyigpsyjlspnxhukkj), never the retired Tokyo project, so a missing
+// env var can't silently send waitlist signups / data to the wrong database.
+// The anon key is a public, browser-shipped token; safe to keep here.
 export const SUPABASE_URL =
-  env.VITE_SUPABASE_URL || "https://lxbpwjktchbdoyphnbvt.supabase.co";
+  env.VITE_SUPABASE_URL || "https://plvyigpsyjlspnxhukkj.supabase.co";
 export const SUPABASE_ANON_KEY =
   env.VITE_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4YnB3amt0Y2hiZG95cGhuYnZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMzE4MTMsImV4cCI6MjA5MzgwNzgxM30.V8svnORZiLD2Ttvfv9obxVbPCYBEOHiAxQVB0t9csjE";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsdnlpZ3BzeWpsc3BueGh1a2tqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwMzg1MzgsImV4cCI6MjA5ODYxNDUzOH0.NjnITzdjvB-HftN-2OJ179TMS4aF3oHfV6-HwBffVfo";
 
 /** Base URL for edge-function calls. Override with VITE_FUNCTIONS_URL (in a
  *  .env.local read by `vite dev`) to point a local frontend at a locally-served
