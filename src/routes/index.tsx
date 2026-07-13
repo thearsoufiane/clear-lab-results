@@ -61,9 +61,10 @@ const html = `<style>
   .btn-ghost{border:1px solid var(--line);color:var(--cream);background:rgba(255,255,255,.01)}
   .btn-ghost:hover{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.04)}
 
-  /* WAITLIST FORM (vanilla — matches the WaitlistForm component: audience 'individual') */
-  .wl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;max-width:520px}
-  .wl-input{flex:1;min-width:220px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:999px;padding:14px 20px;font-family:var(--sans);font-size:15px;color:var(--cream);outline:none;transition:.2s;-webkit-appearance:none}
+  /* WAITLIST FORM (vanilla — mirrors the WaitlistForm component; audience picked
+     from the selected pill, default 'individual') */
+  .wl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;width:100%;max-width:660px}
+  .wl-input{flex:1;min-width:220px;max-width:380px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:999px;padding:14px 20px;font-family:var(--sans);font-size:15px;color:var(--cream);outline:none;transition:.2s;-webkit-appearance:none}
   .wl-input::placeholder{color:var(--faint)}
   .wl-input:focus{border-color:rgba(245,166,35,.5);background:rgba(255,255,255,.06)}
   .wl-btn{flex-shrink:0;white-space:nowrap;justify-content:center}
@@ -73,6 +74,12 @@ const html = `<style>
   .wl.done .wl-input,.wl.done .wl-btn{display:none}
   .wl.done .wl-msg{font-size:14.5px;font-family:var(--sans);margin-top:0}
   .final .wl{margin:0 auto}
+  /* audience pills — single-select, sit above the email input */
+  .wl-aud{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:2px}
+  .wl-pill{font-family:var(--sans);font-size:13.5px;line-height:1;padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:.2s;white-space:nowrap;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .wl-pill:hover{border-color:rgba(245,166,35,.4);color:var(--cream)}
+  .wl-pill.on{background:var(--grad);border-color:transparent;color:#1a0f02;font-weight:600;box-shadow:0 0 20px rgba(245,133,63,.34)}
+  .wl.done .wl-aud{display:none}
 
   /* ANNOUNCEMENT */
   .topbar{background:linear-gradient(90deg,rgba(232,116,59,.14),rgba(245,166,35,.06));border-bottom:1px solid var(--line-soft);text-align:center;font-size:13.5px;color:var(--cream);padding:9px 16px;letter-spacing:.01em}
@@ -236,11 +243,12 @@ const html = `<style>
 
   /* AUDIENCE */
   .aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .aud-card{position:relative;border:1px solid var(--line);border-radius:20px;padding:30px 28px;background:linear-gradient(180deg,var(--surface),var(--bg-2));overflow:hidden;transition:.25s}
-  .aud-card:hover{border-color:rgba(245,166,35,.32);transform:translateY(-3px)}
+  .aud-card{position:relative;border:1px solid var(--line);border-top-color:rgba(245,133,63,.4);border-radius:20px;padding:32px 28px;background:linear-gradient(180deg,var(--surface),var(--bg-2));box-shadow:0 -1px 22px -6px rgba(245,133,63,.35);overflow:hidden;transition:.25s}
+  .aud-card:hover{border-color:rgba(245,166,35,.32);border-top-color:var(--amber);box-shadow:0 -1px 30px -6px rgba(245,133,63,.5);transform:translateY(-3px)}
+  .aud-card::before{content:"";position:absolute;top:0;left:20px;right:20px;height:2px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,transparent,var(--amber),transparent);box-shadow:0 0 14px 1px rgba(245,133,63,.6)}
   .aud-card::after{content:"";position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:radial-gradient(circle,rgba(245,133,63,.14),transparent 70%)}
   .aud-tag{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
-  .aud-card h3{font-size:26px;margin-bottom:18px;position:relative}
+  .aud-card h3{font-size:30px;margin-bottom:18px;position:relative}
   .aud-list{list-style:none;display:flex;flex-direction:column;gap:13px;margin-bottom:26px;position:relative}
   .aud-list li{display:flex;gap:11px;font-size:15px;color:var(--muted);line-height:1.4}
   .aud-list svg{width:18px;height:18px;stroke:var(--amber);flex-shrink:0;margin-top:1px}
@@ -476,6 +484,11 @@ const html = `<style>
   <p class="hero-sub">Understand your results, get a simple plan, and <b>watch your numbers move</b>. Not a one-time report — a health you can actually follow.</p>
   <div class="hero-cta">
     <form class="wl" id="waitlist" novalidate>
+      <div class="wl-aud" role="group" aria-label="Which best describes you?">
+        <button type="button" class="wl-pill on" data-aud="individual" aria-pressed="true">I want to understand my results</button>
+        <button type="button" class="wl-pill" data-aud="doctor" aria-pressed="false">I'm a doctor or consultant</button>
+        <button type="button" class="wl-pill" data-aud="clinic" aria-pressed="false">I run a lab or clinic</button>
+      </div>
       <input class="wl-input" type="email" placeholder="your@email.com" aria-label="Email" autocomplete="email">
       <button class="btn btn-amber wl-btn" type="submit">Join the waitlist →</button>
       <div class="wl-msg" aria-live="polite"></div>
@@ -853,6 +866,11 @@ const html = `<style>
   <h2>Stop guessing what your <span class="ital">numbers mean.</span></h2>
   <p>Your next blood test doesn't have to be a mystery. Get your first report in minutes.</p>
   <form class="wl" id="waitlist-final" novalidate>
+    <div class="wl-aud" role="group" aria-label="Which best describes you?">
+      <button type="button" class="wl-pill on" data-aud="individual" aria-pressed="true">I want to understand my results</button>
+      <button type="button" class="wl-pill" data-aud="doctor" aria-pressed="false">I'm a doctor or consultant</button>
+      <button type="button" class="wl-pill" data-aud="clinic" aria-pressed="false">I run a lab or clinic</button>
+    </div>
     <input class="wl-input" type="email" placeholder="your@email.com" aria-label="Email" autocomplete="email">
     <button class="btn btn-amber wl-btn" type="submit">Join the waitlist →</button>
     <div class="wl-msg" aria-live="polite"></div>
@@ -912,6 +930,19 @@ function HomePage() {
       return 'direct';
     };
     document.querySelectorAll('.wl').forEach((form) => {
+      // Audience pills — single-select (tapping one deselects the others).
+      const pills = form.querySelectorAll('.wl-pill');
+      pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          pills.forEach((p) => {
+            p.classList.remove('on');
+            p.setAttribute('aria-pressed', 'false');
+          });
+          pill.classList.add('on');
+          pill.setAttribute('aria-pressed', 'true');
+        });
+      });
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const input = form.querySelector('.wl-input') as HTMLInputElement | null;
@@ -929,9 +960,11 @@ function HomePage() {
         btn.disabled = true;
         btn.textContent = 'Joining…';
         try {
+          const selected = form.querySelector('.wl-pill.on') as HTMLElement | null;
+          const audience = selected?.dataset.aud || 'individual';
           const { error } = await supabase.from('waitlist').insert({
             email,
-            audience: 'individual',
+            audience,
             source: detectSource(),
             user_agent: navigator.userAgent,
           });
