@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSH Normal But Still Tired? Here's What You're Missing | labread</title>
+<meta name="description" content="Why TSH normal doesn't mean your thyroid is fine. Learn what Free T3, Free T4, and thyroid antibodies reveal — and why one number misses the whole story.">
+<link rel="canonical" href="https://labread.health/learn/tsh-thyroid">
+<meta property="og:title" content="TSH Normal But Still Tired? Here's What You're Missing">
+<meta property="og:description" content="The thyroid number most doctors rely on is hiding half the picture.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #0a0f12;
+        --bg-soft: #0f161a;
+        --panel: #131c21;
+        --ink: #eef3f2;
+        --ink-soft: #9fb0b2;
+        --ink-faint: #61716f;
+        --teal: #3fd6c4;
+        --teal-dim: #2ba596;
+        --warm: #f2c14e;
+        --line: rgba(238, 243, 242, 0.09);
+        --display: 'Newsreader', Georgia, serif;
+        --body: 'Hanken Grotesk', system-ui, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+    .topbar { border-bottom: 1px solid var(--line); }
+    .topbar .wrap {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 28px;
+    }
+    .brand {
+        font-family: var(--display); font-weight: 600; font-size: 1.25rem;
+        color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
+    }
+    .brand span { color: var(--teal); }
+    .topbar a.cta {
+        font-size: 0.9rem; font-weight: 600; color: var(--teal);
+        text-decoration: none; border: 1px solid rgba(63,214,196,0.35);
+        padding: 8px 16px; border-radius: 8px; transition: background 0.25s;
+    }
+    .topbar a.cta:hover { background: rgba(63,214,196,0.08); }
+    article { padding: 56px 0 40px; }
+    .crumb {
+        font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase;
+        color: var(--teal-dim); margin-bottom: 22px;
+    }
+    h1 {
+        font-family: var(--display); font-weight: 500;
+        font-size: clamp(2.1rem, 6vw, 3.1rem);
+        line-height: 1.08; letter-spacing: -0.02em;
+        margin-bottom: 26px;
+    }
+    .lede {
+        font-size: 1.22rem; color: var(--ink);
+        line-height: 1.6; margin-bottom: 16px;
+    }
+    .lede b { color: #fff; font-weight: 600; }
+    .updated {
+        font-size: 0.85rem; color: var(--ink-faint);
+        margin-bottom: 40px; padding-bottom: 30px;
+        border-bottom: 1px solid var(--line);
+    }
+    h2 {
+        font-family: var(--display); font-weight: 500;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        line-height: 1.15; letter-spacing: -0.01em;
+        margin: 48px 0 18px;
+    }
+    h3 {
+        font-size: 1.15rem; font-weight: 700; color: var(--ink);
+        margin: 30px 0 10px;
+    }
+    p { color: var(--ink-soft); margin-bottom: 18px; font-size: 1.06rem; }
+    p b, li b { color: var(--ink); font-weight: 600; }
+    a.inline { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+    ul.clean { list-style: none; margin: 0 0 22px; }
+    ul.clean li {
+        color: var(--ink-soft); font-size: 1.06rem;
+        padding: 8px 0 8px 28px; position: relative;
+    }
+    ul.clean li::before {
+        content: ''; position: absolute; left: 4px; top: 16px;
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--teal);
+    }
+    .table-card {
+        background: var(--panel); border: 1px solid var(--line);
+        border-radius: 14px; overflow: hidden; margin: 26px 0;
+    }
+    .table-card .row {
+        display: grid; grid-template-columns: 1.3fr 1fr 1fr;
+        border-bottom: 1px solid var(--line);
+    }
+    .table-card .row:last-child { border-bottom: none; }
+    .table-card .row.head {
+        background: rgba(63,214,196,0.06);
+    }
+    .table-card .cell {
+        padding: 15px 18px; font-size: 0.96rem;
+        border-right: 1px solid var(--line);
+    }
+    .table-card .cell:last-child { border-right: none; }
+    .table-card .row.head .cell {
+        font-weight: 700; color: var(--ink); font-size: 0.86rem;
+        letter-spacing: 0.02em; text-transform: uppercase;
+    }
+    .table-card .cell.label { color: var(--ink); font-weight: 600; }
+    .table-card .cell.muted { color: var(--ink-soft); }
+    .table-card .cell .opt { color: var(--teal); font-weight: 600; }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 26px; }
+    .chip {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 100px; padding: 9px 16px;
+        font-size: 0.95rem; color: var(--ink);
+    }
+    .callout {
+        background: rgba(242,193,78,0.07);
+        border: 1px solid rgba(242,193,78,0.28);
+        border-radius: 12px; padding: 20px 22px; margin: 28px 0;
+    }
+    .callout p { color: var(--ink); margin: 0; font-size: 1rem; }
+    .callout b { color: var(--warm); }
+    .cta-box {
+        background: linear-gradient(150deg, rgba(63,214,196,0.10), rgba(63,214,196,0.03));
+        border: 1px solid rgba(63,214,196,0.3);
+        border-radius: 18px; padding: 34px;
+        margin: 48px 0; text-align: center;
+    }
+    .cta-box h3 {
+        font-family: var(--display); font-weight: 500; font-size: 1.5rem;
+        color: var(--ink); margin: 0 0 10px;
+    }
+    .cta-box p { color: var(--ink-soft); margin-bottom: 22px; font-size: 1.02rem; }
+    .cta-box a {
+        display: inline-block; background: var(--teal); color: #04100e;
+        font-weight: 700; font-size: 1.02rem; text-decoration: none;
+        padding: 15px 32px; border-radius: 10px;
+        transition: transform 0.2s, box-shadow 0.25s;
+    }
+    .cta-box a:hover { transform: translateY(-2px); box-shadow: 0 12px 30px -12px rgba(63,214,196,0.5); }
+    .cta-box .sub { font-size: 0.84rem; color: var(--ink-faint); margin: 14px 0 0; }
+    .related { border-top: 1px solid var(--line); padding-top: 36px; margin-top: 50px; }
+    .related h2 { margin-top: 0; }
+    .related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .related-grid a {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 12px; padding: 18px 20px; text-decoration: none;
+        transition: border-color 0.25s, transform 0.25s;
+    }
+    .related-grid a:hover { border-color: rgba(63,214,196,0.4); transform: translateY(-2px); }
+    .related-grid .q { color: var(--ink); font-weight: 600; font-size: 1.02rem; display: block; margin-bottom: 3px; }
+    .related-grid .a { color: var(--ink-faint); font-size: 0.88rem; }
+    .disclaimer {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 12px; padding: 20px 22px; margin: 44px 0 0;
+    }
+    .disclaimer p { font-size: 0.88rem; color: var(--ink-faint); margin: 0; }
+    footer {
+        border-top: 1px solid var(--line); margin-top: 48px;
+        padding: 28px 0 50px; text-align: center;
+    }
+    footer p { font-size: 0.85rem; color: var(--ink-faint); margin: 0; }
+    footer a { color: var(--teal); text-decoration: none; }
+    @media (max-width: 560px) {
+        .table-card .row { grid-template-columns: 1fr; }
+        .table-card .cell { border-right: none; border-bottom: 1px solid var(--line); }
+        .related-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="wrap">
+        <a href="https://labread.health" class="brand">lab<span>read</span></a>
+        <a href="https://labread.health" class="cta">Explain my results →</a>
+    </div>
+</div>
+
+<article>
+    <div class="wrap">
+        <div class="crumb">Learn · Thyroid</div>
+        <h1>TSH Normal But Still Tired? Here's What You're Missing</h1>
+
+        <p class="lede"><b>TSH is the most ordered thyroid test — and it's also the most incomplete picture of how your thyroid is actually working.</b> Your doctor can look at TSH alone and declare you "fine," while you're still exhausted, cold, and struggling to lose weight.</p>
+        <p class="lede">The reason: TSH is a signal from your pituitary, not a direct measure of the thyroid hormones actually circulating in your blood. Here's why that gap matters — and what tests you need to fill it.</p>
+
+        <div class="updated">Plain-English guide · reviewed for accuracy · not a substitute for medical advice</div>
+
+        <h2>What TSH actually measures</h2>
+        <p><b>TSH (thyroid-stimulating hormone) is made by your pituitary gland, not your thyroid.</b> It's a signal that tells your thyroid "make more hormones." When your actual thyroid hormones are high, TSH drops (negative feedback). When they're low, TSH rises to try to kick the thyroid into action.</p>
+        <p>The catch: TSH can stay "normal" even when your actual thyroid hormones (T3 and T4) are low or out of balance. Your pituitary is still saying "you're fine," but your cells aren't getting the hormones they need.</p>
+
+        <h2>The three thyroid numbers that matter (and why doctors miss them)</h2>
+        <p>A complete thyroid picture includes four things. Most labs only order one:</p>
+        <ul class="clean">
+            <li><b>TSH</b> — the signal from your pituitary. Normal range: ~0.4–4.0 mIU/L, but many clinicians note symptoms below 2.</li>
+            <li><b>Free T4</b> — the actual thyroid hormone available to your cells (the "free" part means not bound to proteins). Normal range varies widely by lab.</li>
+            <li><b>Free T3</b> — the active hormone your cells actually use. Critically important, rarely tested.</li>
+            <li><b>Thyroid antibodies</b> — TPO and thyroglobulin antibodies detect autoimmune thyroid disease (Hashimoto's / Graves'). Can explain why you feel bad even with "normal" hormones.</li>
+        </ul>
+
+        <div class="table-card">
+            <div class="row head">
+                <div class="cell">Test</div>
+                <div class="cell">What it tells you</div>
+                <div class="cell">Usually ordered?</div>
+            </div>
+            <div class="row">
+                <div class="cell label">TSH</div>
+                <div class="cell muted">Pituitary signal</div>
+                <div class="cell muted">Yes, always</div>
+            </div>
+            <div class="row">
+                <div class="cell label">Free T4</div>
+                <div class="cell muted">Thyroid hormone output</div>
+                <div class="cell"><span class="opt">Sometimes</span></div>
+            </div>
+            <div class="row">
+                <div class="cell label">Free T3</div>
+                <div class="cell muted">Active hormone in cells</div>
+                <div class="cell"><span class="opt">Rarely</span></div>
+            </div>
+            <div class="row">
+                <div class="cell label">TPO antibodies</div>
+                <div class="cell muted">Autoimmune thyroid</div>
+                <div class="cell"><span class="opt">Not routine</span></div>
+            </div>
+        </table>
+
+        <div class="callout">
+            <p><b>Why this matters:</b> You can have a "normal" TSH while your Free T3 is low, your T4 is falling, and autoimmune antibodies are slowly destroying your thyroid. Clinicians who rely solely on TSH will miss all of this.</p>
+        </div>
+
+        <h2>Why you can feel terrible with "normal" TSH</h2>
+        <p>Hypothyroid symptoms show up even when TSH looks fine, because TSH is delayed in rising — your actual hormones can be falling for months before TSH reacts. Or, your Free T3 (the active hormone) is low while T4 is adequate — you're not converting efficiently. Or you have Hashimoto's antibodies silently attacking your thyroid.</p>
+        <p>The constellation of symptoms is familiar:</p>
+        <div class="chips">
+            <span class="chip">Fatigue</span>
+            <span class="chip">Cold hands &amp; feet</span>
+            <span class="chip">Brain fog</span>
+            <span class="chip">Weight gain</span>
+            <span class="chip">Dry skin</span>
+            <span class="chip">Hair shedding</span>
+            <span class="chip">Constipation</span>
+            <span class="chip">Low mood</span>
+        </div>
+
+        <h2>What to ask your doctor</h2>
+        <p>If your TSH is "normal" but you have symptoms, ask directly: <b>"Can we test my Free T4, Free T3, and thyroid antibodies (TPO and thyroglobulin)?"</b> Many doctors will happily do it once you ask. Some will resist, claiming it's unnecessary — but it's standard in functional medicine and thyroid-specific care.</p>
+        <p>Once you have those numbers:</p>
+        <ul class="clean">
+            <li>Look for Free T3 in the <b>upper half</b> of the range (not just "in range").
+            <li>Look for Free T4 similarly — upper half usually feels better than lower half.
+            <li>Negative TPO antibodies is good; positive means autoimmune disease is present.
+        </ul>
+
+        <h2>The conversion problem (T4 to T3)</h2>
+        <p>Your thyroid makes mostly T4, which is inactive. Your body converts it to T3, the active hormone. If you're low in selenium, zinc, iron, or iodine — or if you're under chronic stress — this conversion fails. You can supplement T4 all day and still feel hypothyroid because your Free T3 stays low. This is why the full panel matters.</p>
+
+        <div class="cta-box">
+            <h3>Want your whole panel explained like this?</h3>
+            <p>Upload your blood test and get every value in plain English — what's normal, what's not, and what to ask your doctor. Takes about 30 seconds.</p>
+            <a href="https://labread.health">Explain my results — free →</a>
+            <p class="sub">No signup required · your data is processed and not stored</p>
+        </div>
+
+        <div class="related">
+            <h2>Keep reading</h2>
+            <div class="related-grid">
+                <a href="/learn/ferritin">
+                    <span class="q">What does low ferritin mean?</span>
+                    <span class="a">Iron deficiency explained</span>
+                </a>
+                <a href="/learn/vitamin-d">
+                    <span class="q">Vitamin D deficiency explained</span>
+                    <span class="a">Why "normal" misses the problem</span>
+                </a>
+                <a href="/learn/crp">
+                    <span class="q">What does high CRP mean?</span>
+                    <span class="a">The quiet inflammation marker</span>
+                </a>
+                <a href="/learn/a1c">
+                    <span class="q">What is pre-diabetic A1c?</span>
+                    <span class="a">The window where changes matter most</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p>This guide is for general education only and is not medical advice, diagnosis, or treatment. Thyroid function and what constitutes "optimal" varies between people. Always discuss your results and symptoms with a qualified healthcare professional before making changes to medications or supplements.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="wrap">
+            <p>© 2026 <a href="https://labread.health">labread.health</a> · Understand your bloodwork in plain English</p>
+        </div>
+    </footer>
+</article>
+
+</body>
+</html>

@@ -3,848 +3,590 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>labread — For you &amp; your family</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FFC069'/%3E%3Cstop offset='1' stop-color='%23E8743B'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='36' y='24' width='13' height='62' rx='3.5' fill='url(%23g)'/%3E%3Crect x='36' y='73' width='40' height='13' rx='3.5' fill='url(%23g)'/%3E%3Ccircle cx='92' cy='79.5' r='7' fill='url(%23g)'/%3E%3C/svg%3E">
+<title>labread — the health OS your doctor never gave you</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0B0907; --bg-2:#100D0A; --surface:#171209; --surface-2:#1C160D;
-    --line:rgba(245,166,35,.12); --line-soft:rgba(245,166,35,.07);
-    --cream:#F4ECDF; --muted:#9E9384; --faint:#6F6557; --surface-3:#231B10; --faintest:#473F35; --ink-line:rgba(244,236,223,.08);
-    --amber:#F5A623; --amber-lite:#FFC069; --amber-deep:#E8743B;
-    --grad:linear-gradient(135deg,#FFC069 0%,#F5853F 60%,#E8743B 100%);
-    --green:#6FCF97; --warn:#E3A94A; --red:#E0706A;
-    --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--cream);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
-  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--amber);display:inline-flex;align-items:center;gap:14px}
-  .eyebrow::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--amber))}
-  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.05;letter-spacing:-.01em}
-  .ital{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;border-radius:999px;padding:14px 26px;cursor:pointer;border:none;transition:.2s;font-family:var(--sans)}
-  .btn-amber{background:var(--grad);color:#1a0f02;box-shadow:0 0 34px rgba(245,133,63,.34)}
-  .btn-amber:hover{box-shadow:0 0 50px rgba(245,133,63,.5);transform:translateY(-1px)}
-  .btn-ghost{border:1px solid var(--line);color:var(--cream);background:rgba(255,255,255,.01)}
-  .btn-ghost:hover{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.04)}
-  .btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-  /* TOPBAR + NAV */
-  .topbar{background:linear-gradient(90deg,rgba(232,116,59,.14),rgba(245,166,35,.06));border-bottom:1px solid var(--line-soft);text-align:center;font-size:13.5px;color:var(--cream);padding:9px 16px}
-  .topbar a{color:var(--amber-lite);font-weight:500}
-  .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(11,9,7,.72);border-bottom:1px solid var(--line-soft)}
-  .nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
-  .brand{display:flex;align-items:center;gap:13px}
-  .logo-mark{width:44px;height:44px;flex-shrink:0;filter:drop-shadow(0 0 13px rgba(245,133,63,.42))}
-  @keyframes lmpulse{0%,100%{opacity:.26;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
-  .lm-glow{transform-box:fill-box;transform-origin:center;animation:lmpulse 2.8s ease-in-out infinite}
-  .word{font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:-.01em}
-  .nav-links{display:flex;align-items:center;gap:30px}
-  .nav-links a{font-size:14.5px;color:var(--muted);transition:.15s}
-  .nav-links a:hover,.nav-links a.on{color:var(--cream)}
-  .nav-links a.on{position:relative}
-  .nav-links a.on::after{content:"";position:absolute;left:0;right:0;bottom:-24px;height:2px;background:var(--grad)}
-  .nav-cta{display:flex;align-items:center;gap:18px}
-  .nav-cta .signin{font-size:14.5px;color:var(--muted)}
-  .menu-btn{display:none;background:none;border:none;color:var(--cream);font-size:24px;cursor:pointer}
-  .nav-drawer{display:none;flex-direction:column;gap:2px;padding:10px 24px 18px;background:var(--bg-2);border-top:1px solid var(--line-soft)}
-  .nav-drawer a{color:var(--muted);font-size:16px;padding:12px 4px;border-bottom:1px solid var(--line-soft)}
-  .nav-drawer a.btn{border-bottom:none;margin-top:12px;text-align:center;color:#1a0f02;justify-content:center}
-  .nav.open .nav-drawer{display:flex}
-
-  /* HERO */
-  .hero{position:relative;padding:70px 0 40px;overflow:hidden}
-  .hero::before{content:"";position:absolute;top:-220px;left:8%;width:760px;height:620px;background:radial-gradient(ellipse at center,rgba(245,133,63,.22),transparent 64%);filter:blur(22px);pointer-events:none}
-  .hero::after{content:"";position:absolute;top:60px;right:-160px;width:560px;height:560px;background:radial-gradient(ellipse at center,rgba(111,207,151,.10),transparent 66%);filter:blur(26px);pointer-events:none}
-  .hero-grid{position:relative;display:grid;grid-template-columns:1.04fr .96fr;gap:40px;align-items:center}
-  .hero-badge{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 16px;font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:26px}
-  .hero-badge .av{display:flex;margin-right:2px}
-  .hero-badge .av i{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--bg);margin-left:-6px;background:var(--grad);display:block}
-  .hero-badge .av i:first-child{margin-left:0}
-  .hero h1{font-size:clamp(42px,5.6vw,72px)}
-  .hero-sub{max-width:500px;margin:24px 0 0;color:var(--muted);font-size:18.5px}
-  .hero-sub b{color:var(--cream);font-weight:600}
-  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
-  .hero-trust{margin-top:30px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--faint)}
-  .hero-trust span{display:inline-flex;align-items:center;gap:8px}
-  .hero-trust svg{width:15px;height:15px;stroke:var(--green);fill:none;stroke-width:2}
-
-  /* HERO MOCK CLUSTER */
-  .stage{position:relative;height:520px}
-  .glass{position:absolute;background:linear-gradient(180deg,rgba(28,22,13,.94),rgba(17,14,10,.96));border:1px solid var(--line);border-radius:18px;box-shadow:0 30px 70px rgba(0,0,0,.55);backdrop-filter:blur(6px)}
-  .g-main{top:60px;left:34px;right:8px;padding:20px 20px 18px;z-index:2}
-  .g-head{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
-  .g-ok{color:var(--green);display:inline-flex;align-items:center;gap:7px}
-  .g-ok .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
-  .g-marker{display:flex;align-items:center;gap:11px;margin-bottom:6px}
-  .g-ic{width:34px;height:34px;border-radius:10px;background:rgba(245,133,63,.12);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--serif);color:var(--amber-lite);font-size:15px;font-weight:600}
-  .g-mname{font-size:15px;font-weight:600}
-  .g-mval{font-family:var(--mono);font-size:12px;color:var(--muted)}
-  .g-mval b{color:var(--green)}
-  /* multi-zone range bar */
-  .range{margin:16px 0 6px;position:relative}
-  .range-track{display:flex;gap:3px;height:9px}
-  .range-track i{flex:1;border-radius:3px;opacity:.9}
-  .range-track i.r{background:var(--red)}
-  .range-track i.w{background:var(--warn)}
-  .range-track i.g{background:var(--green);flex:2.1}
-  .range-mark{position:absolute;top:-5px;width:3px;height:19px;border-radius:2px;background:var(--cream);box-shadow:0 0 0 3px rgba(11,9,7,.85),0 0 14px rgba(244,236,223,.7);left:0;transition:left 1.1s cubic-bezier(.22,1,.36,1)}
-  .range-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-top:8px}
-  .g-insight{margin-top:14px;border:1px solid rgba(245,133,63,.2);background:rgba(245,133,63,.06);border-radius:11px;padding:11px 13px;font-size:13px;color:var(--cream);line-height:1.5}
-  .g-insight b{color:var(--amber-lite)}
-  /* panel rings card */
-  .g-rings{top:-6px;right:18px;padding:14px 16px;z-index:3;display:flex;gap:16px}
-  .ring{display:flex;flex-direction:column;align-items:center;gap:6px}
-  .ring svg{width:52px;height:52px;transform:rotate(-90deg)}
-  .ring .rc-bg{stroke:rgba(245,166,35,.14)}
-  .ring .rc-fg{stroke:url(#ringGrad);stroke-linecap:round;transition:stroke-dashoffset 1.3s cubic-bezier(.22,1,.36,1)}
-  .ring .pct{font-family:var(--mono);font-size:12px;fill:var(--cream);transform:rotate(90deg);transform-origin:center}
-  .ring small{font-family:var(--mono);font-size:9.5px;color:var(--muted);letter-spacing:.04em}
-  /* anna chip */
-  .g-anna{bottom:-2px;left:0;padding:12px 15px;z-index:4;display:flex;align-items:center;gap:11px;max-width:260px}
-  .anna-orb{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#1c160d,#0b0907);border:1px solid var(--line);display:grid;place-items:center;flex-shrink:0;position:relative}
-  .anna-orb::before{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 16px rgba(111,207,151,.5);animation:lmpulse 2.6s ease-in-out infinite}
-  .anna-orb i{width:4px;height:4px;border-radius:50%;background:var(--green);box-shadow:8px 0 0 var(--amber-lite),-8px 0 0 var(--amber),0 8px 0 var(--green),0 -8px 0 var(--amber-lite);animation:spin 4s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .g-anna .at{font-size:12.5px;color:var(--muted);line-height:1.4}
-  .g-anna .at b{color:var(--cream);font-weight:600}
-  .wires{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:visible}
-  .wires path{stroke:rgba(245,166,35,.32);stroke-width:1.4;fill:none;stroke-dasharray:4 5}
-
-  /* SECTION SHELL */
-  .sec{position:relative;padding:30px 0}
-  .sec-head{text-align:center;max-width:680px;margin:0 auto 8px}
-  .sec-head h2{font-size:clamp(32px,4.4vw,52px);margin-top:16px}
-  .sec-head p{color:var(--muted);font-size:17px;margin-top:16px}
-
-  /* JOURNEY TIMELINE */
-  .journey{position:relative;padding:50px 0 20px}
-  .spine{position:absolute;left:50%;top:0;bottom:90px;width:2px;background:linear-gradient(180deg,transparent,var(--line),var(--line),transparent);transform:translateX(-50%)}
-  .step{position:relative;display:grid;grid-template-columns:1fr 92px 1fr;align-items:center;gap:0;margin:0 0 60px}
-  .step-node{grid-column:2;justify-self:center;width:54px;height:54px;border-radius:50%;background:var(--bg-2);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--serif);font-size:20px;color:var(--amber-lite);position:relative;z-index:2;box-shadow:0 0 0 8px var(--bg),0 0 30px rgba(245,133,63,.25)}
-  .step-copy{padding:6px 0}
-  .step-copy .k{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
-  .step-copy h3{font-size:clamp(26px,3.2vw,38px)}
-  .step-copy p{color:var(--muted);font-size:16px;margin-top:14px;max-width:420px}
-  .step-list{margin-top:18px;display:flex;flex-direction:column;gap:11px}
-  .step-list li{list-style:none;display:flex;align-items:center;gap:11px;font-size:15px;color:var(--cream)}
-  .step-list svg{width:19px;height:19px;flex-shrink:0;stroke:var(--green);fill:none;stroke-width:2}
-  .step.rev .step-copy{order:3;text-align:left}
-  .step.rev .step-mock{order:1}
-  .step-copy.left{text-align:right}
-  .step-copy.left p,.step-copy.left .step-list{margin-left:auto}
-  .step-copy.left .step-list li{justify-content:flex-end;flex-direction:row-reverse}
-  .step-mock{padding:6px 0}
-
-  /* reveal */
-  .rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1)}
-  .rv.in{opacity:1;transform:none}
-
-  /* mini cards used in steps */
-  .panel{background:linear-gradient(180deg,rgba(28,22,13,.92),rgba(17,14,10,.95));border:1px solid var(--line);border-radius:18px;box-shadow:0 28px 64px rgba(0,0,0,.5)}
-  .stack{display:flex;flex-direction:column;gap:14px;position:relative}
-  .float-l{margin-left:0}.float-r{margin-left:auto}
-
-  /* chat mock */
-  .chat{padding:18px}
-  .chat .row{display:flex;gap:10px;margin-bottom:14px;align-items:flex-end}
-  .chat .row.me{flex-direction:row-reverse}
-  .bub{max-width:78%;padding:11px 14px;border-radius:14px;font-size:13.5px;line-height:1.5}
-  .bub.me{background:var(--grad);color:#1a0f02;border-bottom-right-radius:5px;font-weight:500}
-  .bub.ai{background:rgba(255,255,255,.035);border:1px solid var(--line-soft);border-bottom-left-radius:5px;color:var(--cream)}
-  .bub.ai b{color:var(--amber-lite)}
-  .bub.ai ul{margin:8px 0 2px;padding-left:16px;color:var(--muted)}
-  .bub.ai li{margin:3px 0}
-  .chat .ts{font-family:var(--mono);font-size:9.5px;color:var(--faint);text-align:center;margin-top:4px}
-
-  /* recommendations cards */
-  .goal{padding:15px 17px;display:flex;gap:12px;align-items:flex-start}
-  .goal .gi{width:34px;height:34px;border-radius:10px;background:rgba(111,207,151,.12);display:grid;place-items:center;flex-shrink:0}
-  .goal .gi svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:2}
-  .goal h4{font-family:var(--sans);font-size:14px;font-weight:600}
-  .goal .tag{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.1em;text-transform:uppercase}
-  .goal p{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.5}
-  .macros{padding:15px 17px}
-  .macros .mh{display:flex;align-items:center;gap:9px;margin-bottom:14px}
-  .macros .mh .gi{width:30px;height:30px;border-radius:9px;background:rgba(245,133,63,.12);display:grid;place-items:center}
-  .macros .mh .gi svg{width:16px;height:16px;stroke:var(--amber);fill:none;stroke-width:2}
-  .macros .mh h4{font-size:14px;font-weight:600;font-family:var(--sans)}
-  .macro-row{display:flex;justify-content:space-between;gap:8px}
-  .macro{flex:1;text-align:center}
-  .macro svg{width:46px;height:46px;transform:rotate(-90deg)}
-  .macro .mv{font-family:var(--mono);font-size:12px;margin-top:5px;color:var(--cream)}
-  .macro .ml{font-size:10px;color:var(--faint)}
-  .kcal{text-align:center;flex:1;display:flex;flex-direction:column;justify-content:center;border-left:1px solid var(--line-soft)}
-  .kcal b{font-family:var(--serif);font-size:22px;color:var(--amber-lite)}
-  .kcal small{font-size:10px;color:var(--faint)}
-
-  /* trend chart */
-  .trend{padding:16px 18px}
-  .trend .th{display:flex;align-items:center;gap:9px;margin-bottom:8px}
-  .trend .th .gi{width:26px;height:26px;border-radius:8px;background:var(--grad);display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:#1a0f02;font-weight:600}
-  .trend .th h4{font-size:14px;font-weight:600;font-family:var(--sans)}
-  .trend .th .unit{font-family:var(--mono);font-size:10px;color:var(--faint);margin-left:auto}
-  .trend svg{width:100%;height:140px;display:block}
-  .trend .xax{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-top:6px;padding:0 2px}
-  .badge-good{display:inline-flex;align-items:center;gap:9px;background:rgba(111,207,151,.1);border:1px solid rgba(111,207,151,.3);border-radius:12px;padding:10px 14px;font-size:13px}
-  .badge-good svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:2}
-  .badge-good b{color:var(--green)}
-  .reminder{padding:15px 17px}
-  .reminder .rh{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;margin-bottom:4px}
-  .reminder .rh svg{width:17px;height:17px;stroke:var(--amber);fill:none;stroke-width:2}
-  .reminder .when{font-family:var(--mono);font-size:11px;color:var(--faint);margin-bottom:11px}
-  .reminder ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
-  .reminder li{font-family:var(--mono);font-size:11px;color:var(--muted);background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:7px;padding:4px 8px}
-  .reminder .btn{padding:9px 16px;font-size:13px}
-
-  /* FAMILY BAND */
-  .family{position:relative;margin:30px 0;padding:64px 0;overflow:hidden;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);background:linear-gradient(180deg,rgba(232,116,59,.08),rgba(245,166,35,.03))}
-  .family::before{content:"";position:absolute;bottom:-200px;left:50%;transform:translateX(-50%);width:900px;height:480px;background:radial-gradient(ellipse at center,rgba(245,133,63,.18),transparent 64%);filter:blur(20px)}
-  .family-in{position:relative;text-align:center;max-width:720px;margin:0 auto}
-  .fam-avatars{display:flex;justify-content:center;margin-bottom:26px}
-  .fam-avatars i{width:48px;height:48px;border-radius:50%;border:2px solid var(--bg);margin-left:-12px;background:var(--grad);display:grid;place-items:center;font-family:var(--serif);color:#1a0f02;font-weight:600;font-size:18px;box-shadow:0 8px 22px rgba(0,0,0,.4)}
-  .fam-avatars i:first-child{margin-left:0}
-  .family h2{font-size:clamp(34px,5vw,58px)}
-  .family p{color:var(--muted);font-size:17px;margin:18px auto 0;max-width:520px}
-  .family .hero-cta{justify-content:center}
-
-  /* PRICING */
-  .pricing{padding:50px 0 20px}
-  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:46px;align-items:start}
-  .pcard{position:relative;background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:20px;padding:30px 26px;transition:.25s}
-  .pcard:hover{transform:translateY(-4px);border-color:rgba(245,166,35,.34)}
-  .pcard.pop{border-color:transparent;background:linear-gradient(var(--bg-2),var(--bg-2)) padding-box,var(--grad) border-box;border:1.5px solid transparent;box-shadow:0 30px 70px rgba(232,116,59,.16)}
-  .pop-tag{position:absolute;top:-13px;right:24px;background:var(--grad);color:#1a0f02;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;padding:6px 13px;border-radius:999px}
-  .pcard .pname{font-family:var(--serif);font-size:23px}
-  .pcard .price{display:flex;align-items:flex-end;gap:6px;margin:14px 0 4px}
-  .pcard .price .from{font-size:13px;color:var(--faint);margin-bottom:6px}
-  .pcard .price .amt{font-family:var(--serif);font-size:48px;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .pcard .price .per{font-size:13px;color:var(--muted);margin-bottom:7px}
-  .pcard .pbtn{display:block;text-align:center;margin:20px 0 22px;padding:13px;border-radius:11px;font-weight:600;font-size:14.5px;cursor:pointer;transition:.2s}
-  .pcard .pbtn.sel{border:1px solid var(--line);color:var(--cream);background:rgba(255,255,255,.02)}
-  .pcard .pbtn.sel:hover{border-color:rgba(245,166,35,.4)}
-  .pcard .pbtn.go{background:var(--grad);color:#1a0f02;box-shadow:0 0 30px rgba(245,133,63,.3)}
-  .pcard ul{list-style:none;display:flex;flex-direction:column;gap:13px}
-  .pcard li{display:flex;align-items:flex-start;gap:11px;font-size:14px;color:var(--cream)}
-  .pcard li svg{width:18px;height:18px;flex-shrink:0;margin-top:2px;stroke:var(--green);fill:none;stroke-width:2}
-  .price-foot{text-align:center;margin-top:30px;font-size:14px;color:var(--muted)}
-  .price-foot b{color:var(--amber-lite)}
-
-  /* FAQ */
-  .faq{max-width:760px;margin:0 auto;padding:20px 0}
-  .qa{border-top:1px solid var(--line-soft);padding:22px 0}
-  .qa:last-child{border-bottom:1px solid var(--line-soft)}
-  .qa h4{font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:9px}
-  .qa p{color:var(--muted);font-size:15px}
-
-  /* FINAL CTA */
-  .final{position:relative;text-align:center;padding:80px 0;overflow:hidden}
-  .final::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:760px;height:420px;background:radial-gradient(ellipse at center,rgba(245,133,63,.2),transparent 64%);filter:blur(20px)}
-  .final h2{position:relative;font-size:clamp(36px,5.4vw,62px)}
-  .final p{position:relative;color:var(--muted);font-size:18px;margin:20px auto 0;max-width:480px}
-  .final .hero-cta{position:relative;justify-content:center;margin-top:34px}
-
-  /* FOOTER */
-  footer{border-top:1px solid var(--line-soft);padding:46px 0 36px;background:var(--bg-2)}
-  .foot-in{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:center}
-  .foot-brand{display:flex;align-items:center;gap:12px}
-  .foot-brand .logo-mark{width:40px;height:40px}
-  .foot-brand .word{font-size:23px}
-  .foot-links{display:flex;gap:26px;flex-wrap:wrap}
-  .foot-links a{font-size:14px;color:var(--muted);transition:.15s}
-  .foot-links a:hover{color:var(--cream)}
-  .foot-copy{margin-top:24px;font-family:var(--mono);font-size:11.5px;color:var(--faint)}
-
-  @media(max-width:920px){
-    .nav-links,.nav-cta{display:none}
-    .menu-btn{display:block}
-    .hero-grid{grid-template-columns:1fr;gap:10px}
-    .stage{height:480px;margin-top:10px}
-    .g-main{left:0;right:0}
-    .spine{display:none}
-    .step{grid-template-columns:1fr;gap:22px}
-    .step-node{grid-column:1;justify-self:start;margin-bottom:-6px}
-    .step .step-copy,.step.rev .step-copy{order:1;text-align:left}
-    .step .step-mock,.step.rev .step-mock{order:2}
-    .step-copy.left{text-align:left}
-    .step-copy.left p,.step-copy.left .step-list{margin-left:0}
-    .step-copy.left .step-list li{justify-content:flex-start;flex-direction:row}
-    .price-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}
-    .pcard.pop{order:-1}
-  }
-/* ===== HERO ===== */
-  .hero{position:relative;overflow:hidden;padding:54px 0 0}
-  .hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
-  .hero-bg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(245,166,35,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,.04) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(ellipse 80% 70% at 65% 38%,#000,transparent 78%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 65% 38%,#000,transparent 78%)}
-  .hero-bg .mesh{position:absolute;top:-160px;right:-80px;width:840px;height:760px;background:radial-gradient(ellipse at center,rgba(245,133,63,.2),transparent 60%);filter:blur(30px)}
-  .hero-bg .mesh2{position:absolute;bottom:-160px;left:-120px;width:560px;height:520px;background:radial-gradient(ellipse at center,rgba(111,207,151,.08),transparent 64%);filter:blur(26px)}
-  .hero-bg .scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px);mix-blend-mode:overlay;opacity:.5}
-  .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1.06fr;gap:30px;align-items:center;min-height:600px}
-
-  .h-badges{display:flex;align-items:center;gap:10px;margin-bottom:26px}
-  .h-pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
-  .h-pill .d{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 9px var(--green)}
-  .h-pill.ghost{color:var(--faint);background:transparent}
-  .hero h1{font-size:clamp(46px,6.6vw,88px);font-weight:500}
-  .hero h1 .ital{font-weight:600}
-  .hero-sub{max-width:480px;margin:26px 0 0;color:var(--muted);font-size:18.5px}
-  .hero-sub b{color:var(--cream);font-weight:600}
-  .hero-cta{display:flex;gap:13px;margin-top:34px;flex-wrap:wrap;align-items:center}
-  .hero-metrics{display:flex;gap:30px;margin-top:38px;flex-wrap:wrap}
-  .hm b{font-family:var(--serif);font-size:30px;font-weight:600;line-height:1;display:block;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .hm span{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;margin-top:6px;display:block}
-
-  /* CONSOLE */
-  .console{position:relative;height:580px}
-  .console-rings{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
-  .console-rings::before,.console-rings::after{content:"";position:absolute;border:1px solid rgba(245,166,35,.06);border-radius:50%}
-  .console-rings::before{width:560px;height:560px}
-  .console-rings::after{width:720px;height:720px;border-color:rgba(245,166,35,.035)}
-  .gauge-stage{position:absolute;inset:0;display:grid;place-items:center;z-index:2}
-  .gauge{width:460px;height:460px;filter:drop-shadow(0 30px 70px rgba(0,0,0,.5))}
-  .ring-track{fill:none;stroke:rgba(245,166,35,.1);stroke-width:6}
-  .ring-val{fill:none;stroke-width:6;stroke-linecap:round;transform-box:fill-box;transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset 1.6s cubic-bezier(.16,1,.3,1)}
-  .gauge .tick{stroke:rgba(245,166,35,.22);stroke-width:1.4}
-  .sweep{transform-box:fill-box;transform-origin:260px 260px;animation:spin 7s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .bm-dot{transition:transform .3s}
-  .bm-dot .core{filter:drop-shadow(0 0 5px currentColor)}
-  .bm-pulse{transform-box:fill-box;transform-origin:center;animation:lmpulse 2.4s ease-in-out infinite}
-  .gauge-center .score{font-family:var(--serif);font-weight:600;fill:var(--cream)}
-  .gauge-center .lab{font-family:var(--mono);fill:var(--muted)}
-  @media(prefers-reduced-motion:reduce){.sweep{animation:none}.bm-pulse{animation:none}}
-
-  /* floating panels */
-  .gpanel{position:absolute;z-index:4;background:linear-gradient(180deg,rgba(28,22,13,.94),rgba(15,12,8,.96));border:1px solid var(--line);border-radius:15px;box-shadow:0 24px 56px rgba(0,0,0,.55);backdrop-filter:blur(8px);will-change:transform}
-  .gp-anna{top:18px;left:-18px;width:236px;padding:13px 15px}
-  .gp-anna .ah{display:flex;align-items:center;gap:9px;margin-bottom:9px}
-  .orb{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#1c160d,#0a0806);border:1px solid var(--line);display:grid;place-items:center;position:relative;flex-shrink:0}
-  .orb::before{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 14px rgba(111,207,151,.45);animation:lmpulse 2.6s ease-in-out infinite}
-  .orb i{width:3.5px;height:3.5px;border-radius:50%;background:var(--green);box-shadow:7px 0 0 var(--amber-lite),-7px 0 0 var(--amber),0 7px 0 var(--green),0 -7px 0 var(--amber-lite);animation:spin 4s linear infinite}
-  .gp-anna .an{font-size:11.5px;font-weight:600}
-  .gp-anna .ar{font-family:var(--mono);font-size:8.5px;color:var(--faint)}
-  .gp-anna p{font-size:12px;color:var(--muted);line-height:1.5}
-  .gp-anna p b{color:var(--amber-lite)}
-  .gp-trend{top:6px;right:-14px;width:212px;padding:13px 15px}
-  .gp-trend .th{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-  .gp-trend .tn{font-size:12px;font-weight:600}
-  .gp-trend .tv{font-family:var(--mono);font-size:11px;color:var(--green)}
-  .gp-trend svg{width:100%;height:46px;display:block}
-  .gp-range{bottom:30px;right:-6px;width:248px;padding:14px 16px}
-  .gp-range .rh{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
-  .gp-range .rh .ok{color:var(--green)}
-  .gp-range .rn{display:flex;align-items:center;gap:9px;margin-bottom:11px}
-  .gp-range .ric{width:28px;height:28px;border-radius:8px;background:rgba(245,133,63,.12);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--serif);font-size:12px;color:var(--amber-lite);font-weight:600}
-  .gp-range .rnm{font-size:12.5px;font-weight:600}
-  .gp-range .rvl{font-family:var(--mono);font-size:9.5px;color:var(--muted)}
-  .mini-track{display:flex;gap:2.5px;height:8px;border-radius:3px;overflow:hidden;position:relative}
-  .mini-track i{flex:1}.mini-track i.r{background:rgba(224,112,106,.5)}.mini-track i.w{background:rgba(227,169,74,.5)}.mini-track i.g{flex:2.1;background:rgba(111,207,151,.65)}
-  .mini-mark{position:absolute;top:-3px;width:3px;height:14px;border-radius:2px;background:var(--cream);box-shadow:0 0 0 2px rgba(10,8,6,.9),0 0 10px rgba(244,236,223,.7);left:0;transition:left 1.2s cubic-bezier(.16,1,.3,1)}
-  .gp-streak{bottom:64px;left:-26px;width:150px;padding:13px 15px;display:flex;align-items:center;gap:11px}
-  .gp-streak .sr{width:40px;height:40px;flex-shrink:0}
-  .gp-streak .sb{font-family:var(--serif);font-size:21px;font-weight:600;line-height:1}
-  .gp-streak .sl{font-family:var(--mono);font-size:8.5px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
-  .gwire{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:visible}
-  .gwire path{stroke:rgba(245,166,35,.22);stroke-width:1.2;fill:none;stroke-dasharray:3 5}
-
-  /* TICKER */
-  .ticker{position:relative;z-index:2;margin-top:34px;border-top:1px solid var(--ink-line);border-bottom:1px solid var(--ink-line);overflow:hidden;background:rgba(15,12,8,.4)}
-  .ticker-track{display:flex;gap:0;width:max-content;animation:marquee 34s linear infinite}
-  @keyframes marquee{to{transform:translateX(-50%)}}
-  .ticker:hover .ticker-track{animation-play-state:paused}
-  .tk-item{display:flex;align-items:center;gap:12px;padding:15px 26px;border-right:1px solid var(--ink-line);white-space:nowrap}
-  .tk-item .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-  .tk-item .dot.g{background:var(--green);box-shadow:0 0 8px var(--green)}.tk-item .dot.w{background:var(--warn)}.tk-item .dot.r{background:var(--red)}
-  .tk-item .nm{font-size:13px;color:var(--cream)}
-  .tk-item .vl{font-family:var(--mono);font-size:12px;color:var(--muted)}
-  .tk-item .st{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
-  .tk-item .st.g{color:var(--green)}.tk-item .st.w{color:var(--warn)}.tk-item .st.r{color:var(--red)}
-/* ---- console graft extras ---- */
-.btn-line{border:1px solid var(--line);color:var(--cream);background:rgba(255,255,255,.012)}
-.btn-line:hover{border-color:rgba(245,166,35,.45);background:rgba(245,166,35,.05)}
-.hero::before,.hero::after{content:none!important}
-@media(max-width:1040px){
-  .hero-grid{grid-template-columns:1fr;gap:20px}
-  .console{height:520px;margin:0 auto;max-width:520px}
-  .gp-anna{left:0}.gp-trend{right:0}.gp-streak{left:0}.gp-range{right:0}
-}
-@media(max-width:980px){.console{height:480px}}
-@media(max-width:680px){
-  .console{height:430px}.gauge{width:330px;height:330px}
-  .gp-anna,.gp-streak{display:none}.hero-metrics{gap:18px}
+:root{
+  --void:#080705;
+  --ember:#E8743B;
+  --ember-hot:#FF9147;
+  --ember-glow:#FFC069;
+  --ember-deep:#8A2C08;
+  --glass:rgba(255,255,255,.035);
+  --glass-line:rgba(255,176,102,.14);
+  --text:#EDE5D9;
+  --dim:rgba(237,229,217,.5);
+  --faint:rgba(237,229,217,.28);
+  --line:rgba(255,176,102,.07);
 }
 
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text);
+  font-family:'Inter',-apple-system,sans-serif;
+  font-size:17px;line-height:1.6;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+
+.glow-field{position:fixed;inset:0;pointer-events:none;z-index:0}
+.glow-field::before{
+  content:'';position:absolute;top:-15%;left:50%;transform:translateX(-50%);
+  width:1100px;height:800px;
+  background:radial-gradient(ellipse,rgba(255,122,24,.16) 0%,rgba(178,58,12,.06) 40%,transparent 68%);
+  animation:breathe 11s ease-in-out infinite;
+}
+.glow-field::after{
+  content:'';position:absolute;bottom:-10%;right:-10%;
+  width:800px;height:800px;
+  background:radial-gradient(circle,rgba(232,116,59,.08) 0%,transparent 62%);
+  animation:breathe 14s ease-in-out infinite reverse;
+}
+@keyframes breathe{0%,100%{opacity:.55}50%{opacity:1}}
+
+/* ── THE SPINE ── */
+.spine{
+  position:fixed;left:50%;top:0;bottom:0;width:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(to bottom,transparent,rgba(255,176,102,.10) 12%,rgba(255,176,102,.10) 88%,transparent);
+  z-index:1;pointer-events:none;
+}
+.spine-fill{
+  position:absolute;top:0;left:-1px;width:3px;height:0%;
+  background:linear-gradient(to bottom,var(--ember-glow),var(--ember),var(--ember-deep));
+  box-shadow:0 0 14px rgba(255,145,71,.7),0 0 40px rgba(232,116,59,.35);
+  border-radius:2px;
+}
+.spine-head{
+  position:absolute;left:-4px;top:0;width:9px;height:9px;border-radius:50%;
+  background:var(--ember-glow);
+  box-shadow:0 0 12px var(--ember-glow),0 0 36px rgba(255,145,71,.8);
+}
+
+/* ── DAY HUD ── */
+.day-hud{
+  position:fixed;right:40px;top:50%;transform:translateY(-50%);
+  z-index:50;text-align:right;pointer-events:none;mix-blend-mode:screen;
+}
+.day-hud-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
+.day-hud-num{font-family:'Fraunces',serif;font-size:76px;font-weight:200;line-height:.9;color:var(--ember);letter-spacing:-3px;text-shadow:0 0 30px rgba(232,116,59,.4)}
+.day-hud-total{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint);letter-spacing:2px;margin-top:4px}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:22px 44px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(8,7,5,.92),rgba(8,7,5,0))}
+.brand{font-family:'Fraunces',serif;font-size:23px;font-weight:300;color:var(--ember);text-decoration:none;letter-spacing:-.5px}
+.brand b{font-weight:400}
+.nav-cta{background:linear-gradient(135deg,var(--ember-glow),var(--ember));color:#160B04;border:none;padding:11px 24px;border-radius:100px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 0 24px rgba(232,116,59,.3);transition:box-shadow .25s,transform .2s}
+.nav-cta:hover{box-shadow:0 0 40px rgba(232,116,59,.55);transform:translateY(-1px)}
+
+.wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 44px}
+.act{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0;position:relative}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3.5px;text-transform:uppercase;color:var(--ember-glow);opacity:.75;margin-bottom:26px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:'';width:26px;height:1px;background:var(--ember);opacity:.6}
+.eyebrow.mid{justify-content:center}
+.eyebrow.mid::after{content:'';width:26px;height:1px;background:var(--ember);opacity:.6}
+
+h1{font-family:'Fraunces',serif;font-weight:200;font-size:clamp(42px,6.4vw,88px);line-height:1.03;letter-spacing:-2.5px}
+h1 em{font-style:italic;font-weight:300;color:var(--ember-glow)}
+h2{font-family:'Fraunces',serif;font-weight:200;font-size:clamp(30px,4.2vw,56px);line-height:1.12;letter-spacing:-1.5px}
+h2 em{font-style:italic;font-weight:300;color:var(--ember-glow)}
+h3{font-family:'Fraunces',serif;font-weight:300;font-size:23px;letter-spacing:-.4px}
+
+.lede{font-size:20px;color:var(--dim);line-height:1.7;max-width:560px}
+.lede b{color:var(--text);font-weight:500}
+
+/* ── HERO ── */
+.hero{text-align:center;align-items:center}
+.hero h1{max-width:900px;margin:0 auto 34px}
+.hero .lede{margin:0 auto 44px;max-width:600px}
+
+.wait{display:flex;gap:10px;max-width:460px;margin:0 auto}
+.wait input{flex:1;background:var(--glass);border:1px solid var(--glass-line);padding:17px 22px;border-radius:100px;color:var(--text);font-size:15px;font-family:'Inter',sans-serif;outline:none;backdrop-filter:blur(14px);transition:border-color .25s,box-shadow .25s}
+.wait input::placeholder{color:var(--faint)}
+.wait input:focus{border-color:var(--ember);box-shadow:0 0 0 3px rgba(232,116,59,.1)}
+.wait button{background:linear-gradient(135deg,var(--ember-glow),var(--ember));color:#160B04;border:none;padding:17px 30px;border-radius:100px;font-size:15px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 0 30px rgba(232,116,59,.35);transition:box-shadow .25s,transform .2s}
+.wait button:hover{box-shadow:0 0 50px rgba(232,116,59,.6);transform:translateY(-1px)}
+.wait-note{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--faint);text-transform:uppercase}
+
+.cue{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:var(--faint);text-transform:uppercase;text-align:center}
+.cue::after{content:'';display:block;width:1px;height:34px;margin:12px auto 0;background:linear-gradient(to bottom,var(--ember),transparent);animation:drip 2.2s ease-in-out infinite}
+@keyframes drip{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+
+/* ── SPLIT ── */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center}
+
+.t-before{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:16px 16px 0 0;padding:26px 30px}
+.t-arrow{height:44px;display:flex;align-items:center;justify-content:center;position:relative}
+.t-arrow::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:1px;background:linear-gradient(to bottom,rgba(255,176,102,.15),var(--ember),rgba(255,176,102,.15))}
+.t-arrow span{position:relative;background:var(--void);padding:0 10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--ember);text-transform:uppercase}
+.t-after{background:linear-gradient(135deg,rgba(255,176,102,.07),rgba(232,116,59,.03));border:1px solid var(--glass-line);border-radius:0 0 16px 16px;padding:26px 30px;backdrop-filter:blur(12px);box-shadow:0 0 50px rgba(232,116,59,.08)}
+.t-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.t-before .t-tag{color:var(--faint)}
+.t-after .t-tag{color:var(--ember-glow)}
+.t-before p{color:var(--faint);font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.7}
+.t-after p{font-size:16px;line-height:1.65}
+.t-after p b{color:var(--ember-glow);font-weight:500}
+
+/* ── 90 DAYS ── */
+.days-wrap{text-align:center;align-items:center}
+.days-wrap h2{max-width:760px;margin:0 auto 20px}
+.days-wrap>.lede{margin:0 auto 56px;text-align:center}
+
+.day-grid{display:grid;grid-template-columns:repeat(18,1fr);gap:8px;max-width:720px;margin:0 auto 48px;width:100%}
+.day-cell{aspect-ratio:1;border-radius:5px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04)}
+.day-cell.done{background:linear-gradient(135deg,var(--ember),var(--ember-deep));border-color:transparent;box-shadow:0 0 8px rgba(232,116,59,.45)}
+.day-cell.today{background:var(--ember-glow);border-color:var(--ember-glow);box-shadow:0 0 14px var(--ember-glow),0 0 30px rgba(255,192,105,.5);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.18);opacity:.85}}
+
+.streak-bar{display:inline-flex;align-items:center;gap:26px;background:var(--glass);border:1px solid var(--glass-line);padding:16px 30px;border-radius:100px;backdrop-filter:blur(14px)}
+.streak-item{text-align:left}
+.streak-val{font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:var(--ember-glow);line-height:1}
+.streak-lab{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--faint);text-transform:uppercase;margin-top:3px}
+.streak-div{width:1px;height:30px;background:var(--line)}
+
+.habits{max-width:440px;margin:56px auto 0;background:var(--glass);border:1px solid var(--glass-line);border-radius:18px;padding:26px 28px;backdrop-filter:blur(14px);text-align:left;width:100%}
+.habits-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.habits-hd span:first-child{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:var(--faint);text-transform:uppercase}
+.habits-hd span:last-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ember-glow)}
+.hb{display:flex;align-items:center;gap:14px;padding:11px 0}
+.hb-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--ember);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.hb-check.on{background:var(--ember);border-color:var(--ember);box-shadow:0 0 12px rgba(232,116,59,.5)}
+.hb-check.on::after{content:'✓';color:#160B04;font-size:11px;font-weight:700}
+.hb-name{font-size:15px;flex:1}
+.hb-check:not(.on)+.hb-name{color:var(--dim)}
+.hb-pts{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint)}
+
+/* ── ANNA ── */
+.anna-act{text-align:center;align-items:center}
+.orb{width:120px;height:120px;border-radius:50%;margin:0 auto 34px;background:radial-gradient(circle at 38% 32%,#FFE3B8,var(--ember-glow) 22%,var(--ember) 52%,var(--ember-deep) 82%);box-shadow:0 0 50px rgba(255,145,71,.55),0 0 110px rgba(232,116,59,.3),inset 0 0 34px rgba(255,227,184,.28);animation:orbPulse 4.5s ease-in-out infinite}
+@keyframes orbPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.anna-act h2{margin-bottom:18px;max-width:800px}
+.anna-act>.lede{margin:0 auto 60px;text-align:center;max-width:600px}
+
+.convo{max-width:640px;margin:0 auto;text-align:left;width:100%}
+.u-turn{text-align:right;margin-bottom:30px}
+.u-bub{display:inline-block;background:var(--glass);border:1px solid var(--glass-line);border-radius:22px 22px 5px 22px;padding:13px 22px;font-size:15px;color:var(--dim);backdrop-filter:blur(10px);max-width:80%}
+.a-turn{margin-bottom:40px;padding-left:4px}
+.a-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:var(--ember-glow);margin-bottom:12px}
+.a-text{font-family:'Fraunces',serif;font-size:26px;font-weight:200;line-height:1.5;letter-spacing:-.5px}
+.a-text em{font-style:italic;color:var(--ember-glow);font-weight:300}
+
+.inline-gauge{display:inline-flex;align-items:center;gap:14px;background:rgba(255,176,102,.05);border:1px solid var(--glass-line);border-radius:12px;padding:12px 18px;margin:14px 0;backdrop-filter:blur(10px)}
+.ig-num{font-family:'Fraunces',serif;font-size:30px;font-weight:300;color:var(--ember-glow);line-height:1}
+.ig-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:1px;line-height:1.5;margin-top:6px}
+.ig-track{width:110px;height:4px;background:rgba(255,255,255,.06);border-radius:2px;position:relative}
+.ig-fill{position:absolute;left:0;top:0;height:100%;width:52%;border-radius:2px;background:linear-gradient(90deg,var(--ember-deep),var(--ember-glow));box-shadow:0 0 8px rgba(255,192,105,.6)}
+
+.prompts{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:44px}
+.prompt{background:var(--glass);border:1px solid var(--glass-line);padding:10px 18px;border-radius:100px;font-size:13px;color:var(--dim);backdrop-filter:blur(10px);transition:all .25s}
+.prompt:hover{border-color:var(--ember);color:var(--text);box-shadow:0 0 20px rgba(232,116,59,.15)}
+
+/* ── CHALLENGES ── */
+.chal-hd{text-align:center;margin-bottom:60px;display:flex;flex-direction:column;align-items:center}
+.chal-hd h2{max-width:720px;margin:0 auto 18px}
+.chal-hd .lede{margin:0 auto;text-align:center}
+
+.chal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.chal{border-radius:18px;padding:32px 26px;position:relative;overflow:hidden;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(14px);transition:transform .35s,box-shadow .35s,border-color .35s}
+.chal:hover{transform:translateY(-6px);border-color:rgba(255,176,102,.3);box-shadow:0 16px 50px rgba(232,116,59,.14)}
+.chal.hot{background:linear-gradient(150deg,#FFB865,#B23A0C 55%,#5E1703);border-color:transparent;box-shadow:0 0 60px rgba(232,116,59,.35)}
+.chal-days{font-family:'Fraunces',serif;font-size:46px;font-weight:200;line-height:1;letter-spacing:-2px;margin-bottom:6px;color:var(--ember-glow)}
+.chal.hot .chal-days{color:#FFF3E2}
+.chal-unit{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--faint);margin-bottom:20px}
+.chal.hot .chal-unit{color:rgba(255,243,226,.75)}
+.chal h3{margin-bottom:10px;font-size:19px}
+.chal.hot h3{color:#FFF3E2}
+.chal p{font-size:13.5px;color:var(--dim);line-height:1.6;margin-bottom:20px}
+.chal.hot p{color:rgba(255,243,226,.85)}
+.chal-reward{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ember);padding-top:14px;border-top:1px solid var(--line)}
+.chal.hot .chal-reward{color:#FFF3E2;border-top-color:rgba(255,243,226,.22)}
+
+/* ── STORIES ── */
+.stories-hd{text-align:center;margin-bottom:56px;display:flex;flex-direction:column;align-items:center}
+.stories-hd h2{max-width:700px;margin:0 auto 18px}
+.stories-hd .lede{margin:0 auto;text-align:center}
+
+.stories{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.story{border-radius:20px;overflow:hidden;border:1px solid var(--glass-line);background:var(--glass);backdrop-filter:blur(14px);transition:transform .4s,box-shadow .4s}
+.story:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(232,116,59,.16)}
+.story-img{height:190px;padding:28px;display:flex;align-items:flex-end;position:relative;overflow:hidden}
+.story:nth-child(1) .story-img{background:linear-gradient(145deg,#C4501E,#5E1703)}
+.story:nth-child(2) .story-img{background:linear-gradient(145deg,#E8743B,#7A2408)}
+.story:nth-child(3) .story-img{background:linear-gradient(145deg,#FFB865,#8A2C08)}
+.story-img::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 75% 20%,rgba(255,227,184,.25),transparent 55%)}
+.story-hl{font-family:'Fraunces',serif;font-size:26px;font-weight:300;line-height:1.15;color:#FFF3E2;text-transform:uppercase;letter-spacing:-.5px;position:relative;z-index:1}
+.story-hl em{display:block;font-style:italic;text-transform:none;color:#FFE3B8;font-weight:300}
+.story-body{padding:22px 26px 26px}
+.story-who{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.story-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ember-glow),var(--ember-deep));flex-shrink:0}
+.story-name{font-size:14px;font-weight:500}
+.story-loc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:1px}
+.story-res{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ember-glow);letter-spacing:1px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between}
+.story-likes{color:var(--faint)}
+
+/* ── PROOF ── */
+.proof{text-align:center;align-items:center}
+.proof h2{max-width:800px;margin:0 auto 20px}
+.proof>.lede{margin:0 auto 56px;text-align:center}
+.aurora{max-width:760px;margin:0 auto;background:var(--glass);border:1px solid var(--glass-line);border-radius:20px;padding:32px;backdrop-filter:blur(14px);width:100%}
+.aurora-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.aurora-hd>span{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:var(--faint);text-transform:uppercase}
+.aurora-legend{display:flex;gap:16px}
+.leg{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
+.leg i{width:8px;height:8px;border-radius:2px;display:block}
+.aurora-axis{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:1px;margin-top:10px}
+
+/* ── FINAL ── */
+.final{text-align:center;align-items:center}
+.final h2{max-width:800px;margin:0 auto 22px;font-size:clamp(34px,5vw,64px)}
+.final .lede{margin:0 auto 44px;text-align:center}
+.final .wait-note{text-align:center}
+
+footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:44px;max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.f-links{display:flex;gap:26px}
+.f-links a{color:var(--dim);text-decoration:none;font-size:13px;transition:color .2s}
+.f-links a:hover{color:var(--text)}
+.f-note{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:1px}
+
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+@media (max-width:900px){
+  .day-hud,.spine{display:none}
+  .wrap{padding:0 24px}
+  .split{grid-template-columns:1fr;gap:48px}
+  .chal-grid{grid-template-columns:repeat(2,1fr)}
+  .stories{grid-template-columns:1fr}
+  .day-grid{grid-template-columns:repeat(10,1fr)}
+  .wait{flex-direction:column}
+  .nav{padding:16px 24px}
+  .act{min-height:auto;padding:90px 0}
+  footer{flex-direction:column;text-align:center}
+  .a-text{font-size:22px}
+}
+@media (max-width:560px){
+  .chal-grid{grid-template-columns:1fr}
+  .streak-bar{flex-wrap:wrap;border-radius:20px;gap:18px;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .rv{opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <linearGradient id="lmAmber" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC069"/><stop offset=".55" stop-color="#F5853F"/><stop offset="1" stop-color="#E8743B"/></linearGradient>
-  <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC069"/><stop offset="1" stop-color="#E8743B"/></linearGradient>
-  <linearGradient id="ringG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC069"/><stop offset="1" stop-color="#E8743B"/></linearGradient>
-  <linearGradient id="tgrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#E0706A"/><stop offset=".5" stop-color="#F5A623"/><stop offset="1" stop-color="#6FCF97"/></linearGradient>
-  <linearGradient id="sweepG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F5A623" stop-opacity="0"/><stop offset="1" stop-color="#F5A623" stop-opacity=".4"/></linearGradient>
-  <symbol id="lm" viewBox="0 0 120 120">
-    <rect x="36" y="24" width="13" height="62" rx="3.5" fill="url(#lmAmber)"/>
-    <rect x="36" y="73" width="40" height="13" rx="3.5" fill="url(#lmAmber)"/>
-    <line x1="76" y1="79.5" x2="108" y2="79.5" stroke="url(#lmAmber)" stroke-width="2.4" stroke-linecap="round" opacity=".38"/>
-    <g stroke="url(#lmAmber)" stroke-width="2" stroke-linecap="round" opacity=".4"><line x1="84" y1="74.5" x2="84" y2="84.5"/><line x1="100" y1="74.5" x2="100" y2="84.5"/></g>
-    <circle class="lm-glow" cx="92" cy="79.5" r="11" fill="url(#lmAmber)" opacity=".3"/>
-    <circle cx="92" cy="79.5" r="7" fill="url(#lmAmber)"/>
-    <circle cx="92" cy="79.5" r="2.8" fill="#160d04"/>
-  </symbol>
-</defs></svg>
 
-<div class="topbar">One upload, every marker explained — <b>in plain words, in seconds</b> &nbsp;<a href="#pricing">See plans →</a></div>
+<div class="glow-field"></div>
+<div class="spine"><div class="spine-fill" id="spineFill"></div><div class="spine-head" id="spineHead"></div></div>
 
-<nav class="nav"><div class="wrap nav-in">
-  <a class="brand" href="/"><svg class="logo-mark"><use href="#lm"/></svg><span class="word">labread</span></a>
-  <div class="nav-links">
-    <a href="/for-you" class="on">For you</a>
-    <a href="/for-doctors">For doctors</a>
-    <a href="/for-labs">For clinics</a>
-    <a href="#learn">Learn</a>
-  </div>
-  <div class="nav-cta">
-    <a class="signin" href="/get-started">Sign in</a>
-    <a class="btn btn-amber" href="/get-started">Start free</a>
-  </div>
-  <button class="menu-btn" aria-label="Menu">☰</button>
+<div class="day-hud">
+  <div class="day-hud-label">day</div>
+  <div class="day-hud-num" id="dayNum">01</div>
+  <div class="day-hud-total">of 90</div>
 </div>
-  <div class="nav-drawer">
-    <a href="/for-you">For you</a>
-    <a href="/for-doctors">For doctors</a>
-    <a href="/for-labs">For clinics</a>
-    <a href="#learn">Learn</a>
-    <a href="/get-started">Sign in</a>
-    <a class="btn btn-amber" href="/get-started">Start free</a>
-  </div>
+
+<nav class="nav">
+  <a href="/" class="brand">lab<b>read</b></a>
+  <a href="#join" class="nav-cta">Join the waitlist</a>
 </nav>
 
-<!-- HERO -->
-<header class="hero">
-  <div class="hero-bg"><div class="grid"></div><div class="mesh"></div><div class="mesh2"></div><div class="scan"></div></div>
-  <div class="wrap">
-    <div class="hero-grid">
-      <div class="hero-copy">
-        <div class="h-badges">
-          <span class="h-pill"><span class="d"></span>Live health console</span>
-          <span class="h-pill ghost">AI-read · 50+ markers</span>
-        </div>
-        <h1>Your blood,<br>fully <span class="ital">read.</span></h1>
-        <p class="hero-sub">labread turns every lab result into a living picture of your health — <b>read, explained, and tracked</b> the moment you upload it.</p>
-        <div class="hero-cta">
-          <a class="btn btn-amber" href="/get-started">Read my test <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          <a class="btn btn-line" href="#journey">See how it works</a>
-        </div>
-        <div class="hero-metrics">
-          <div class="hm"><b data-count="82" data-suf="%">0%</b><span>Markers in range</span></div>
-          <div class="hm"><b data-count="50" data-suf="+">0</b><span>Markers read</span></div>
-          <div class="hm"><b data-count="14" data-suf="d">0</b><span>Streak tracked</span></div>
-        </div>
+<div class="wrap">
+
+<!-- ACT 0 -->
+<section class="act hero">
+  <div class="eyebrow mid">the health os your doctor never gave you</div>
+  <h1>Your body has been talking.<br>Nobody was <em>translating.</em></h1>
+  <p class="lede">
+    It starts with your blood test — every number explained in your language.
+    But that's <b>day one.</b> What comes after is ninety days of actually
+    doing something about it.
+  </p>
+  <div class="wait" id="join">
+    <input type="email" placeholder="your@email.com" aria-label="Email">
+    <button>Join the waitlist →</button>
+  </div>
+  <p class="wait-note">launching soon · morocco first</p>
+  <div class="cue">scroll</div>
+</section>
+
+<!-- ACT 1 -->
+<section class="act rv">
+  <div class="split">
+    <div>
+      <div class="eyebrow">day 01 · the translation</div>
+      <h2>The number was always <em>there.</em> The meaning wasn't.</h2>
+      <p class="lede" style="margin-top:26px">
+        Your lab said "within normal range." labread reads the same value against
+        real clinical ranges — adjusted for your age and sex — and tells you where
+        you <b>actually</b> stand. Math first. Then words you understand.
+      </p>
+    </div>
+    <div>
+      <div class="t-before">
+        <div class="t-tag">your lab report</div>
+        <p>FERRITIN &nbsp; 18 ng/mL &nbsp; [ 15 – 300 ] &nbsp; NORMAL</p>
       </div>
-
-      <!-- CONSOLE -->
-      <div class="console" id="console">
-        <div class="console-rings"></div>
-        <svg class="gwire" viewBox="0 0 560 580" preserveAspectRatio="none">
-          <path d="M120 90 C 180 170, 230 200, 280 250"/>
-          <path d="M470 80 C 410 150, 360 200, 300 250"/>
-          <path d="M120 470 C 200 420, 250 360, 290 300"/>
-          <path d="M470 460 C 400 410, 350 350, 300 300"/>
-        </svg>
-
-        <div class="gauge-stage">
-          <svg class="gauge" viewBox="0 0 520 520">
-            <!-- tick ring -->
-            <g class="ticks">
-              <!-- generated ticks -->
-            </g>
-            <!-- tracks + value rings -->
-            <circle class="ring-track" cx="260" cy="260" r="230"/>
-            <circle class="ring-val" cx="260" cy="260" r="230" stroke="url(#ringG)" data-pct="82" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" style="opacity:.95"/>
-            <circle class="ring-track" cx="260" cy="260" r="196"/>
-            <circle class="ring-val" cx="260" cy="260" r="196" stroke="var(--green)" data-pct="76" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" style="opacity:.7"/>
-            <circle class="ring-track" cx="260" cy="260" r="162"/>
-            <circle class="ring-val" cx="260" cy="260" r="162" stroke="var(--warn)" data-pct="64" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" style="opacity:.65"/>
-
-            <!-- sweep -->
-            <g class="sweep"><path d="M260 260 L260 30 A230 230 0 0 1 420 110 Z" fill="url(#sweepG)" opacity=".5"/></g>
-
-            <!-- biomarker dots -->
-            <g class="bm-dot" style="color:#6FCF97"><circle class="bm-pulse" cx="363" cy="82" r="12" fill="#6FCF97" opacity=".18"/><circle class="core" cx="363" cy="82" r="6" fill="#6FCF97"/></g>
-            <g class="bm-dot" style="color:#6FCF97"><circle class="bm-pulse" cx="103" cy="128" r="12" fill="#6FCF97" opacity=".18"/><circle class="core" cx="103" cy="128" r="6" fill="#6FCF97"/></g>
-            <g class="bm-dot" style="color:#E3A94A"><circle class="bm-pulse" cx="452" cy="330" r="12" fill="#E3A94A" opacity=".18"/><circle class="core" cx="452" cy="330" r="6" fill="#E3A94A"/></g>
-            <g class="bm-dot" style="color:#E0706A"><circle class="bm-pulse" cx="92" cy="362" r="12" fill="#E0706A" opacity=".18"/><circle class="core" cx="92" cy="362" r="6" fill="#E0706A"/></g>
-            <g class="bm-dot" style="color:#6FCF97"><circle class="core" cx="409" cy="190" r="5" fill="#6FCF97"/></g>
-            <g class="bm-dot" style="color:#6FCF97"><circle class="core" cx="316" cy="415" r="5" fill="#6FCF97"/></g>
-            <g class="bm-dot" style="color:#E3A94A"><circle class="core" cx="118" cy="240" r="5" fill="#E3A94A"/></g>
-            <g class="bm-dot" style="color:#6FCF97"><circle class="core" cx="345" cy="345" r="5" fill="#6FCF97"/></g>
-
-            <!-- center -->
-            <g class="gauge-center" text-anchor="middle">
-              <circle cx="260" cy="260" r="92" fill="#0E0B08" stroke="rgba(245,166,35,.16)"/>
-              <circle cx="260" cy="260" r="92" fill="none" stroke="url(#ringG)" stroke-width="1.5" opacity=".4"/>
-              <text class="score" x="260" y="256" font-size="58">82<tspan font-size="26" dy="-22">%</tspan></text>
-              <text class="lab" x="260" y="290" font-size="12" letter-spacing="2">IN RANGE</text>
-              <text class="lab" x="260" y="308" font-size="9" letter-spacing="3" fill="#6F6557">12 OF 14 OPTIMAL</text>
-            </g>
-          </svg>
-        </div>
-
-        <!-- floating panels -->
-        <div class="gpanel gp-anna" data-float="1.3">
-          <div class="ah"><div class="orb"><i></i></div><div><div class="an">Anna</div><div class="ar">your coach · online</div></div></div>
-          <p>Your <b>iron is climbing</b> nicely — up 13 points. Keep the plan going 🙌</p>
-        </div>
-        <div class="gpanel gp-trend" data-float="1">
-          <div class="th"><span class="tn">Ferritin</span><span class="tv">▲ 31 ng/mL</span></div>
-          <svg viewBox="0 0 180 46" preserveAspectRatio="none"><rect x="0" y="8" width="180" height="26" fill="rgba(111,207,151,.1)"/><polyline points="8,40 55,37 105,20 175,12" fill="none" stroke="url(#tgrad)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="105" cy="20" r="4" fill="#0E0B08" stroke="#6FCF97" stroke-width="2.4"/></svg>
-        </div>
-        <div class="gpanel gp-range" data-float="1.5">
-          <div class="rh"><span>Ferritin</span><span class="ok">● optimal</span></div>
-          <div class="rn"><div class="ric">Fe</div><div><div class="rnm">31 ng/mL</div><div class="rvl">up from 18 · 8 weeks</div></div></div>
-          <div class="mini-track"><i class="r"></i><i class="w"></i><i class="g"></i><i class="w"></i><i class="r"></i><div class="mini-mark" data-left="46%"></div></div>
-        </div>
-        <div class="gpanel gp-streak" data-float="1.7">
-          <svg class="sr" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(245,166,35,.14)" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="url(#ringG)" stroke-width="4" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="34" transform="rotate(-90 22 22)"/></svg>
-          <div><div class="sb">14</div><div class="sl">day streak</div></div>
-        </div>
+      <div class="t-arrow"><span>labread</span></div>
+      <div class="t-after">
+        <div class="t-tag">what it means for you</div>
+        <p><b>Your iron stores are running low.</b> Technically "normal" — but you're in the bottom 15%. This is the quiet cause of the fatigue, the brain fog, and always feeling cold. Optimal starts at 30.</p>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- TICKER -->
-  <div class="ticker"><div class="ticker-track" id="ticker">
-    <div class="tk-item"><span class="dot g"></span><span class="nm">Ferritin</span><span class="vl">31 ng/mL</span><span class="st g">Optimal</span></div>
-    <div class="tk-item"><span class="dot w"></span><span class="nm">Vitamin D</span><span class="vl">24 ng/mL</span><span class="st w">Low</span></div>
-    <div class="tk-item"><span class="dot g"></span><span class="nm">HDL</span><span class="vl">1.6 mmol/L</span><span class="st g">Optimal</span></div>
-    <div class="tk-item"><span class="dot r"></span><span class="nm">TSH</span><span class="vl">4.8 mIU/L</span><span class="st r">High</span></div>
-    <div class="tk-item"><span class="dot g"></span><span class="nm">Glucose</span><span class="vl">5.1 mmol/L</span><span class="st g">Optimal</span></div>
-    <div class="tk-item"><span class="dot g"></span><span class="nm">Hemoglobin</span><span class="vl">14.2 g/dL</span><span class="st g">Optimal</span></div>
-    <div class="tk-item"><span class="dot w"></span><span class="nm">B12</span><span class="vl">312 pg/mL</span><span class="st w">Low</span></div>
-    <div class="tk-item"><span class="dot g"></span><span class="nm">Calcium</span><span class="vl">2.3 mmol/L</span><span class="st g">Optimal</span></div>
-  </div></div>
-</header>
+<!-- ACT 2 -->
+<section class="act days-wrap rv">
+  <div class="eyebrow mid">day 01 → day 90 · the protocol</div>
+  <h2>Understanding is easy.<br><em>Changing</em> is the hard part.</h2>
+  <p class="lede">
+    So labread doesn't stop at the report. It builds you a ninety-day protocol from
+    your own results — a few small daily actions, not a lifestyle overhaul. Check them off.
+    Keep the streak. Watch the number move.
+  </p>
 
-<!-- JOURNEY -->
-<section class="sec journey" id="journey"><div class="wrap">
-  <div class="sec-head rv">
-    <span class="eyebrow">Your health journey</span>
-    <h2>From confusing numbers to a plan you can <span class="ital">actually follow.</span></h2>
+  <div class="day-grid" id="dayGrid"></div>
+
+  <div class="streak-bar">
+    <div class="streak-item"><div class="streak-val">47</div><div class="streak-lab">day of 90</div></div>
+    <div class="streak-div"></div>
+    <div class="streak-item"><div class="streak-val">12</div><div class="streak-lab">day streak</div></div>
+    <div class="streak-div"></div>
+    <div class="streak-item"><div class="streak-val">3,280</div><div class="streak-lab">points earned</div></div>
   </div>
-  <div class="spine"></div>
 
-  <!-- STEP 1 -->
-  <div class="step">
-    <div class="step-copy left rv">
-      <div class="k">Step 01</div>
-      <h3>See what your blood is <span class="ital">actually saying</span></h3>
-      <p>Snap a photo or drop a PDF from any lab. labread pulls every value, flags what sits outside your range, and explains it the way a person would — no decoder ring required.</p>
-      <ul class="step-list">
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Reads any lab, any format, any language</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>In-range or out, clear at a glance</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Answers the second you upload</li>
-      </ul>
+  <div class="habits">
+    <div class="habits-hd"><span>today's actions</span><span>3 of 5 done</span></div>
+    <div class="hb"><span class="hb-check on"></span><span class="hb-name">Iron-rich meal</span><span class="hb-pts">+20</span></div>
+    <div class="hb"><span class="hb-check on"></span><span class="hb-name">Vitamin D · 4000 IU</span><span class="hb-pts">+20</span></div>
+    <div class="hb"><span class="hb-check on"></span><span class="hb-name">8,000 steps</span><span class="hb-pts">+20</span></div>
+    <div class="hb"><span class="hb-check"></span><span class="hb-name">Magnesium before bed</span><span class="hb-pts">+20</span></div>
+    <div class="hb"><span class="hb-check"></span><span class="hb-name">Sleep 7h+</span><span class="hb-pts">+20</span></div>
+  </div>
+</section>
+
+<!-- ACT 3 -->
+<section class="act anna-act rv">
+  <div class="orb"></div>
+  <div class="eyebrow mid">day 12 · 3:40 am · you couldn't sleep</div>
+  <h2>The only coach who has read <em>your</em> blood.</h2>
+  <p class="lede">
+    Anna isn't a chatbot with a health skin. She knows your ferritin. She knows you're on
+    day 47. She knows what moved and what didn't. Ask her anything, in any language,
+    at any hour — and the answer is about <b>you</b>, not a textbook.
+  </p>
+
+  <div class="convo">
+    <div class="u-turn"><span class="u-bub">why do I still feel tired? it's been 6 weeks</span></div>
+
+    <div class="a-turn">
+      <div class="a-tag">[ anna ]</div>
+      <p class="a-text">Actually — you're turning the corner. Yours has climbed from 18 to 31 since you started.</p>
+      <div class="inline-gauge">
+        <span class="ig-num">31</span>
+        <div>
+          <div class="ig-track"><div class="ig-fill"></div></div>
+          <div class="ig-meta">FERRITIN · ng/mL · optimal 30–150</div>
+        </div>
+      </div>
+      <p class="a-text">That's <em>into the optimal range.</em> The tired usually lags the number by a few weeks. Stay with it.</p>
     </div>
-    <div class="step-node rv">01</div>
-    <div class="step-mock rv">
-      <div class="stack" style="max-width:380px">
-        <div class="panel" style="padding:14px 16px;display:flex;gap:18px">
-          <div class="ring"><svg viewBox="0 0 44 44"><circle class="rc-bg" cx="22" cy="22" r="18" fill="none" stroke-width="4"/><circle class="rc-fg" cx="22" cy="22" r="18" fill="none" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="113" data-pct="82"/><text class="pct" x="22" y="26" text-anchor="middle">82%</text></svg><small>Metabolic</small></div>
-          <div class="ring"><svg viewBox="0 0 44 44"><circle class="rc-bg" cx="22" cy="22" r="18" fill="none" stroke-width="4"/><circle class="rc-fg" cx="22" cy="22" r="18" fill="none" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="113" data-pct="76"/><text class="pct" x="22" y="26" text-anchor="middle">76%</text></svg><small>Hormonal</small></div>
-          <div class="ring"><svg viewBox="0 0 44 44"><circle class="rc-bg" cx="22" cy="22" r="18" fill="none" stroke-width="4"/><circle class="rc-fg" cx="22" cy="22" r="18" fill="none" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="113" data-pct="64"/><text class="pct" x="22" y="26" text-anchor="middle">64%</text></svg><small>Iron</small></div>
-        </div>
-        <div class="panel" style="padding:18px">
-          <div class="g-head"><span>Ferritin</span><span style="color:var(--warn)">● Low</span></div>
-          <div class="g-marker"><div class="g-ic" style="background:rgba(227,169,74,.14);color:var(--warn)">Fe</div><div><div class="g-mname">Ferritin</div><div class="g-mval">18 ng/mL · below optimal</div></div></div>
-          <div class="range">
-            <div class="range-track"><i class="r"></i><i class="w"></i><i class="g"></i><i class="w"></i><i class="r"></i></div>
-            <div class="range-mark" data-left="20%"></div>
-            <div class="range-scale"><span>0</span><span>30</span><span>150</span><span>200</span></div>
-          </div>
-          <div class="g-insight">Low ferritin can explain fatigue and low energy. <b>Anna built you a plan</b> to bring it back up.</div>
-        </div>
+
+    <div class="u-turn"><span class="u-bub">what should I eat this week?</span></div>
+
+    <div class="a-turn">
+      <div class="a-tag">[ anna ]</div>
+      <p class="a-text">Lentils, spinach with lemon, red meat twice if you can. The lemon matters — <em>vitamin C doubles iron absorption.</em></p>
+    </div>
+  </div>
+
+  <div class="prompts">
+    <span class="prompt">Explain my CRP</span>
+    <span class="prompt">Am I actually improving?</span>
+    <span class="prompt">What should I ask my doctor?</span>
+    <span class="prompt">Why does vitamin D matter?</span>
+  </div>
+</section>
+
+<!-- ACT 4 -->
+<section class="act rv">
+  <div class="chal-hd">
+    <div class="eyebrow mid">the challenges</div>
+    <h2>Your body responds to <em>consistency,</em> not intentions.</h2>
+    <p class="lede">
+      Pick a challenge. Show up daily. Earn points. The longer you go, the more labread
+      gives back — because the people who stay are the people who change.
+    </p>
+  </div>
+
+  <div class="chal-grid">
+    <div class="chal">
+      <div class="chal-days">21</div>
+      <div class="chal-unit">days</div>
+      <h3>Iron Reset</h3>
+      <p>Three weeks of iron-rich meals, timed vitamin C, and the small things that actually move ferritin.</p>
+      <div class="chal-reward">2,100 pts → 20% off</div>
+    </div>
+    <div class="chal">
+      <div class="chal-days">30</div>
+      <div class="chal-unit">days</div>
+      <h3>Energy Rebuild</h3>
+      <p>Sleep, sunlight, and the B-vitamins your panel says you're short on. A month to feel like yourself.</p>
+      <div class="chal-reward">3,000 pts → 30% off</div>
+    </div>
+    <div class="chal">
+      <div class="chal-days">45</div>
+      <div class="chal-unit">days</div>
+      <h3>Metabolic Shift</h3>
+      <p>Six weeks working on the markers that decide how your body handles sugar and fat.</p>
+      <div class="chal-reward">4,500 pts → 50% off</div>
+    </div>
+    <div class="chal hot">
+      <div class="chal-days">90</div>
+      <div class="chal-unit">days · the big one</div>
+      <h3>Transformation</h3>
+      <p>The full protocol, start to finish. Re-test at the end. Finish it, and your next month is 90% off.</p>
+      <div class="chal-reward">9,000 pts → 90% off</div>
+    </div>
+  </div>
+</section>
+
+<!-- ACT 5 -->
+<section class="act rv">
+  <div class="stories-hd">
+    <div class="eyebrow mid">real people · real reports</div>
+    <h2>Nobody does ninety days <em>alone.</em></h2>
+    <p class="lede">
+      Every person who finishes a challenge writes what it was actually like — what worked,
+      what they'd do differently, what nobody told them. Read them. Then write yours.
+    </p>
+  </div>
+
+  <div class="stories">
+    <div class="story">
+      <div class="story-img"><div class="story-hl">FROM EXHAUSTED TO<em>finally myself</em></div></div>
+      <div class="story-body">
+        <div class="story-who"><span class="story-av"></span><div><div class="story-name">Salma K.</div><div class="story-loc">CASABLANCA</div></div></div>
+        <div class="story-res"><span>Day 90 · ferritin doubled</span><span class="story-likes">♡ 214</span></div>
+      </div>
+    </div>
+    <div class="story">
+      <div class="story-img"><div class="story-hl">MY ENERGY<em>came back</em></div></div>
+      <div class="story-body">
+        <div class="story-who"><span class="story-av"></span><div><div class="story-name">Youssef B.</div><div class="story-loc">RABAT</div></div></div>
+        <div class="story-res"><span>Day 47 · vit D 22 → 41</span><span class="story-likes">♡ 168</span></div>
+      </div>
+    </div>
+    <div class="story">
+      <div class="story-img"><div class="story-hl">SLEEPING<em>like I mean it</em></div></div>
+      <div class="story-body">
+        <div class="story-who"><span class="story-av"></span><div><div class="story-name">Nadia M.</div><div class="story-loc">MARRAKECH</div></div></div>
+        <div class="story-res"><span>Day 30 · CRP 4.2 → 1.8</span><span class="story-likes">♡ 302</span></div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- STEP 2 -->
-  <div class="step rev">
-    <div class="step-mock rv">
-      <div class="panel chat float-r" style="max-width:390px">
-        <div class="row me"><div class="bub me">Why is my ferritin low and should I worry?</div></div>
-        <div class="row"><div class="anna-orb"><i></i></div><div class="bub ai">Your ferritin is <b>18 ng/mL</b> — a bit under the optimal range, which often shows up as tiredness. It's common and very fixable. Here's where I'd start:
-          <ul><li>Iron-rich foods (red meat, lentils, spinach)</li><li>Pair them with vitamin C to absorb more</li><li>Re-test in ~8 weeks to confirm the climb</li></ul>
-        </div></div>
-        <div class="ts">10:02</div>
+<!-- ACT 6 -->
+<section class="act proof rv">
+  <div class="eyebrow mid">day 90 · the re-test</div>
+  <h2>The only opinion that matters is your <em>next blood test.</em></h2>
+  <p class="lede">
+    Ninety days later you draw again. And this time you don't wonder whether it worked —
+    you look at the line and you know.
+  </p>
+
+  <div class="aurora">
+    <div class="aurora-hd">
+      <span>your markers · 90 days</span>
+      <div class="aurora-legend">
+        <span class="leg"><i style="background:#FFC069"></i>Ferritin</span>
+        <span class="leg"><i style="background:#E8743B"></i>Vitamin D</span>
+        <span class="leg"><i style="background:#8A2C08"></i>CRP</span>
       </div>
     </div>
-    <div class="step-node rv">02</div>
-    <div class="step-copy rv">
-      <div class="k">Step 02</div>
-      <h3>Ask <span class="ital">Anna</span> anything</h3>
-      <p>Your AI health coach knows your full history. Ask what a marker means, why it changed, or what to do next — and get a calm, clear answer any time, day or night.</p>
-      <ul class="step-list">
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Remembers every test you've uploaded</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Plain answers, never scary jargon</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Prep for your next doctor visit</li>
-      </ul>
-    </div>
+    <svg viewBox="0 0 700 200" style="width:100%;height:auto" role="img" aria-label="Three biomarkers trending over 90 days">
+      <defs>
+        <linearGradient id="a1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FFC069" stop-opacity=".38"/><stop offset="100%" stop-color="#FFC069" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="a2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#E8743B" stop-opacity=".32"/><stop offset="100%" stop-color="#E8743B" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="a3" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8A2C08" stop-opacity=".3"/><stop offset="100%" stop-color="#8A2C08" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="sg"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <path d="M0,72 C120,80 240,104 360,130 C480,150 600,158 700,162 L700,200 L0,200 Z" fill="url(#a3)" style="mix-blend-mode:screen"/>
+      <path d="M0,72 C120,80 240,104 360,130 C480,150 600,158 700,162" fill="none" stroke="#8A2C08" stroke-width="1.6" filter="url(#sg)" opacity=".85"/>
+      <path d="M0,150 C120,146 240,128 360,102 C480,80 600,66 700,58 L700,200 L0,200 Z" fill="url(#a2)" style="mix-blend-mode:screen"/>
+      <path d="M0,150 C120,146 240,128 360,102 C480,80 600,66 700,58" fill="none" stroke="#E8743B" stroke-width="1.6" filter="url(#sg)" opacity=".9"/>
+      <path d="M0,168 C120,160 240,132 360,92 C480,58 600,40 700,32 L700,200 L0,200 Z" fill="url(#a1)" style="mix-blend-mode:screen"/>
+      <path d="M0,168 C120,160 240,132 360,92 C480,58 600,40 700,32" fill="none" stroke="#FFC069" stroke-width="2" filter="url(#sg)"/>
+      <circle cx="696" cy="32" r="4" fill="#FFC069" filter="url(#sg)"/>
+    </svg>
+    <div class="aurora-axis"><span>DAY 1</span><span>DAY 30</span><span>DAY 60</span><span>DAY 90</span></div>
   </div>
+</section>
 
-  <!-- STEP 3 -->
-  <div class="step">
-    <div class="step-copy left rv">
-      <div class="k">Step 03</div>
-      <h3>Get a plan, <span class="ital">not just numbers</span></h3>
-      <p>Numbers only help if you know what to do with them. labread turns yours into a personal plan — food, supplements, habits — matched to exactly what your body needs right now.</p>
-      <ul class="step-list">
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>A meal plan shaped by your results</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Supplements that target what's low</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Sleep &amp; stress habits that move markers</li>
-      </ul>
-    </div>
-    <div class="step-node rv">03</div>
-    <div class="step-mock rv">
-      <div class="stack" style="max-width:380px">
-        <div class="panel goal">
-          <div class="gi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-          <div><div class="tag">Your confirmed goal</div><h4>Restore iron &amp; energy</h4><p>Focus on iron-rich, vitamin-C-paired meals to lift ferritin back into range over the next 8 weeks.</p></div>
-        </div>
-        <div class="panel macros">
-          <div class="mh"><div class="gi"><svg viewBox="0 0 24 24"><path d="M4 11h16M4 15h16M10 3v18"/></svg></div><h4>Daily meal plan</h4></div>
-          <div class="macro-row">
-            <div class="macro"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="17" fill="none" stroke="rgba(245,166,35,.14)" stroke-width="4"/><circle cx="22" cy="22" r="17" fill="none" stroke="var(--amber-lite)" stroke-width="4" stroke-linecap="round" stroke-dasharray="107" stroke-dashoffset="64"/></svg><div class="mv">~180g</div><div class="ml">Carbs</div></div>
-            <div class="macro"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="17" fill="none" stroke="rgba(245,166,35,.14)" stroke-width="4"/><circle cx="22" cy="22" r="17" fill="none" stroke="var(--green)" stroke-width="4" stroke-linecap="round" stroke-dasharray="107" stroke-dashoffset="75"/></svg><div class="mv">~120g</div><div class="ml">Protein</div></div>
-            <div class="macro"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="17" fill="none" stroke="rgba(245,166,35,.14)" stroke-width="4"/><circle cx="22" cy="22" r="17" fill="none" stroke="var(--amber-deep)" stroke-width="4" stroke-linecap="round" stroke-dasharray="107" stroke-dashoffset="75"/></svg><div class="mv">~65g</div><div class="ml">Fat</div></div>
-            <div class="kcal"><b>2,000</b><small>kcal goal</small></div>
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- FINAL -->
+<section class="act final rv">
+  <div class="eyebrow mid">day 91 · you start again, higher</div>
+  <h2>Ninety days from now, you'll wish you'd <em>started today.</em></h2>
+  <p class="lede">
+    labread opens soon. Morocco first. Bring your last blood test — we'll take it from there.
+  </p>
+  <div class="wait">
+    <input type="email" placeholder="your@email.com" aria-label="Email">
+    <button>Join the waitlist →</button>
   </div>
+  <p class="wait-note">data hosted in the eu · never used to train ai · cndp registered</p>
+</section>
 
-  <!-- STEP 4 -->
-  <div class="step rev">
-    <div class="step-mock rv">
-      <div class="stack float-r" style="max-width:400px">
-        <div class="badge-good"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span><b>Good progress</b> — 80% of your markers improved</span></div>
-        <div class="panel trend">
-          <div class="th"><div class="gi">Fe</div><h4>Ferritin</h4><span class="unit">ng/mL</span></div>
-          <svg viewBox="0 0 320 140" preserveAspectRatio="none">
-            <rect x="0" y="0" width="320" height="40" fill="rgba(224,112,106,.10)"/>
-            <rect x="0" y="40" width="320" height="26" fill="rgba(227,169,74,.10)"/>
-            <rect x="0" y="66" width="320" height="48" fill="rgba(111,207,151,.12)"/>
-            <rect x="0" y="114" width="320" height="26" fill="rgba(227,169,74,.10)"/>
-            <polyline class="trend-line" points="20,108 95,104 170,78 245,58 300,52" fill="none" stroke="url(#ringGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="245" cy="58" r="6" fill="var(--bg)" stroke="var(--green)" stroke-width="3"/>
-            <g transform="translate(245,38)"><rect x="-17" y="-15" width="34" height="20" rx="6" fill="var(--green)"/><text x="0" y="-1" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#0b0907">31</text></g>
-          </svg>
-          <div class="xax"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span></div>
-        </div>
-        <div class="panel reminder">
-          <div class="rh"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Follow-up testing</div>
-          <div class="when">In about 4 weeks</div>
-          <ul><li>Ferritin</li><li>Vitamin B12</li><li>Folate</li><li>Vitamin D</li></ul>
-          <button class="btn btn-amber">Remind me <svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3z"/></svg></button>
-        </div>
-      </div>
-    </div>
-    <div class="step-node rv">04</div>
-    <div class="step-copy rv">
-      <div class="k">Step 04</div>
-      <h3>Watch your numbers <span class="ital">actually move</span></h3>
-      <p>Every upload adds to your timeline. See markers climb from red into green, catch a drift months before it becomes a problem, and get nudged when it's time to re-test.</p>
-      <ul class="step-list">
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>A full history for every marker</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Early signal, long before symptoms</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Re-test reminders that find you</li>
-      </ul>
-    </div>
-  </div>
-</div></section>
+</div>
 
-<!-- FAMILY BAND -->
-<section class="family"><div class="wrap family-in rv">
-  <div class="fam-avatars"><i>A</i><i>M</i><i>S</i><i>+</i></div>
-  <h2>One account, <span class="ital">the whole household.</span></h2>
-  <p>Kids, parents, partners — every profile under one roof. Results stay private and encrypted, and the insights get sharper for everyone with each new test.</p>
-  <div class="hero-cta">
-    <a class="btn btn-amber" href="/get-started">Create your household <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+<footer>
+  <a href="/" class="brand">lab<b>read</b></a>
+  <div class="f-links">
+    <a href="/">For you</a>
+    <a href="/for-doctors">For doctors</a>
+    <a href="/for-clinics">For clinics</a>
+    <a href="/privacy">Privacy</a>
   </div>
-</div></section>
-
-<!-- PRICING -->
-<section class="sec pricing" id="pricing"><div class="wrap">
-  <div class="sec-head rv">
-    <span class="eyebrow">Pricing</span>
-    <h2>Simple plans for <span class="ital">every household.</span></h2>
-    <p>Start free. Upgrade only when you're ready — cancel anytime.</p>
-  </div>
-  <div class="price-grid">
-    <div class="pcard rv">
-      <div class="pname">Personal</div>
-      <div class="price"><span class="amt">$9</span><span class="per">/ month</span></div>
-      <div class="pbtn sel">Choose Personal</div>
-      <ul>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>1 profile</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Up to 12 uploads a month</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Full history &amp; trend tracking</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Anna, your AI health coach</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Personalised food &amp; lifestyle plan</li>
-      </ul>
-    </div>
-    <div class="pcard pop rv">
-      <span class="pop-tag">Popular</span>
-      <div class="pname">Family</div>
-      <div class="price"><span class="amt">$19</span><span class="per">/ month</span></div>
-      <div class="pbtn go">Start Family</div>
-      <ul>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Up to 5 profiles</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>12 uploads a month, each</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Anna &amp; trends for every member</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>One shared family timeline</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Personalised plans for everyone</li>
-      </ul>
-    </div>
-    <div class="pcard rv">
-      <div class="pname">Household</div>
-      <div class="price"><span class="amt">$29</span><span class="per">/ month</span></div>
-      <div class="pbtn sel">Choose Household</div>
-      <ul>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Up to 12 profiles</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>12 uploads a month, each</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Anna &amp; trends for every profile</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Priority processing</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Personalised plans for everyone</li>
-      </ul>
-    </div>
-  </div>
-  <p class="price-foot">Are you a doctor or clinic? <a href="/for-doctors" style="color:var(--amber-lite);font-weight:600">See plans for professionals →</a></p>
-</div></section>
-
-<!-- FAQ -->
-<section class="sec"><div class="wrap">
-  <div class="sec-head rv"><span class="eyebrow">Questions</span><h2>Good to know.</h2></div>
-  <div class="faq">
-    <div class="qa rv"><h4>Which labs does labread work with?</h4><p>Any of them. Upload a photo or PDF from any lab in any country — labread reads the values and standardises the ranges for you, even across different units and languages.</p></div>
-    <div class="qa rv"><h4>Is this a replacement for my doctor?</h4><p>No — and it's not meant to be. labread helps you understand your results and walk into appointments prepared. Always confirm decisions with a licensed clinician.</p></div>
-    <div class="qa rv"><h4>How private is my data?</h4><p>Your results are encrypted and never sold. Each family profile is yours alone, and you can export or delete everything at any time.</p></div>
-    <div class="qa rv"><h4>Can I really start for free?</h4><p>Yes. Upload your first test and explore your breakdown free. Upgrade only when you want more uploads, profiles, or family tracking.</p></div>
-  </div>
-</div></section>
-
-<!-- FINAL CTA -->
-<section class="final"><div class="wrap">
-  <h2>Understand your blood test <span class="ital">today.</span></h2>
-  <p>Take your health off the lab printout and into your own hands — one clear result at a time.</p>
-  <div class="hero-cta">
-    <a class="btn btn-amber" href="/get-started">Start free <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-    <a class="btn btn-ghost" href="#journey">See how it works</a>
-  </div>
-</div></section>
-
-<!-- FOOTER -->
-<footer><div class="wrap">
-  <div class="foot-in">
-    <a class="foot-brand" href="/"><svg class="logo-mark"><use href="#lm"/></svg><span class="word">labread</span></a>
-    <div class="foot-links">
-      <a href="/for-you">For you</a>
-      <a href="/for-doctors">For doctors</a>
-      <a href="/for-labs">For clinics</a>
-      <a href="#pricing">Pricing</a>
-      <a href="/terms">Terms</a>
-      <a href="/privacy">Privacy</a>
-    </div>
-  </div>
-  <div class="foot-copy">© 2026 labread · Understand your blood, follow your health.</div>
-</div></footer>
+  <span class="f-note">© 2026 labread · labread.health</span>
+</footer>
 
 <script>
-  // mobile menu
-  (function(){
-    var nav=document.querySelector('.nav'),btn=document.querySelector('.menu-btn');
-    if(btn){btn.addEventListener('click',function(){nav.classList.toggle('open')});
-      nav.querySelectorAll('.nav-drawer a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open')})});}
-  })();
+const fill = document.getElementById('spineFill');
+const head = document.getElementById('spineHead');
+const dayN = document.getElementById('dayNum');
 
-  // reveal on scroll + trigger ring/range animations
-  (function(){
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting){
-          e.target.classList.add('in');
-          // animate rings inside
-          e.target.querySelectorAll('.rc-fg[data-pct]').forEach(function(c){
-            var len=113,pct=+c.getAttribute('data-pct');
-            c.style.strokeDashoffset=len-(len*pct/100);
-          });
-          // animate range markers inside
-          e.target.querySelectorAll('.range-mark[data-left]').forEach(function(m){
-            setTimeout(function(){m.style.left=m.getAttribute('data-left')},120);
-          });
-          io.unobserve(e.target);
-        }
-      });
-    },{threshold:.18});
-    document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+function onScroll(){
+  const max = document.body.scrollHeight - window.innerHeight;
+  const p = Math.min(Math.max(window.scrollY / max, 0), 1);
+  fill.style.height = (p * 100) + '%';
+  head.style.top = (p * 100) + '%';
+  dayN.textContent = String(Math.max(1, Math.round(p * 90))).padStart(2, '0');
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
 
-    // hero mock animates immediately
-    setTimeout(function(){
-      document.querySelectorAll('#stage .rc-fg[data-pct]').forEach(function(c){
-        var len=113,pct=+c.getAttribute('data-pct');c.style.strokeDashoffset=len-(len*pct/100);
-      });
-      document.querySelectorAll('#stage .range-mark[data-left]').forEach(function(m){m.style.left=m.getAttribute('data-left')});
-    },350);
-  })();
+const grid = document.getElementById('dayGrid');
+for (let i = 1; i <= 90; i++){
+  const c = document.createElement('div');
+  c.className = 'day-cell' + (i < 47 ? ' done' : i === 47 ? ' today' : '');
+  grid.appendChild(c);
+}
 
-  // cursor parallax on hero cluster
-  (function(){
-    var stage=document.getElementById('stage');if(!stage)return;
-    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-    if(window.matchMedia('(max-width:920px)').matches)return;
-    stage.addEventListener('mousemove',function(e){
-      var r=stage.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-      stage.querySelectorAll('[data-float]').forEach(function(el){
-        var f=parseFloat(el.getAttribute('data-float'));
-        el.style.transform='translate('+(x*f*14)+'px,'+(y*f*14)+'px)';
-      });
-    });
-    stage.addEventListener('mouseleave',function(){
-      stage.querySelectorAll('[data-float]').forEach(function(el){el.style.transform=''});
-    });
-  })();
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, {threshold: 0.12});
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
 </script>
 
-<script>
-(function(){
-  var g=document.querySelector('.gauge .ticks');
-  if(g){var cx=260,cy=260,r1=246,r2=236,html='';
-    for(var i=0;i<60;i++){var aa=(i/60)*Math.PI*2-Math.PI/2,big=(i%5===0);
-      var x1=cx+Math.cos(aa)*(big?r1-6:r1),y1=cy+Math.sin(aa)*(big?r1-6:r1);
-      var x2=cx+Math.cos(aa)*r2,y2=cy+Math.sin(aa)*r2;
-      html+='<line class="tick" x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" opacity="'+(big?'.35':'.16')+'"/>';}
-    g.innerHTML=html;}
-  function runCount(el){var goal=+el.getAttribute('data-count'),suf=el.getAttribute('data-suf')||'',n=0,
-    step=Math.max(1,Math.round(goal/40)),t=setInterval(function(){n+=step;if(n>=goal){n=goal;clearInterval(t)}el.textContent=n+suf},26);}
-  setTimeout(function(){
-    document.querySelectorAll('.gauge .ring-val[data-pct]').forEach(function(c){c.style.strokeDashoffset=100-(+c.getAttribute('data-pct'));});
-    var mm=document.querySelector('.gp-range .mini-mark[data-left]');if(mm)mm.style.left=mm.getAttribute('data-left');
-    document.querySelectorAll('.hero-metrics [data-count]').forEach(runCount);
-  },420);
-  var tk=document.getElementById('ticker');if(tk)tk.innerHTML+=tk.innerHTML;
-  var c=document.getElementById('console');
-  if(c&&!window.matchMedia('(prefers-reduced-motion:reduce)').matches&&!window.matchMedia('(max-width:1040px)').matches){
-    c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-      c.querySelectorAll('[data-float]').forEach(function(el){var f=parseFloat(el.getAttribute('data-float'));el.style.transform='translate('+(x*f*16)+'px,'+(y*f*16)+'px)';});});
-    c.addEventListener('mouseleave',function(){c.querySelectorAll('[data-float]').forEach(function(el){el.style.transform=''});});
-  }
-})();
-</script>
 </body>
 </html>

@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>labread.health — Your blood test, finally explained.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080808;
+            color: #A0A0A0;
+            overflow-x: hidden;
+        }
+
+        /* Utility Classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Playfair Display', serif !important;
+            font-size: 90px;
+            font-weight: 700;
+            color: #FFFFFF;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif !important;
+            font-size: 56px;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 40px;
+            letter-spacing: -0.5px;
+        }
+
+        h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #A0A0A0;
+        }
+
+        .label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #606060;
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 24px;
+            backdrop-filter: blur(0);
+            transition: backdrop-filter 0.3s ease, background 0.3s ease;
+        }
+
+        nav.scrolled {
+            backdrop-filter: blur(10px);
+            background: rgba(8, 8, 8, 0.8);
+            border-bottom: 1px solid rgba(79, 110, 247, 0.1);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        nav a {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 32px;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #4F6EF7;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: #080808;
+        }
+
+        .glow-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+        }
+
+        .glow-blob-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #4F6EF7 0%, transparent 70%);
+            top: 10%;
+            left: 10%;
+            animation: float1 20s ease-in-out infinite;
+        }
+
+        .glow-blob-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #00D9C0 0%, transparent 70%);
+            bottom: 10%;
+            right: 10%;
+            animation: float2 25s ease-in-out infinite;
+        }
+
+        .glow-blob-3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #4F6EF7 0%, transparent 70%);
+            top: 50%;
+            right: 20%;
+            animation: float3 30s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, -50px); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-60px, 40px); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-40px, 60px); }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(79, 110, 247, 0.15);
+            border: 1px solid rgba(79, 110, 247, 0.3);
+            border-radius: 24px;
+            margin-bottom: 32px;
+            font-size: 13px;
+            color: #4F6EF7;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            max-width: 900px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 .accent {
+            color: #00D9C0;
+            font-style: italic;
+        }
+
+        .hero-subheading {
+            max-width: 560px;
+            margin: 0 auto 48px;
+            font-size: 18px;
+            color: #A0A0A0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #4F6EF7;
+            color: #FFFFFF;
+            box-shadow: 0 0 20px rgba(79, 110, 247, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 40px rgba(79, 110, 247, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #A0A0A0;
+            border: 1px solid rgba(160, 160, 160, 0.3);
+        }
+
+        .btn-secondary:hover {
+            color: #4F6EF7;
+            border-color: #4F6EF7;
+            box-shadow: 0 0 20px rgba(79, 110, 247, 0.2);
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: #606060;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Counter Stats */
+        .counter-stats {
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            margin-top: 60px;
+            padding-top: 60px;
+            border-top: 1px solid rgba(79, 110, 247, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 56px;
+            font-weight: 700;
+            color: #4F6EF7;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #606060;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* True Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .glass:hover {
+            border-color: #4F6EF7;
+            box-shadow: 0 0 30px rgba(79, 110, 247, 0.2);
+        }
+
+        /* Sample Report Section */
+        .sample-report {
+            background: rgba(15, 15, 15, 0.4);
+        }
+
+        .section-label {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section-label .label {
+            color: #4F6EF7;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .biomarker-card {
+            padding: 24px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .biomarker-card.low {
+            border-left-color: #FFB800;
+        }
+
+        .biomarker-card.low .status-badge {
+            background: rgba(255, 184, 0, 0.2);
+            color: #FFB800;
+        }
+
+        .biomarker-card.low:hover {
+            box-shadow: 0 0 30px rgba(255, 184, 0, 0.2);
+        }
+
+        .biomarker-card.elevated {
+            border-left-color: #FF4444;
+        }
+
+        .biomarker-card.elevated .status-badge {
+            background: rgba(255, 68, 68, 0.2);
+            color: #FF4444;
+        }
+
+        .biomarker-card.elevated:hover {
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.2);
+        }
+
+        .biomarker-card.normal {
+            border-left-color: #00D9C0;
+        }
+
+        .biomarker-card.normal .status-badge {
+            background: rgba(0, 217, 192, 0.2);
+            color: #00D9C0;
+        }
+
+        .biomarker-card.normal:hover {
+            box-shadow: 0 0 30px rgba(0, 217, 192, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .biomarker-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .biomarker-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #A0A0A0;
+            margin-bottom: 12px;
+        }
+
+        .biomarker-description {
+            font-size: 14px;
+            color: #808080;
+            line-height: 1.6;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            padding: 40px;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #4F6EF7;
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .feature-card:hover .feature-icon svg {
+            stroke: #00D9C0;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: rgba(15, 15, 15, 0.4);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .steps-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .steps-container::before {
+                content: '';
+                position: absolute;
+                top: 80px;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: url('data:image/svg+xml,<svg width="100" height="2" viewBox="0 0 100 2" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="1" x2="100" y2="1" stroke="%23404040" stroke-dasharray="5,5"/></svg>');
+                z-index: 0;
+            }
+        }
+
+        .step {
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number-bg {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 160px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.03);
+            z-index: 0;
+            line-height: 1;
+        }
+
+        .step-content {
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+        }
+
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #4F6EF7;
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #A0A0A0;
+            line-height: 1.6;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: rgba(15, 15, 15, 0.4);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            padding: 32px;
+        }
+
+        .quote-mark {
+            font-size: 48px;
+            color: #4F6EF7;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            font-style: italic;
+            color: #FFFFFF;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            font-size: 14px;
+            font-weight: 600;
+            color: #FFFFFF;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(79, 110, 247, 0.2);
+        }
+
+        /* Final CTA */
+        .final-cta {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(79, 110, 247, 0.08) 0%, rgba(0, 217, 192, 0.04) 50%, transparent 100%);
+            z-index: 0;
+        }
+
+        .final-cta-content {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-cta h2 {
+            margin-bottom: 32px;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(8, 8, 8, 0.9);
+            border-top: 1px solid rgba(79, 110, 247, 0.1);
+            padding: 40px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #606060;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 56px;
+                letter-spacing: -1px;
+            }
+
+            h2 {
+                font-size: 36px;
+            }
+
+            .section {
+                padding: 60px 0;
+            }
+
+            .counter-stats {
+                gap: 40px;
+                margin-top: 40px;
+                flex-direction: column;
+            }
+
+            .stat-number {
+                font-size: 40px;
+            }
+
+            .cta-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .steps-container::before {
+                display: none;
+            }
+
+            .step-number-bg {
+                font-size: 100px;
+                top: -20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav id="navbar">
+        <div class="container">
+            <div class="logo">labread</div>
+            <div style="display: flex; gap: 24px;">
+                <a href="#features">Why labread</a>
+                <a href="#how">How it works</a>
+                <a href="#testimonials">Testimonials</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="glow-blob glow-blob-1"></div>
+            <div class="glow-blob glow-blob-2"></div>
+            <div class="glow-blob glow-blob-3"></div>
+        </div>
+        <div class="fade-in">
+            <div class="badge">
+                <span>✦</span>
+                AI-powered medical clarity
+            </div>
+            <h1>
+                Your blood test,<br>
+                <span class="accent">finally explained.</span>
+            </h1>
+            <p class="hero-subheading">
+                Upload any blood test from any lab, in any language. Get instant, plain-English explanations and personalized screening recommendations. 100% free. Zero data stored.
+            </p>
+            <div class="cta-group">
+                <button class="btn btn-primary">Try for free →</button>
+                <button class="btn btn-secondary">Learn more</button>
+            </div>
+            <div class="trust-badge">
+                🔒 HIPAA-compliant · Zero data stored · Processed & deleted instantly
+            </div>
+
+            <!-- Counter Stats -->
+            <div class="counter-stats">
+                <div class="stat fade-in">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Biomarkers Explained</div>
+                </div>
+                <div class="stat fade-in">
+                    <div class="stat-number">30<span style="font-size: 32px;">sec</span></div>
+                    <div class="stat-label">To Your Full Report</div>
+                </div>
+                <div class="stat fade-in">
+                    <div class="stat-number">Free</div>
+                    <div class="stat-label">No Card Needed</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Report Section -->
+    <section class="section sample-report">
+        <div class="container fade-in">
+            <div class="section-label">
+                <p class="label" style="color: #4F6EF7;">SAMPLE REPORT</p>
+                <h2>See what your report looks like</h2>
+            </div>
+            <div class="cards-grid">
+                <div class="biomarker-card glass low fade-in">
+                    <div class="card-header">
+                        <div class="biomarker-name">Ferritin</div>
+                        <div class="status-badge">Low</div>
+                    </div>
+                    <div class="biomarker-value">18 ng/mL</div>
+                    <div class="biomarker-description">Your iron stores are running low — a common cause of fatigue, brain fog, and feeling cold.</div>
+                </div>
+                <div class="biomarker-card glass low fade-in">
+                    <div class="card-header">
+                        <div class="biomarker-name">Vitamin D</div>
+                        <div class="status-badge">Low</div>
+                    </div>
+                    <div class="biomarker-value">22 ng/mL</div>
+                    <div class="biomarker-description">Below the optimal range, often linked to low energy, low mood, and weaker immunity.</div>
+                </div>
+                <div class="biomarker-card glass normal fade-in">
+                    <div class="card-header">
+                        <div class="biomarker-name">TSH</div>
+                        <div class="status-badge">Normal</div>
+                    </div>
+                    <div class="biomarker-value">2.1 mIU/L</div>
+                    <div class="biomarker-description">Your thyroid signal is in range — though one number doesn't capture the full thyroid picture.</div>
+                </div>
+                <div class="biomarker-card glass elevated fade-in">
+                    <div class="card-header">
+                        <div class="biomarker-name">CRP</div>
+                        <div class="status-badge">Elevated</div>
+                    </div>
+                    <div class="biomarker-value">4.2 mg/L</div>
+                    <div class="biomarker-description">Inflammation marker. Elevated can indicate ongoing immune activity, stress, or metabolic issues.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="container fade-in">
+            <div class="section-label">
+                <p class="label" style="color: #4F6EF7;">WHY LABREAD</p>
+                <h2>Built for clarity</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M8 16h8M6 20h12"/></svg>
+                    </div>
+                    <h3>Any lab, any format</h3>
+                    <p>Upload PDFs or images from any lab in the world. We understand blood work from everywhere.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
+                    </div>
+                    <h3>Plain English</h3>
+                    <p>No medical jargon. No cryptic abbreviations. Just clear, honest explanations you can actually understand.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M3 12h18M12 3v18M4.5 12l4.5-4.5M4.5 12l4.5 4.5"/></svg>
+                    </div>
+                    <h3>Instant insights</h3>
+                    <p>30 seconds from upload to full analysis. AI does the heavy lifting so you don't have to wait.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 12h6M9 16h6"/></svg>
+                    </div>
+                    <h3>Flagged automatically</h3>
+                    <p>Know exactly which values are off. Color-coded status makes abnormalities impossible to miss.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M9 12l2 2 4-4"/></svg>
+                    </div>
+                    <h3>Screening recommendations</h3>
+                    <p>Based on your results, we suggest next-step tests and screenings personalized to you.</p>
+                </div>
+                <div class="feature-card glass fade-in">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 1L3 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-6z"/><path d="M9 13l2 2 4-4"/></svg>
+                    </div>
+                    <h3>Your data stays yours</h3>
+                    <p>HIPAA-compliant. Zero data stored. Your report is processed and immediately deleted.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section how-it-works" id="how">
+        <div class="container fade-in">
+            <div class="section-label">
+                <p class="label" style="color: #4F6EF7;">HOW IT WORKS</p>
+                <h2>Three simple steps</h2>
+            </div>
+            <div class="steps-container">
+                <div class="step fade-in">
+                    <div class="step-number-bg">01</div>
+                    <div class="step-content glass">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><path d="M16 6l-4-4-4 4M12 2v10"/></svg>
+                        </div>
+                        <div class="step-title">Upload your report</div>
+                        <p class="step-description">Drag & drop any blood test PDF or image. Any lab, any country. Supports 100+ formats.</p>
+                    </div>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number-bg">02</div>
+                    <div class="step-content glass">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/><path d="M12 5v14M5 9v6M19 9v6"/></svg>
+                        </div>
+                        <div class="step-title">AI analyzes instantly</div>
+                        <p class="step-description">Our AI extracts values, checks ranges, and writes plain-language explanations. Happens in 30 seconds.</p>
+                    </div>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number-bg">03</div>
+                    <div class="step-content glass">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24"><path d="M3 12h18M12 3l9 9-9 9"/><path d="M15 12H3"/></svg>
+                        </div>
+                        <div class="step-title">Understand your results</div>
+                        <p class="step-description">Get a beautiful report with flagged values, explanations, and actionable screening recommendations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials" id="testimonials">
+        <div class="container fade-in">
+            <div class="section-label">
+                <p class="label" style="color: #4F6EF7;">TESTIMONIALS</p>
+                <h2>People love it</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card glass fade-in">
+                    <div class="quote-mark">"</div>
+                    <p class="testimonial-text">I finally understand my blood test. No more confusion, no more jargon I can't make sense of.</p>
+                    <div class="testimonial-author">Sarah M.</div>
+                </div>
+                <div class="testimonial-card glass fade-in">
+                    <div class="quote-mark">"</div>
+                    <p class="testimonial-text">Useful and actually explains my blood test in language I can understand. Exactly what I needed.</p>
+                    <div class="testimonial-author">James L.</div>
+                </div>
+                <div class="testimonial-card glass fade-in">
+                    <div class="quote-mark">"</div>
+                    <p class="testimonial-text">Better than my doctor's explanations. Clear, fast, and I trust it. Using it every time now.</p>
+                    <div class="testimonial-author">Emma R.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="section final-cta">
+        <div class="container fade-in">
+            <div class="final-cta-content">
+                <h2>Ready to understand your blood test?</h2>
+                <button class="btn btn-primary" style="margin-top: 32px;">Try for free → </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">© 2026 labread.health</div>
+                <div class="footer-text">Not medical advice. Always consult your doctor.</div>
+                <div class="footer-text">HIPAA-compliant · Privacy-first · Zero ads</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.style.backdropFilter = 'blur(10px)';
+                navbar.style.background = 'rgba(8, 8, 8, 0.8)';
+                navbar.style.borderBottom = '1px solid rgba(79, 110, 247, 0.1)';
+            } else {
+                navbar.style.backdropFilter = 'blur(0)';
+                navbar.style.background = 'transparent';
+                navbar.style.borderBottom = 'none';
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // CTA buttons scroll to hero
+        document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (btn.classList.contains('btn-primary')) {
+                    alert('Try for free button would redirect to /try-free');
+                } else {
+                    alert('Learn more button would scroll to features');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

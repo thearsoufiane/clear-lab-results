@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Does High CRP Mean? The Inflammation Marker Most People Miss | labread</title>
+<meta name="description" content="High CRP explained: what chronic inflammation actually means, why it matters more than you think, and what to do about it. Plain-English guide to C-reactive protein.">
+<link rel="canonical" href="https://labread.health/learn/crp">
+<meta property="og:title" content="What Does High CRP Mean? The Inflammation Marker Most People Miss">
+<meta property="og:description" content="CRP is the inflammation marker that predicts disease — and most people have never heard of it.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #0a0f12;
+        --bg-soft: #0f161a;
+        --panel: #131c21;
+        --ink: #eef3f2;
+        --ink-soft: #9fb0b2;
+        --ink-faint: #61716f;
+        --teal: #3fd6c4;
+        --teal-dim: #2ba596;
+        --warm: #f2c14e;
+        --line: rgba(238, 243, 242, 0.09);
+        --display: 'Newsreader', Georgia, serif;
+        --body: 'Hanken Grotesk', system-ui, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+    .topbar { border-bottom: 1px solid var(--line); }
+    .topbar .wrap {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 28px;
+    }
+    .brand {
+        font-family: var(--display); font-weight: 600; font-size: 1.25rem;
+        color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
+    }
+    .brand span { color: var(--teal); }
+    .topbar a.cta {
+        font-size: 0.9rem; font-weight: 600; color: var(--teal);
+        text-decoration: none; border: 1px solid rgba(63,214,196,0.35);
+        padding: 8px 16px; border-radius: 8px; transition: background 0.25s;
+    }
+    .topbar a.cta:hover { background: rgba(63,214,196,0.08); }
+    article { padding: 56px 0 40px; }
+    .crumb {
+        font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase;
+        color: var(--teal-dim); margin-bottom: 22px;
+    }
+    h1 {
+        font-family: var(--display); font-weight: 500;
+        font-size: clamp(2.1rem, 6vw, 3.1rem);
+        line-height: 1.08; letter-spacing: -0.02em;
+        margin-bottom: 26px;
+    }
+    .lede {
+        font-size: 1.22rem; color: var(--ink);
+        line-height: 1.6; margin-bottom: 16px;
+    }
+    .lede b { color: #fff; font-weight: 600; }
+    .updated {
+        font-size: 0.85rem; color: var(--ink-faint);
+        margin-bottom: 40px; padding-bottom: 30px;
+        border-bottom: 1px solid var(--line);
+    }
+    h2 {
+        font-family: var(--display); font-weight: 500;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        line-height: 1.15; letter-spacing: -0.01em;
+        margin: 48px 0 18px;
+    }
+    h3 {
+        font-size: 1.15rem; font-weight: 700; color: var(--ink);
+        margin: 30px 0 10px;
+    }
+    p { color: var(--ink-soft); margin-bottom: 18px; font-size: 1.06rem; }
+    p b, li b { color: var(--ink); font-weight: 600; }
+    a.inline { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+    ul.clean { list-style: none; margin: 0 0 22px; }
+    ul.clean li {
+        color: var(--ink-soft); font-size: 1.06rem;
+        padding: 8px 0 8px 28px; position: relative;
+    }
+    ul.clean li::before {
+        content: ''; position: absolute; left: 4px; top: 16px;
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--teal);
+    }
+    .table-card {
+        background: var(--panel); border: 1px solid var(--line);
+        border-radius: 14px; overflow: hidden; margin: 26px 0;
+    }
+    .table-card .row {
+        display: grid; grid-template-columns: 1.3fr 1fr 1fr;
+        border-bottom: 1px solid var(--line);
+    }
+    .table-card .row:last-child { border-bottom: none; }
+    .table-card .row.head {
+        background: rgba(63,214,196,0.06);
+    }
+    .table-card .cell {
+        padding: 15px 18px; font-size: 0.96rem;
+        border-right: 1px solid var(--line);
+    }
+    .table-card .cell:last-child { border-right: none; }
+    .table-card .row.head .cell {
+        font-weight: 700; color: var(--ink); font-size: 0.86rem;
+        letter-spacing: 0.02em; text-transform: uppercase;
+    }
+    .table-card .cell.label { color: var(--ink); font-weight: 600; }
+    .table-card .cell.muted { color: var(--ink-soft); }
+    .table-card .cell .opt { color: var(--teal); font-weight: 600; }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 26px; }
+    .chip {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 100px; padding: 9px 16px;
+        font-size: 0.95rem; color: var(--ink);
+    }
+    .callout {
+        background: rgba(242,193,78,0.07);
+        border: 1px solid rgba(242,193,78,0.28);
+        border-radius: 12px; padding: 20px 22px; margin: 28px 0;
+    }
+    .callout p { color: var(--ink); margin: 0; font-size: 1rem; }
+    .callout b { color: var(--warm); }
+    .cta-box {
+        background: linear-gradient(150deg, rgba(63,214,196,0.10), rgba(63,214,196,0.03));
+        border: 1px solid rgba(63,214,196,0.3);
+        border-radius: 18px; padding: 34px;
+        margin: 48px 0; text-align: center;
+    }
+    .cta-box h3 {
+        font-family: var(--display); font-weight: 500; font-size: 1.5rem;
+        color: var(--ink); margin: 0 0 10px;
+    }
+    .cta-box p { color: var(--ink-soft); margin-bottom: 22px; font-size: 1.02rem; }
+    .cta-box a {
+        display: inline-block; background: var(--teal); color: #04100e;
+        font-weight: 700; font-size: 1.02rem; text-decoration: none;
+        padding: 15px 32px; border-radius: 10px;
+        transition: transform 0.2s, box-shadow 0.25s;
+    }
+    .cta-box a:hover { transform: translateY(-2px); box-shadow: 0 12px 30px -12px rgba(63,214,196,0.5); }
+    .cta-box .sub { font-size: 0.84rem; color: var(--ink-faint); margin: 14px 0 0; }
+    .related { border-top: 1px solid var(--line); padding-top: 36px; margin-top: 50px; }
+    .related h2 { margin-top: 0; }
+    .related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .related-grid a {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 12px; padding: 18px 20px; text-decoration: none;
+        transition: border-color 0.25s, transform 0.25s;
+    }
+    .related-grid a:hover { border-color: rgba(63,214,196,0.4); transform: translateY(-2px); }
+    .related-grid .q { color: var(--ink); font-weight: 600; font-size: 1.02rem; display: block; margin-bottom: 3px; }
+    .related-grid .a { color: var(--ink-faint); font-size: 0.88rem; }
+    .disclaimer {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 12px; padding: 20px 22px; margin: 44px 0 0;
+    }
+    .disclaimer p { font-size: 0.88rem; color: var(--ink-faint); margin: 0; }
+    footer {
+        border-top: 1px solid var(--line); margin-top: 48px;
+        padding: 28px 0 50px; text-align: center;
+    }
+    footer p { font-size: 0.85rem; color: var(--ink-faint); margin: 0; }
+    footer a { color: var(--teal); text-decoration: none; }
+    @media (max-width: 560px) {
+        .table-card .row { grid-template-columns: 1fr; }
+        .table-card .cell { border-right: none; border-bottom: 1px solid var(--line); }
+        .related-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="wrap">
+        <a href="https://labread.health" class="brand">lab<span>read</span></a>
+        <a href="https://labread.health" class="cta">Explain my results →</a>
+    </div>
+</div>
+
+<article>
+    <div class="wrap">
+        <div class="crumb">Learn · Inflammation</div>
+        <h1>What Does High CRP Mean? The Inflammation Marker Most People Miss</h1>
+
+        <p class="lede"><b>CRP (C-reactive protein) measures chronic inflammation — a quiet fire running in your body that predicts heart disease, stroke, diabetes, and autoimmune problems years before symptoms show.</b> Yet most people have never heard of it, and most doctors don't order it.</p>
+        <p class="lede">That's a gap you need to know about. Here's what CRP actually measures, why it matters more than most markers, and what to do if it's elevated.</p>
+
+        <div class="updated">Plain-English guide · reviewed for accuracy · not a substitute for medical advice</div>
+
+        <h2>What CRP measures (and why it's so useful)</h2>
+        <p><b>CRP is an inflammatory protein your liver makes in response to inflammation anywhere in your body.</b> Unlike blood sugar or cholesterol, CRP is agnostic — it rises when your body is inflamed, period. That inflammation could be from an infection, arthritis, a bad diet, chronic stress, poor sleep, obesity, or smoking.</p>
+        <p>What makes CRP powerful: <b>it predicts future disease.</b> Studies show that high CRP correlates with heart attack and stroke risk *independent of cholesterol*. It predicts diabetes, Alzheimer's, and even certain cancers. And most people have no idea their CRP is high because they never get tested.</p>
+
+        <h2>The normal range (and what "normal" actually means)</h2>
+        <p>Standard lab ranges say CRP under 3.0 mg/L is "normal." But that range was set including sick and healthy people — it's not optimal, it's just "not acutely inflamed." Many cardiologists and longevity-focused doctors argue for a lower threshold:</p>
+
+        <div class="table-card">
+            <div class="row head">
+                <div class="cell">CRP level (mg/L)</div>
+                <div class="cell">Typical label</div>
+                <div class="cell">Cardiovascular risk</div>
+            </div>
+            <div class="row">
+                <div class="cell label">Under 1.0</div>
+                <div class="cell muted">Low</div>
+                <div class="cell"><span class="opt">Low risk</span></div>
+            </div>
+            <div class="row">
+                <div class="cell label">1.0–3.0</div>
+                <div class="cell muted">"Normal"</div>
+                <div class="cell muted">Moderate risk</div>
+            </div>
+            <div class="row">
+                <div class="cell label">3.0–10.0</div>
+                <div class="cell muted">Elevated</div>
+                <div class="cell muted">Higher risk</div>
+            </div>
+            <div class="row">
+                <div class="cell label">Over 10</div>
+                <div class="cell muted">High</div>
+                <div class="cell muted">Significant risk</div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <p><b>The nuance:</b> CRP under 1.0 is what many cardiologists consider truly "optimal" for long-term health, though <b>this threshold is still being debated.</b> For now, the key is knowing your actual number and understanding what's driving it if it's elevated.</p>
+        </div>
+
+        <h2>What causes high CRP (and what to do about it)</h2>
+        <p>CRP rises with almost any inflammatory state. The common culprits:</p>
+        <ul class="clean">
+            <li><b>Poor diet</b> — ultra-processed foods, refined carbs, seed oils. The single biggest driver for many people.</li>
+            <li><b>Chronic stress and poor sleep</b> — inflammation is your body's stress response.</li>
+            <li><b>Lack of movement</b> — sedentary life drives inflammation; exercise reduces it.</li>
+            <li><b>Infection or autoimmune disease</b> — CRP rises while your body fights something.</li>
+            <li><b>Obesity</b> — fat tissue produces inflammatory cytokines.</li>
+            <li><b>Smoking</b> — major inflammatory trigger.</li>
+        </ul>
+        <p>The good news: CRP is <b>one of the most responsive markers to lifestyle change.</b> Diet, sleep, exercise, and stress management all lower it. Unlike genetics, you can actually move the needle here.</p>
+
+        <h2>What to ask your doctor</h2>
+        <p>Ask for <b>"high-sensitivity CRP" (hs-CRP)</b> — it's more precise than standard CRP. Many doctors will order it once you ask. If your CRP is elevated and you want to understand why, the conversation then shifts to ruling out acute infection (which your doctor will do) and addressing chronic lifestyle factors (which is mostly on you).</p>
+        <p>If your CRP is persistently elevated despite lifestyle changes, your doctor may investigate for underlying autoimmune or inflammatory conditions.</p>
+
+        <h2>Why so few people know about CRP</h2>
+        <p>CRP isn't part of standard bloodwork — you have to specifically request it. And most doctors don't routine order it because standard medicine focuses on acute illness, not prevention. You have to be the one who knows it matters.</p>
+
+        <div class="cta-box">
+            <h3>Want your whole panel explained like this?</h3>
+            <p>Upload your blood test and get every value in plain English — what's normal, what's not, and what to ask your doctor. Takes about 30 seconds.</p>
+            <a href="https://labread.health">Explain my results — free →</a>
+            <p class="sub">No signup required · your data is processed and not stored</p>
+        </div>
+
+        <div class="related">
+            <h2>Keep reading</h2>
+            <div class="related-grid">
+                <a href="/learn/ferritin">
+                    <span class="q">What does low ferritin mean?</span>
+                    <span class="a">Iron deficiency explained</span>
+                </a>
+                <a href="/learn/vitamin-d">
+                    <span class="q">Vitamin D deficiency</span>
+                    <span class="a">Why "normal" misses the problem</span>
+                </a>
+                <a href="/learn/tsh-thyroid">
+                    <span class="q">TSH normal but tired?</span>
+                    <span class="a">The incomplete thyroid picture</span>
+                </a>
+                <a href="/learn/a1c">
+                    <span class="q">What is pre-diabetic A1c?</span>
+                    <span class="a">The window where changes matter most</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p>This guide is for general education only and is not medical advice, diagnosis, or treatment. CRP should be interpreted in context with other markers and your health history. Always discuss your results with a qualified healthcare professional before making changes based on this information.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="wrap">
+            <p>© 2026 <a href="https://labread.health">labread.health</a> · Understand your bloodwork in plain English</p>
+        </div>
+    </footer>
+</article>
+
+</body>
+</html>

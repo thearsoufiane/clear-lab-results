@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitamin D Deficiency: What Low Levels Actually Mean | labread</title>
+<meta name="description" content="Low vitamin D explained in plain English: what the number means, why 'normal' labs miss deficiency, symptoms, causes, and what to ask your doctor. Free guide.">
+<link rel="canonical" href="https://labread.health/learn/vitamin-d">
+<meta property="og:title" content="Vitamin D Deficiency: What Low Levels Actually Mean">
+<meta property="og:description" content="Why you can have 'normal' vitamin D and still feel exhausted, depressed, and weak — and what to do about it.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #0a0f12;
+        --bg-soft: #0f161a;
+        --panel: #131c21;
+        --ink: #eef3f2;
+        --ink-soft: #9fb0b2;
+        --ink-faint: #61716f;
+        --teal: #3fd6c4;
+        --teal-dim: #2ba596;
+        --warm: #f2c14e;
+        --line: rgba(238, 243, 242, 0.09);
+        --display: 'Newsreader', Georgia, serif;
+        --body: 'Hanken Grotesk', system-ui, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+
+    .topbar { border-bottom: 1px solid var(--line); }
+    .topbar .wrap {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 28px;
+    }
+    .brand {
+        font-family: var(--display); font-weight: 600; font-size: 1.25rem;
+        color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
+    }
+    .brand span { color: var(--teal); }
+    .topbar a.cta {
+        font-size: 0.9rem; font-weight: 600; color: var(--teal);
+        text-decoration: none; border: 1px solid rgba(63,214,196,0.35);
+        padding: 8px 16px; border-radius: 8px; transition: background 0.25s;
+    }
+    .topbar a.cta:hover { background: rgba(63,214,196,0.08); }
+
+    article { padding: 56px 0 40px; }
+
+    .crumb {
+        font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase;
+        color: var(--teal-dim); margin-bottom: 22px;
+    }
+
+    h1 {
+        font-family: var(--display); font-weight: 500;
+        font-size: clamp(2.1rem, 6vw, 3.1rem);
+        line-height: 1.08; letter-spacing: -0.02em;
+        margin-bottom: 26px;
+    }
+
+    .lede {
+        font-size: 1.22rem; color: var(--ink);
+        line-height: 1.6; margin-bottom: 16px;
+    }
+    .lede b { color: #fff; font-weight: 600; }
+
+    .updated {
+        font-size: 0.85rem; color: var(--ink-faint);
+        margin-bottom: 40px; padding-bottom: 30px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+        font-family: var(--display); font-weight: 500;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        line-height: 1.15; letter-spacing: -0.01em;
+        margin: 48px 0 18px;
+    }
+    h3 {
+        font-size: 1.15rem; font-weight: 700; color: var(--ink);
+        margin: 30px 0 10px;
+    }
+
+    p { color: var(--ink-soft); margin-bottom: 18px; font-size: 1.06rem; }
+    p b, li b { color: var(--ink); font-weight: 600; }
+    a.inline { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+    a.inline:hover { color: var(--ink); }
+
+    ul.clean { list-style: none; margin: 0 0 22px; }
+    ul.clean li {
+        color: var(--ink-soft); font-size: 1.06rem;
+        padding: 8px 0 8px 28px; position: relative;
+    }
+    ul.clean li::before {
+        content: ''; position: absolute; left: 4px; top: 16px;
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--teal);
+    }
+
+    .table-card {
+        background: var(--panel); border: 1px solid var(--line);
+        border-radius: 14px; overflow: hidden; margin: 26px 0;
+    }
+    .table-card .row {
+        display: grid; grid-template-columns: 1.3fr 1fr 1fr;
+        border-bottom: 1px solid var(--line);
+    }
+    .table-card .row:last-child { border-bottom: none; }
+    .table-card .row.head {
+        background: rgba(63,214,196,0.06);
+    }
+    .table-card .cell {
+        padding: 15px 18px; font-size: 0.96rem;
+        border-right: 1px solid var(--line);
+    }
+    .table-card .cell:last-child { border-right: none; }
+    .table-card .row.head .cell {
+        font-weight: 700; color: var(--ink); font-size: 0.86rem;
+        letter-spacing: 0.02em; text-transform: uppercase;
+    }
+    .table-card .cell.label { color: var(--ink); font-weight: 600; }
+    .table-card .cell.muted { color: var(--ink-soft); }
+    .table-card .cell .opt { color: var(--teal); font-weight: 600; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 26px; }
+    .chip {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 100px; padding: 9px 16px;
+        font-size: 0.95rem; color: var(--ink);
+    }
+
+    .callout {
+        background: rgba(242,193,78,0.07);
+        border: 1px solid rgba(242,193,78,0.28);
+        border-radius: 12px; padding: 20px 22px; margin: 28px 0;
+    }
+    .callout p { color: var(--ink); margin: 0; font-size: 1rem; }
+    .callout b { color: var(--warm); }
+
+    .cta-box {
+        background: linear-gradient(150deg, rgba(63,214,196,0.10), rgba(63,214,196,0.03));
+        border: 1px solid rgba(63,214,196,0.3);
+        border-radius: 18px; padding: 34px;
+        margin: 48px 0; text-align: center;
+    }
+    .cta-box h3 {
+        font-family: var(--display); font-weight: 500; font-size: 1.5rem;
+        color: var(--ink); margin: 0 0 10px;
+    }
+    .cta-box p { color: var(--ink-soft); margin-bottom: 22px; font-size: 1.02rem; }
+    .cta-box a {
+        display: inline-block; background: var(--teal); color: #04100e;
+        font-weight: 700; font-size: 1.02rem; text-decoration: none;
+        padding: 15px 32px; border-radius: 10px;
+        transition: transform 0.2s, box-shadow 0.25s;
+    }
+    .cta-box a:hover { transform: translateY(-2px); box-shadow: 0 12px 30px -12px rgba(63,214,196,0.5); }
+    .cta-box .sub { font-size: 0.84rem; color: var(--ink-faint); margin: 14px 0 0; }
+
+    .related { border-top: 1px solid var(--line); padding-top: 36px; margin-top: 50px; }
+    .related h2 { margin-top: 0; }
+    .related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .related-grid a {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 12px; padding: 18px 20px; text-decoration: none;
+        transition: border-color 0.25s, transform 0.25s;
+    }
+    .related-grid a:hover { border-color: rgba(63,214,196,0.4); transform: translateY(-2px); }
+    .related-grid .q { color: var(--ink); font-weight: 600; font-size: 1.02rem; display: block; margin-bottom: 3px; }
+    .related-grid .a { color: var(--ink-faint); font-size: 0.88rem; }
+
+    .disclaimer {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 12px; padding: 20px 22px; margin: 44px 0 0;
+    }
+    .disclaimer p { font-size: 0.88rem; color: var(--ink-faint); margin: 0; }
+    footer {
+        border-top: 1px solid var(--line); margin-top: 48px;
+        padding: 28px 0 50px; text-align: center;
+    }
+    footer p { font-size: 0.85rem; color: var(--ink-faint); margin: 0; }
+    footer a { color: var(--teal); text-decoration: none; }
+
+    @media (max-width: 560px) {
+        .table-card .row { grid-template-columns: 1fr; }
+        .table-card .cell { border-right: none; border-bottom: 1px solid var(--line); }
+        .related-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="wrap">
+        <a href="https://labread.health" class="brand">lab<span>read</span></a>
+        <a href="https://labread.health" class="cta">Explain my results →</a>
+    </div>
+</div>
+
+<article>
+    <div class="wrap">
+        <div class="crumb">Learn · Vitamin D</div>
+        <h1>Vitamin D Deficiency: What Low Levels Actually Mean</h1>
+
+        <p class="lede"><b>Vitamin D is the hormone that governs mood, bone strength, immune function, and inflammation.</b> When levels are low, the effects ripple through your entire body — fatigue, depression, weak bones, and slow recovery from illness are the most common complaints.</p>
+        <p class="lede">Yet most people who feel these things get told their vitamin D is "normal." Here's what the number actually means — and why "normal" often misses the problem.</p>
+
+        <div class="updated">Plain-English guide · reviewed for accuracy · not a substitute for medical advice</div>
+
+        <h2>What vitamin D actually does</h2>
+        <p>Vitamin D isn't just about bone health (though that's part of it). It regulates <b>immune function, mood, inflammation, and how your cells respond to stress.</b> Most of your tissues have vitamin D receptors, so when levels fall short, the effects show up almost everywhere — mood takes a hit, infections linger longer, and general fatigue sets in.</p>
+        <p>The challenge: vitamin D status isn't obvious from the outside. People can have critically low levels and still look and act "fine" until symptoms pile up enough to notice. By then, the deficiency has usually been building for months.</p>
+
+        <h2>"Normal" vs "optimal": the gap nobody talks about</h2>
+        <p>This is the same issue as with ferritin and most other biomarkers. Lab reference ranges are set wide, and "normal" means "not yet a diagnosed disease" — not "optimal for feeling well." For vitamin D especially, the gap between lab-normal and clinically-optimal is huge.</p>
+
+        <div class="table-card">
+            <div class="row head">
+                <div class="cell">Vitamin D level (ng/mL)</div>
+                <div class="cell">Typical lab label</div>
+                <div class="cell">What clinicians often note</div>
+            </div>
+            <div class="row">
+                <div class="cell label">Under 20</div>
+                <div class="cell muted">Deficient</div>
+                <div class="cell muted">Clearly problematic</div>
+            </div>
+            <div class="row">
+                <div class="cell label">20–29</div>
+                <div class="cell muted">"Insufficient"</div>
+                <div class="cell muted">Symptoms likely</div>
+            </div>
+            <div class="row">
+                <div class="cell label">30–50</div>
+                <div class="cell muted">"Normal"</div>
+                <div class="cell"><span class="opt">Symptoms still common</span></div>
+            </div>
+            <div class="row">
+                <div class="cell label">50–80+</div>
+                <div class="cell muted">"Normal"</div>
+                <div class="cell"><span class="opt">Where most people feel best</span></div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <p><b>Important:</b> vitamin D reference ranges vary slightly by lab, and optimal levels are still debated among clinicians. These numbers reflect a clinical view that's <b>widely used but not absolute.</b> The key is tracking *your* number and how you feel at different levels.</p>
+        </div>
+
+        <h2>Why you can feel terrible with "normal" vitamin D</h2>
+        <p>Vitamin D deficiency doesn't announce itself loudly. Instead, it creeps up as a constellation of vague symptoms that most people chalk up to aging, stress, or just life:</p>
+        <div class="chips">
+            <span class="chip">Persistent fatigue</span>
+            <span class="chip">Depression or low mood</span>
+            <span class="chip">Muscle aches</span>
+            <span class="chip">Slow wound healing</span>
+            <span class="chip">Frequent infections</span>
+            <span class="chip">Poor exercise tolerance</span>
+            <span class="chip">Bone pain</span>
+            <span class="chip">Impaired focus</span>
+        </div>
+        <p>If that list feels familiar and your bloodwork came back "normal," it's worth asking specifically for your <b>vitamin D number</b> — not just whether you're flagged as deficient.</p>
+
+        <h2>Why so many people are low</h2>
+        <ul class="clean">
+            <li><b>Limited sun exposure</b> — your skin makes vitamin D from UVB sunlight, which means winter, indoor work, and sunscreen all reduce production.</li>
+            <li><b>Geography</b> — people above ~40° latitude (most of North America and Europe) can't produce meaningful vitamin D from the sun half the year.</li>
+            <li><b>Darker skin</b> — higher melanin reduces vitamin D synthesis from sunlight (which is why deficiency is more common in people with darker skin, especially those at northern latitudes).</li>
+            <li><b>Diet</b> — very few foods naturally contain vitamin D; it's mostly in fatty fish, egg yolks, and mushrooms exposed to sunlight.</li>
+            <li><b>Absorption problems</b> — conditions like celiac disease or Crohn's can block vitamin D absorption even if intake is adequate.</li>
+        </ul>
+
+        <h2>What to ask your doctor</h2>
+        <p>If your vitamin D is in the "normal" range but you have symptoms, a useful question is: <b>"What's my actual number, and would you recommend supplementing?"</b> Some clinicians will proactively suggest it; many wait for you to ask.</p>
+        <p>If you do supplement, a few things matter:</p>
+        <ul class="clean">
+            <li><b>Form</b> — vitamin D3 (cholecalciferol) is generally more effective than D2 (ergocalciferol).</li>
+            <li><b>Dose</b> — typical supplementation ranges from 1,000–4,000 IU daily for maintenance; correcting a deficiency often needs more.</li>
+            <li><b>Retest</b> — vitamin D takes 8–12 weeks to shift meaningfully, so retest after that window to see if you've corrected it.</li>
+            <li><b>Context</b> — vitamin D works best with adequate calcium, magnesium, and K2, though the science on this is still evolving.</li>
+        </ul>
+
+        <h2>One important note: too much vitamin D is also a problem</h2>
+        <p>While deficiency is far more common, it's possible to get too much vitamin D, especially from supplements. Very high levels (over 100 ng/mL) can cause toxicity. This is why supplementing makes sense only after testing, not preemptively — you want to know where you actually are.</p>
+
+        <div class="cta-box">
+            <h3>Want your whole panel explained like this?</h3>
+            <p>Upload your blood test and get every value in plain English — what's normal, what's not, and what to ask your doctor. Takes about 30 seconds.</p>
+            <a href="https://labread.health">Explain my results — free →</a>
+            <p class="sub">No signup required · your data is processed and not stored</p>
+        </div>
+
+        <div class="related">
+            <h2>Keep reading</h2>
+            <div class="related-grid">
+                <a href="/learn/ferritin">
+                    <span class="q">What does low ferritin mean?</span>
+                    <span class="a">Iron deficiency explained</span>
+                </a>
+                <a href="/learn/tsh-thyroid">
+                    <span class="q">TSH normal but still tired?</span>
+                    <span class="a">Why one thyroid number isn't the whole story</span>
+                </a>
+                <a href="/learn/crp">
+                    <span class="q">What does high CRP mean?</span>
+                    <span class="a">The quiet inflammation marker</span>
+                </a>
+                <a href="/learn/a1c">
+                    <span class="q">What is a pre-diabetic A1c?</span>
+                    <span class="a">The window where changes matter most</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p>This guide is for general education only and is not medical advice, diagnosis, or treatment. Vitamin D levels and their meaning vary between people. Always discuss your results and any symptoms with a qualified healthcare professional before starting supplements or making other changes.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="wrap">
+            <p>© 2026 <a href="https://labread.health">labread.health</a> · Understand your bloodwork in plain English</p>
+        </div>
+    </footer>
+</article>
+
+</body>
+</html>

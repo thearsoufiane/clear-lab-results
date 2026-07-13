@@ -1,15 +1,15 @@
-// GATED WORKER ENTRY — production stays behind the "coming soon" page; the real
-// app runs in local dev. This is the true gate (it short-circuits before the
-// TanStack router), so the live site stays gated through the vision rebuild +
-// CNDP registration while we can render real screens locally.
+// GATED WORKER ENTRY — the public landing page goes live to collect waitlist
+// emails, but the actual app (dashboard, chat, protocol, …) stays behind the
+// "coming soon" page through the vision rebuild + CNDP registration.
 //
-//   • Production build (vite build):  OFFLINE -> static coming-soon for all paths.
-//   • Local dev (vite dev):           full app (SSR + router).
-//   • Override either way with VITE_OFFLINE=true|false.
+//   • Production build (vite build):  landing + marketing render; APP routes -> coming-soon.
+//   • Local dev (vite dev):           full app (SSR + router), nothing gated.
+//   • Override the gate on/off with VITE_OFFLINE=true|false.
 //
-// Do not un-gate production until the rebuild AND CNDP are both done.
+// Do not un-gate the APP routes until the rebuild AND CNDP are both done.
 import "./lib/error-capture";
 
+import { isAppRoute } from "./lib/app-routes";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 
@@ -20,6 +20,14 @@ const OFFLINE =
   import.meta.env.VITE_OFFLINE != null
     ? import.meta.env.VITE_OFFLINE === "true"
     : !import.meta.env.DEV;
+
+// App surfaces (APP_ROUTE_PREFIXES in ./lib/app-routes) stay gated while the
+// public site is live. Everything else renders normally so the marketing site
+// can collect waitlist emails — the three public pages (the homepage "/",
+// "/for-doctors", "/for-clinics"), "/privacy", the legacy "/for-you" +
+// "/for-labs" redirect stubs, the learn/legal pages, and every static or build
+// asset. (Match by path prefix; "/dashboard" or "/dashboard/anything" hits the
+// gate, but "/" and "/for-clinics" do not.)
 
 const COMING_SOON_HTML = `<!doctype html>
 <html lang="en">
@@ -124,7 +132,9 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
-    if (OFFLINE) return comingSoonResponse();
+    if (OFFLINE && isAppRoute(new URL(request.url).pathname)) {
+      return comingSoonResponse();
+    }
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

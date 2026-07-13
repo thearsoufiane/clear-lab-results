@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Does Low Ferritin Mean? A Plain-English Guide to Your Iron Levels | labread</title>
+<meta name="description" content="Low ferritin explained simply: what the number means, why you can feel exhausted with 'normal' labs, common causes, and what to ask your doctor. Free plain-English guide.">
+<link rel="canonical" href="https://labread.health/learn/ferritin">
+<meta property="og:title" content="What Does Low Ferritin Mean? A Plain-English Guide">
+<meta property="og:description" content="Why you can feel exhausted, foggy and cold even when your bloodwork reads 'normal' — and what to do about it.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #0a0f12;
+        --bg-soft: #0f161a;
+        --panel: #131c21;
+        --ink: #eef3f2;
+        --ink-soft: #9fb0b2;
+        --ink-faint: #61716f;
+        --teal: #3fd6c4;
+        --teal-dim: #2ba596;
+        --warm: #f2c14e;
+        --line: rgba(238, 243, 242, 0.09);
+        --display: 'Newsreader', Georgia, serif;
+        --body: 'Hanken Grotesk', system-ui, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+
+    /* top bar */
+    .topbar { border-bottom: 1px solid var(--line); }
+    .topbar .wrap {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 28px;
+    }
+    .brand {
+        font-family: var(--display); font-weight: 600; font-size: 1.25rem;
+        color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
+    }
+    .brand span { color: var(--teal); }
+    .topbar a.cta {
+        font-size: 0.9rem; font-weight: 600; color: var(--teal);
+        text-decoration: none; border: 1px solid rgba(63,214,196,0.35);
+        padding: 8px 16px; border-radius: 8px; transition: background 0.25s;
+    }
+    .topbar a.cta:hover { background: rgba(63,214,196,0.08); }
+
+    /* article */
+    article { padding: 56px 0 40px; }
+
+    .crumb {
+        font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase;
+        color: var(--teal-dim); margin-bottom: 22px;
+    }
+
+    h1 {
+        font-family: var(--display); font-weight: 500;
+        font-size: clamp(2.1rem, 6vw, 3.1rem);
+        line-height: 1.08; letter-spacing: -0.02em;
+        margin-bottom: 26px;
+    }
+
+    .lede {
+        font-size: 1.22rem; color: var(--ink);
+        line-height: 1.6; margin-bottom: 16px;
+    }
+    .lede b { color: #fff; font-weight: 600; }
+
+    .updated {
+        font-size: 0.85rem; color: var(--ink-faint);
+        margin-bottom: 40px; padding-bottom: 30px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+        font-family: var(--display); font-weight: 500;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        line-height: 1.15; letter-spacing: -0.01em;
+        margin: 48px 0 18px;
+    }
+    h3 {
+        font-size: 1.15rem; font-weight: 700; color: var(--ink);
+        margin: 30px 0 10px;
+    }
+
+    p { color: var(--ink-soft); margin-bottom: 18px; font-size: 1.06rem; }
+    p b, li b { color: var(--ink); font-weight: 600; }
+    a.inline { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+    a.inline:hover { color: var(--ink); }
+
+    ul.clean { list-style: none; margin: 0 0 22px; }
+    ul.clean li {
+        color: var(--ink-soft); font-size: 1.06rem;
+        padding: 8px 0 8px 28px; position: relative;
+    }
+    ul.clean li::before {
+        content: ''; position: absolute; left: 4px; top: 16px;
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--teal);
+    }
+
+    /* the key table */
+    .table-card {
+        background: var(--panel); border: 1px solid var(--line);
+        border-radius: 14px; overflow: hidden; margin: 26px 0;
+    }
+    .table-card .row {
+        display: grid; grid-template-columns: 1.3fr 1fr 1fr;
+        border-bottom: 1px solid var(--line);
+    }
+    .table-card .row:last-child { border-bottom: none; }
+    .table-card .row.head {
+        background: rgba(63,214,196,0.06);
+    }
+    .table-card .cell {
+        padding: 15px 18px; font-size: 0.96rem;
+        border-right: 1px solid var(--line);
+    }
+    .table-card .cell:last-child { border-right: none; }
+    .table-card .row.head .cell {
+        font-weight: 700; color: var(--ink); font-size: 0.86rem;
+        letter-spacing: 0.02em; text-transform: uppercase;
+    }
+    .table-card .cell.label { color: var(--ink); font-weight: 600; }
+    .table-card .cell.muted { color: var(--ink-soft); }
+    .table-card .cell .opt { color: var(--teal); font-weight: 600; }
+
+    /* symptom chips */
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 26px; }
+    .chip {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 100px; padding: 9px 16px;
+        font-size: 0.95rem; color: var(--ink);
+    }
+
+    /* callout */
+    .callout {
+        background: rgba(242,193,78,0.07);
+        border: 1px solid rgba(242,193,78,0.28);
+        border-radius: 12px; padding: 20px 22px; margin: 28px 0;
+    }
+    .callout p { color: var(--ink); margin: 0; font-size: 1rem; }
+    .callout b { color: var(--warm); }
+
+    /* CTA box */
+    .cta-box {
+        background: linear-gradient(150deg, rgba(63,214,196,0.10), rgba(63,214,196,0.03));
+        border: 1px solid rgba(63,214,196,0.3);
+        border-radius: 18px; padding: 34px;
+        margin: 48px 0; text-align: center;
+    }
+    .cta-box h3 {
+        font-family: var(--display); font-weight: 500; font-size: 1.5rem;
+        color: var(--ink); margin: 0 0 10px;
+    }
+    .cta-box p { color: var(--ink-soft); margin-bottom: 22px; font-size: 1.02rem; }
+    .cta-box a {
+        display: inline-block; background: var(--teal); color: #04100e;
+        font-weight: 700; font-size: 1.02rem; text-decoration: none;
+        padding: 15px 32px; border-radius: 10px;
+        transition: transform 0.2s, box-shadow 0.25s;
+    }
+    .cta-box a:hover { transform: translateY(-2px); box-shadow: 0 12px 30px -12px rgba(63,214,196,0.5); }
+    .cta-box .sub { font-size: 0.84rem; color: var(--ink-faint); margin: 14px 0 0; }
+
+    /* related */
+    .related { border-top: 1px solid var(--line); padding-top: 36px; margin-top: 50px; }
+    .related h2 { margin-top: 0; }
+    .related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .related-grid a {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 12px; padding: 18px 20px; text-decoration: none;
+        transition: border-color 0.25s, transform 0.25s;
+    }
+    .related-grid a:hover { border-color: rgba(63,214,196,0.4); transform: translateY(-2px); }
+    .related-grid .q { color: var(--ink); font-weight: 600; font-size: 1.02rem; display: block; margin-bottom: 3px; }
+    .related-grid .a { color: var(--ink-faint); font-size: 0.88rem; }
+
+    /* disclaimer / footer */
+    .disclaimer {
+        background: var(--bg-soft); border: 1px solid var(--line);
+        border-radius: 12px; padding: 20px 22px; margin: 44px 0 0;
+    }
+    .disclaimer p { font-size: 0.88rem; color: var(--ink-faint); margin: 0; }
+    footer {
+        border-top: 1px solid var(--line); margin-top: 48px;
+        padding: 28px 0 50px; text-align: center;
+    }
+    footer p { font-size: 0.85rem; color: var(--ink-faint); margin: 0; }
+    footer a { color: var(--teal); text-decoration: none; }
+
+    @media (max-width: 560px) {
+        .table-card .row { grid-template-columns: 1fr; }
+        .table-card .cell { border-right: none; border-bottom: 1px solid var(--line); }
+        .related-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="wrap">
+        <a href="https://labread.health" class="brand">lab<span>read</span></a>
+        <a href="https://labread.health" class="cta">Explain my results →</a>
+    </div>
+</div>
+
+<article>
+    <div class="wrap">
+        <div class="crumb">Learn · Iron &amp; Ferritin</div>
+        <h1>What Does Low Ferritin Mean?</h1>
+
+        <p class="lede"><b>Ferritin is the protein that stores iron in your body — it's the single best measure of your iron reserves.</b> When ferritin is low, your iron "tank" is running near empty, which can leave you exhausted, foggy, and cold long before a standard anemia test ever flags a problem.</p>
+        <p class="lede">That's why so many people are told their bloodwork is "normal" while they still feel drained. Here's what the number actually means — and what to do about it.</p>
+
+        <div class="updated">Plain-English guide · reviewed for accuracy · not a substitute for medical advice</div>
+
+        <h2>What ferritin actually measures</h2>
+        <p>Most blood tests measure the iron circulating in your blood right now. Ferritin is different: it measures your <b>stored</b> iron — the reserve your body draws on when intake falls short. Because the body empties these stores <em>before</em> levels in the blood drop, ferritin is usually the <b>first marker to fall</b> when you're heading toward iron deficiency, and the first to recover when you fix it.</p>
+        <p>In practice, that makes a low ferritin one of the earliest warning signs that something's off — often while a standard CBC (the test used to diagnose anemia) still looks completely normal.</p>
+
+        <h2>"Normal" vs "optimal": the gap that confuses everyone</h2>
+        <p>Here's the part most people are never told. Lab reference ranges are wide, and the bottom of "normal" is set very low — low enough that you can technically pass the test while running on fumes. Many clinicians find that symptoms can appear at ferritin levels that a lab still marks as in-range.</p>
+
+        <div class="table-card">
+            <div class="row head">
+                <div class="cell">Ferritin level (ng/mL)</div>
+                <div class="cell">Typical lab label</div>
+                <div class="cell">What many clinicians note</div>
+            </div>
+            <div class="row">
+                <div class="cell label">Under 15–30</div>
+                <div class="cell muted">Flagged low</div>
+                <div class="cell muted">Iron deficiency likely</div>
+            </div>
+            <div class="row">
+                <div class="cell label">30–50</div>
+                <div class="cell muted">"Normal"</div>
+                <div class="cell"><span class="opt">Symptoms still common</span></div>
+            </div>
+            <div class="row">
+                <div class="cell label">50–100+</div>
+                <div class="cell muted">"Normal"</div>
+                <div class="cell"><span class="opt">Often where people feel best</span></div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <p><b>Important:</b> these figures are general orientation, not a diagnosis. Reference ranges vary by lab, and they differ by sex, age, pregnancy, and whether inflammation is present. The "optimal" thresholds above reflect a clinical view that's <b>widely used but still debated</b> — your doctor interprets your number in the context of <em>you</em>.</p>
+        </div>
+
+        <h2>Why you can feel awful with "normal" labs</h2>
+        <p>Iron does far more than prevent anemia — it carries oxygen, fuels your cells' energy production, and supports your thyroid, brain, and muscles. When stores run low, the effects show up everywhere, often well before anemia appears:</p>
+        <div class="chips">
+            <span class="chip">Persistent fatigue</span>
+            <span class="chip">Hair shedding</span>
+            <span class="chip">Cold hands &amp; feet</span>
+            <span class="chip">Brain fog</span>
+            <span class="chip">Breathlessness on exertion</span>
+            <span class="chip">Restless legs</span>
+            <span class="chip">Low mood</span>
+            <span class="chip">Poor exercise tolerance</span>
+        </div>
+        <p>If that list feels familiar and your doctor said your blood was "fine," it's worth asking specifically about your <b>ferritin number</b> — not just whether you're anemic.</p>
+
+        <h2>Common causes of low ferritin</h2>
+        <ul class="clean">
+            <li><b>Heavy periods</b> — one of the most common causes in menstruating people, and frequently overlooked.</li>
+            <li><b>Not enough dietary iron</b> — especially on plant-based diets, where iron is harder to absorb.</li>
+            <li><b>Poor absorption</b> — conditions like celiac disease, or low stomach acid, can block uptake even with enough intake.</li>
+            <li><b>Blood loss in the gut</b> — sometimes silent; an important reason unexplained iron deficiency should always be investigated.</li>
+            <li><b>Pregnancy</b> — iron demand rises sharply.</li>
+            <li><b>Endurance training</b> — heavy runners and athletes lose iron through several routes.</li>
+        </ul>
+
+        <h2>What to ask your doctor (and what to test next)</h2>
+        <p>If your ferritin is low or low-normal and you have symptoms, a useful next step is a <b>full iron panel</b> rather than ferritin alone. That typically includes:</p>
+        <ul class="clean">
+            <li><b>Serum iron</b> — iron currently in your blood</li>
+            <li><b>TIBC / transferrin</b> — your body's iron-carrying capacity</li>
+            <li><b>Transferrin saturation</b> — how "full" that capacity is</li>
+            <li><b>CBC</b> — to check whether anemia has developed</li>
+        </ul>
+        <p>Two questions worth asking directly: <b>"What's my actual ferritin number?"</b> and <b>"If it's low, what's the cause?"</b> Supplementing without finding the <em>why</em> can mask a problem that needs attention — which is exactly why iron should be looked at <b>with a doctor</b>, not self-treated from a number alone.</p>
+
+        <h2>What about high ferritin?</h2>
+        <p>Ferritin can also be <b>elevated</b> — sometimes from iron overload (such as hemochromatosis), but often simply because ferritin rises with inflammation, infection, or other stress in the body. A high reading isn't automatically an iron problem, which is another reason the number needs proper interpretation rather than a quick glance.</p>
+
+        <div class="cta-box">
+            <h3>Want your whole panel explained like this?</h3>
+            <p>Upload your blood test and get every value in plain English — what's normal, what's not, and what to ask your doctor. Takes about 30 seconds.</p>
+            <a href="https://labread.health">Explain my results — free →</a>
+            <p class="sub">No signup required · your data is processed and not stored</p>
+        </div>
+
+        <div class="related">
+            <h2>Keep reading</h2>
+            <div class="related-grid">
+                <a href="/learn/vitamin-d">
+                    <span class="q">What does low vitamin D mean?</span>
+                    <span class="a">Why "normal" and "optimal" are far apart</span>
+                </a>
+                <a href="/learn/tsh-thyroid">
+                    <span class="q">TSH normal but still tired?</span>
+                    <span class="a">Why one thyroid number isn't the whole story</span>
+                </a>
+                <a href="/learn/crp">
+                    <span class="q">What does high CRP mean?</span>
+                    <span class="a">The quiet inflammation marker most people miss</span>
+                </a>
+                <a href="/learn/a1c">
+                    <span class="q">What is a pre-diabetic A1c?</span>
+                    <span class="a">The window where changes matter most</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p>This guide is for general education only and is not medical advice, diagnosis, or treatment. Lab ranges and what they mean vary between people. Always discuss your results and any symptoms with a qualified healthcare professional before making changes to supplements, diet, or medication.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="wrap">
+            <p>© 2026 <a href="https://labread.health">labread.health</a> · Understand your bloodwork in plain English</p>
+        </div>
+    </footer>
+</article>
+
+</body>
+</html>

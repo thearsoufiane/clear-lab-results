@@ -1,239 +1,439 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef } from "react";
-import {
-  MARKETING_CSS, CONSOLE_CSS, SvgDefs, MarketingNav, MarketingFooter,
-  ConsoleHero, useMarketingEffects, type TickerItem,
-} from "@/components/marketing";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
+import { WaitlistForm } from "@/components/marketing-waitlist";
+
+// Public marketing page — ported 1:1 from
+// design-reference/marketing/labread-for-doctors.html. CSS scoped under `.lr-doc`.
 
 export const Route = createFileRoute("/for-doctors")({
   head: () => ({
     meta: [
-      { title: "labread — Branded lab reports for doctors" },
-      { name: "description", content: "Turn each patient's blood test into a clear, branded interpretation — read, explained, and tracked across every visit. Built for solo doctors and small practices." },
-      { property: "og:title", content: "labread — Branded lab reports for doctors" },
-      { property: "og:description", content: "Branded, patient-ready interpretation reports and trend tracking for clinicians." },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://labread.health/for-doctors" },
-      { property: "og:image", content: "https://labread.health/og-image.png" },
+      { title: "labread — for doctors" },
+      {
+        name: "description",
+        content:
+          "You have four minutes; she has thirty questions. labread writes the explanation you'd give her if you had thirty — under your name, before she walks out.",
+      },
+      { property: "og:title", content: "labread — for doctors" },
+      {
+        property: "og:description",
+        content:
+          "A branded, plain-language interpretation of every result — the AI never decides the medicine. Free for practices during the beta.",
+      },
     ],
     links: [
       { rel: "canonical", href: "https://labread.health/for-doctors" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" as const },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap",
+      },
     ],
   }),
-  component: ForDoctors,
+  component: ForDoctorsPage,
 });
 
-const pageCss = `
-  .lr-mkt .sec-head{max-width:680px;margin:0 auto}
+const CSS = `
+html{scroll-behavior:smooth}
+@keyframes lrBreathe{0%,100%{opacity:.55}50%{opacity:1}}
 
-  /* FEATURE TRIO */
-  .lr-mkt .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:46px}
-  .lr-mkt .feat{background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:18px;padding:26px 24px;transition:.25s}
-  .lr-mkt .feat:hover{transform:translateY(-4px);border-color:rgba(245,166,35,.32)}
-  .lr-mkt .feat .fi{width:46px;height:46px;border-radius:13px;background:rgba(245,133,63,.1);border:1px solid var(--line);display:grid;place-items:center;margin-bottom:18px}
-  .lr-mkt .feat .fi svg{width:23px;height:23px;stroke:var(--amber);fill:none;stroke-width:1.9}
-  .lr-mkt .feat h3{font-size:21px;margin-bottom:10px}
-  .lr-mkt .feat p{color:var(--muted);font-size:14.5px}
+.lr-doc{
+  --void:#080705;--ember:#E8743B;--ember-glow:#FFC069;--ember-deep:#8A2C08;
+  --glass:rgba(255,255,255,.035);--glass-line:rgba(255,176,102,.14);
+  --text:#EDE5D9;--dim:rgba(237,229,217,.5);--faint:rgba(237,229,217,.28);
+  --line:rgba(255,176,102,.07);
+  background:var(--void);color:var(--text);font-family:'Inter',-apple-system,sans-serif;
+  font-size:17px;line-height:1.6;overflow-x:clip;box-sizing:border-box;-webkit-font-smoothing:antialiased;
 
-  /* WORKFLOW */
-  .lr-mkt .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:46px;position:relative}
-  .lr-mkt .flow-step{position:relative;background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:16px;padding:22px 18px;text-align:center}
-  .lr-mkt .flow-step .n{width:34px;height:34px;border-radius:50%;background:var(--bg-2);border:1px solid var(--line);display:grid;place-items:center;margin:0 auto 14px;font-family:var(--serif);color:var(--amber-lite);font-size:15px}
-  .lr-mkt .flow-step h4{font-family:var(--sans);font-size:15px;font-weight:600;margin-bottom:7px}
-  .lr-mkt .flow-step p{font-size:13px;color:var(--muted)}
-  .lr-mkt .flow-step::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:16px;z-index:2}
-  .lr-mkt .flow-step:last-child::after{display:none}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-  /* COMPLIANCE STRIP */
-  .lr-mkt .compliance{margin-top:46px;border:1px solid var(--line);border-radius:18px;padding:26px 30px;background:linear-gradient(90deg,rgba(245,133,63,.06),rgba(111,207,151,.04));display:flex;align-items:center;gap:30px;flex-wrap:wrap;justify-content:center}
-  .lr-mkt .compliance .ci{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--cream)}
-  .lr-mkt .compliance .ci svg{width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:2}
+  .glow-field{position:fixed;inset:0;pointer-events:none;z-index:0}
+  .glow-field::before{content:'';position:absolute;top:-12%;left:-8%;width:900px;height:700px;background:radial-gradient(ellipse,rgba(255,122,24,.13) 0%,transparent 65%);animation:lrBreathe 12s ease-in-out infinite}
+  .glow-field::after{content:'';position:absolute;bottom:-8%;right:-8%;width:700px;height:700px;background:radial-gradient(circle,rgba(232,116,59,.07) 0%,transparent 62%);animation:lrBreathe 15s ease-in-out infinite reverse}
 
-  /* PRICING (single best-value) */
-  .lr-mkt .pricing{padding:46px 0}
-  .lr-mkt .price-one{max-width:480px;margin:46px auto 0;position:relative}
-  .lr-mkt .price-frame{position:relative;background:linear-gradient(var(--bg-2),var(--bg-2)) padding-box,var(--grad) border-box;border:1.5px solid transparent;border-radius:22px;padding:34px 32px;box-shadow:0 40px 90px rgba(232,116,59,.18)}
-  .lr-mkt .best-tag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--grad);color:#1a0f02;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;padding:7px 16px;border-radius:999px;display:inline-flex;align-items:center;gap:7px}
-  .lr-mkt .best-tag .dot{width:6px;height:6px;border-radius:50%;background:#1a0f02}
-  .lr-mkt .price-frame .pname{font-family:var(--serif);font-size:26px}
-  .lr-mkt .price-frame .price{display:flex;align-items:flex-end;gap:7px;margin:14px 0 16px}
-  .lr-mkt .price-frame .amt{font-family:var(--serif);font-size:58px;line-height:.9;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .lr-mkt .price-frame .per{font-size:14px;color:var(--muted);margin-bottom:9px}
-  .lr-mkt .annual{border:1px solid rgba(111,207,151,.3);background:rgba(111,207,151,.07);border-radius:13px;padding:13px 16px;margin-bottom:22px}
-  .lr-mkt .annual b{color:var(--green);font-size:14px}
-  .lr-mkt .annual span{display:block;font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:3px}
-  .lr-mkt .price-frame ul{list-style:none;display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
-  .lr-mkt .price-frame li{display:flex;align-items:flex-start;gap:12px;font-size:14.5px;color:var(--cream)}
-  .lr-mkt .price-frame li svg{width:20px;height:20px;flex-shrink:0;margin-top:1px;stroke:var(--green);fill:none;stroke-width:2}
-  .lr-mkt .price-frame .pbtn{display:block;text-align:center;padding:15px;border-radius:12px;font-weight:600;font-size:15px;background:var(--grad);color:#1a0f02;cursor:pointer;box-shadow:0 0 34px rgba(245,133,63,.32);transition:.2s}
-  .lr-mkt .price-frame .pbtn:hover{transform:translateY(-1px);box-shadow:0 0 50px rgba(245,133,63,.48)}
-  .lr-mkt .price-foot{text-align:center;margin-top:28px;font-size:14px;color:var(--muted)}
-  .lr-mkt .price-foot a{color:var(--amber-lite);font-weight:600}
+  .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:22px 44px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(8,7,5,.92),rgba(8,7,5,0))}
+  .brand{font-family:'Fraunces',serif;font-size:23px;font-weight:300;color:var(--ember);text-decoration:none;letter-spacing:-.5px}
+  .brand b{font-weight:400}
+  .brand span{color:var(--faint);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-left:12px}
+  .nav-cta{background:linear-gradient(135deg,var(--ember-glow),var(--ember));color:#160B04;border:none;padding:11px 24px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 0 24px rgba(232,116,59,.3);transition:box-shadow .25s,transform .2s}
+  .nav-cta:hover{box-shadow:0 0 40px rgba(232,116,59,.55);transform:translateY(-1px)}
 
-  @media(max-width:920px){
-    .lr-mkt .feat-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}
-    .lr-mkt .flow{grid-template-columns:1fr;max-width:340px;margin-left:auto;margin-right:auto}
-    .lr-mkt .flow-step::after{content:"↓";right:50%;left:50%;top:auto;bottom:-12px;transform:translateX(50%)}
+  .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 44px}
+  .act{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0;position:relative}
+  .act.short{min-height:auto;padding:120px 0}
+
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3.5px;text-transform:uppercase;color:var(--ember-glow);opacity:.75;margin-bottom:26px;display:flex;align-items:center;gap:12px}
+  .eyebrow::before{content:'';width:26px;height:1px;background:var(--ember);opacity:.6}
+  .eyebrow.mid{justify-content:center}
+  .eyebrow.mid::after{content:'';width:26px;height:1px;background:var(--ember);opacity:.6}
+
+  h1{font-family:'Fraunces',serif;font-weight:200;font-size:clamp(40px,5.8vw,78px);line-height:1.05;letter-spacing:-2.2px}
+  h1 em{font-style:italic;font-weight:300;color:var(--ember-glow)}
+  h2{font-family:'Fraunces',serif;font-weight:200;font-size:clamp(30px,4.2vw,54px);line-height:1.12;letter-spacing:-1.5px}
+  h2 em{font-style:italic;font-weight:300;color:var(--ember-glow)}
+  h3{font-family:'Fraunces',serif;font-weight:300;font-size:22px;letter-spacing:-.4px}
+  .lede{font-size:20px;color:var(--dim);line-height:1.7;max-width:580px}
+  .lede b{color:var(--text);font-weight:500}
+
+  .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:70px;align-items:center}
+  .hero-copy h1{margin-bottom:30px}
+  .hero-copy .lede{margin-bottom:40px}
+
+  .clock{position:relative;display:flex;align-items:center;justify-content:center}
+  .clock svg{width:100%;max-width:340px;filter:drop-shadow(0 0 40px rgba(232,116,59,.3))}
+  .clock-center{position:absolute;text-align:center}
+  .clock-num{font-family:'Fraunces',serif;font-size:82px;font-weight:200;color:var(--ember-glow);line-height:1;letter-spacing:-4px}
+  .clock-lab{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--faint);text-transform:uppercase;margin-top:6px}
+  .clock-sub{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--faint);text-transform:uppercase;margin-top:14px;opacity:.6;max-width:150px;line-height:1.6}
+
+  .wait{display:flex;gap:10px;max-width:440px}
+  .wait input{flex:1;background:var(--glass);border:1px solid var(--glass-line);padding:17px 22px;border-radius:100px;color:var(--text);font-size:15px;font-family:'Inter',sans-serif;outline:none;backdrop-filter:blur(14px);transition:border-color .25s,box-shadow .25s}
+  .wait input::placeholder{color:var(--faint)}
+  .wait input:focus{border-color:var(--ember);box-shadow:0 0 0 3px rgba(232,116,59,.1)}
+  .wait button{background:linear-gradient(135deg,var(--ember-glow),var(--ember));color:#160B04;border:none;padding:17px 28px;border-radius:100px;font-size:15px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 0 30px rgba(232,116,59,.35);transition:box-shadow .25s,transform .2s}
+  .wait button:hover{box-shadow:0 0 50px rgba(232,116,59,.6);transform:translateY(-1px)}
+  .wait button[disabled]{opacity:.6;cursor:default;box-shadow:none;transform:none}
+  .wait-note{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--faint);text-transform:uppercase}
+  .wait-done{max-width:440px;align-items:center;justify-content:center;gap:11px;background:var(--glass);border:1px solid var(--glass-line);border-radius:100px;padding:15px 24px;color:var(--ember-glow);font-size:15px;backdrop-filter:blur(14px)}
+  .wait-err{margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ember)}
+
+  .two-hd{text-align:center;display:flex;flex-direction:column;align-items:center;margin-bottom:60px}
+  .two-hd h2{max-width:780px;margin:0 auto 18px}
+  .two-hd .lede{text-align:center;margin:0 auto}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .conv{border-radius:20px;padding:36px 34px;position:relative;overflow:hidden}
+  .conv-cold{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.055)}
+  .conv-warm{background:linear-gradient(140deg,rgba(255,176,102,.075),rgba(232,116,59,.025));border:1px solid var(--glass-line);backdrop-filter:blur(14px);box-shadow:0 0 60px rgba(232,116,59,.1)}
+  .conv-when{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .conv-cold .conv-when{color:var(--faint)}
+  .conv-warm .conv-when{color:var(--ember-glow)}
+  .beat{padding:15px 0;display:flex;gap:14px;align-items:flex-start}
+  .beat-t{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:1px;min-width:52px;padding-top:4px}
+  .beat-x{font-size:15px;line-height:1.6}
+  .conv-cold .beat-x{color:var(--dim)}
+  .conv-warm .beat-x{color:var(--text)}
+  .beat-x b{color:var(--ember-glow);font-weight:500}
+
+  .report-split{display:grid;grid-template-columns:.9fr 1.1fr;gap:80px;align-items:center}
+  .rep{background:var(--glass);border:1px solid var(--glass-line);border-radius:20px;padding:34px;backdrop-filter:blur(14px);box-shadow:0 20px 70px rgba(0,0,0,.4)}
+  .rep-hd{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:22px}
+  .rep-clinic{font-family:'Fraunces',serif;font-size:21px;font-weight:300;color:var(--ember-glow)}
+  .rep-pb{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--faint);text-transform:uppercase;margin-top:4px}
+  .rep-pt{text-align:right}
+  .rep-pt-n{font-size:14px;font-weight:500}
+  .rep-pt-i{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:1px;margin-top:3px}
+  .rm{padding:14px 0;border-bottom:1px solid var(--line)}
+  .rm:last-of-type{border-bottom:none}
+  .rm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+  .rm-name{font-size:14.5px;font-weight:500}
+  .rm-val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim)}
+  .rm-bar{height:4px;background:rgba(255,255,255,.05);border-radius:2px;position:relative;overflow:hidden}
+  .rm-fill{position:absolute;left:0;top:0;height:100%;border-radius:2px;box-shadow:0 0 8px currentColor}
+  .rm-note{font-size:12.5px;color:var(--faint);line-height:1.55;margin-top:9px}
+  .rep-foot{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--faint);text-transform:uppercase;display:flex;justify-content:space-between}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:56px}
+  .card{background:var(--glass);border:1px solid var(--glass-line);border-radius:18px;padding:36px 32px;backdrop-filter:blur(14px);transition:border-color .3s,transform .3s}
+  .card:hover{border-color:rgba(255,176,102,.3);transform:translateY(-4px)}
+  .card-eb{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ember-glow);margin-bottom:16px}
+  .card h3{margin-bottom:12px}
+  .card p{color:var(--dim);font-size:14.5px;line-height:1.7}
+
+  .layers{display:flex;flex-direction:column;gap:0;max-width:640px;margin:0 auto}
+  .layer{border-radius:16px;padding:28px 32px;position:relative}
+  .layer-1{background:linear-gradient(135deg,rgba(255,176,102,.09),rgba(232,116,59,.03));border:1px solid var(--glass-line);backdrop-filter:blur(14px);box-shadow:0 0 50px rgba(232,116,59,.1)}
+  .layer-2{background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(14px);margin-top:14px}
+  .layer-eb{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ember-glow);margin-bottom:12px}
+  .layer h3{margin-bottom:10px}
+  .layer p{color:var(--dim);font-size:14.5px;line-height:1.7}
+  .layer-sep{height:26px;display:flex;align-items:center;justify-content:center;position:relative}
+  .layer-sep::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:1px;background:linear-gradient(to bottom,rgba(255,176,102,.2),var(--ember),rgba(255,176,102,.2))}
+  .layer-sep span{position:relative;background:var(--void);padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--ember);text-transform:uppercase}
+  .layer-guard{margin-top:26px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--faint);text-transform:uppercase;line-height:2}
+
+  .final{text-align:center;align-items:center}
+  .final h2{max-width:800px;margin:0 auto 22px;font-size:clamp(32px,4.6vw,58px)}
+  .final .lede{margin:0 auto 42px;text-align:center}
+  .final .wait{margin:0 auto}
+  .final .wait-note{text-align:center}
+
+  footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:44px;max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+  .f-links{display:flex;gap:26px}
+  .f-links a{color:var(--dim);text-decoration:none;font-size:13px}
+  .f-links a:hover{color:var(--text)}
+  .f-note{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:1px}
+
+  .rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+  .rv.in{opacity:1;transform:none}
+
+  @media (max-width:900px){
+    .wrap{padding:0 24px}
+    .hero{grid-template-columns:1fr;gap:50px}
+    .clock{order:-1}
+    .two{grid-template-columns:1fr}
+    .report-split{grid-template-columns:1fr;gap:48px}
+    .grid2{grid-template-columns:1fr}
+    .wait{flex-direction:column}
+    .nav{padding:16px 24px}
+    .brand span{display:none}
+    .act{min-height:auto;padding:90px 0}
+    footer{flex-direction:column;text-align:center}
   }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}.rv{opacity:1;transform:none}}
+}
 `;
 
-const ARROW = <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
-const CHECK = <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>;
-
-const ticker: TickerItem[] = [
-  { tone: "r", nm: "Yassine B.", vl: "23 params", st: "2 abnormal" },
-  { tone: "g", nm: "Leila M.", vl: "18 params", st: "All clear" },
-  { tone: "w", nm: "Omar K.", vl: "21 params", st: "1 flag" },
-  { tone: "g", nm: "Sara T.", vl: "14 params", st: "All clear" },
-  { tone: "r", nm: "Hamza R.", vl: "26 params", st: "3 abnormal" },
-  { tone: "g", nm: "Nadia B.", vl: "19 params", st: "All clear" },
-  { tone: "w", nm: "Karim A.", vl: "22 params", st: "1 flag" },
-  { tone: "g", nm: "Imane S.", vl: "16 params", st: "All clear" },
-];
-
-function ForDoctors() {
+function ForDoctorsPage() {
   const rootRef = useRef<HTMLDivElement>(null);
-  useMarketingEffects(rootRef);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => e.isIntersecting && e.target.classList.add("in")),
+      { threshold: 0.1 },
+    );
+    root.querySelectorAll(".rv").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <div className="lr-mkt" ref={rootRef}>
-      <style dangerouslySetInnerHTML={{ __html: MARKETING_CSS + pageCss + CONSOLE_CSS }} />
-      <SvgDefs />
+    <div className="lr-doc" ref={rootRef}>
+      <style dangerouslySetInnerHTML={{ __html: CSS }} />
 
-      <MarketingNav
-        active="doctors"
-        topbar={<>Give every patient a report they understand — <b>in your clinic's name</b> &nbsp;<a href="#pricing">See pricing →</a></>}
-        cta={{ label: "Start free", href: "/get-started" }}
-      />
+      <div className="glow-field" />
 
-      <ConsoleHero
-        badges={<>
-          <span className="h-pill"><span className="d" />Clinician console</span>
-          <span className="h-pill ghost">Patient-ready · branded</span>
-        </>}
-        h1={<>Branded reads,<br />patient by <span className="ital">patient.</span></>}
-        sub={<>labread turns each patient's blood test into a clear, branded interpretation — <b>read, explained, and tracked</b> across every visit.</>}
-        ctas={<>
-          <Link className="btn btn-amber" to="/get-started">Start free {ARROW}</Link>
-          <a className="btn btn-line" href="#pricing">See pricing</a>
-        </>}
-        metrics={[
-          { count: 150, suf: "", label: "Analyses / mo" },
-          { count: 50, suf: "+", label: "Markers read" },
-          { count: 6, suf: "h", label: "Saved / week" },
-        ]}
-        gaugeCenter={<>
-          <text className="score" x="260" y="256" fontSize="54">148</text>
-          <text className="lab" x="260" y="290" fontSize="12" letterSpacing="2">ANALYSES</text>
-          <text className="lab" x="260" y="308" fontSize="9" letterSpacing="3" fill="#6F6557">THIS MONTH · 6 FLAGGED</text>
-        </>}
-        panels={<>
-          <div className="gpanel gp-anna" data-float="1.3">
-            <div className="ah"><div className="orb"><i /></div><div><div className="an">Yassine B.</div><div className="ar">2 abnormal · flagged</div></div></div>
-            <p>Latest panel — <b>ferritin &amp; ALT</b> out of range. Ready for your review.</p>
-          </div>
-          <div className="gpanel gp-trend" data-float="1">
-            <div className="th"><span className="tn">ALT</span><span className="tv">▼ 16.7 U/L</span></div>
-            <svg viewBox="0 0 180 46" preserveAspectRatio="none"><rect x="0" y="8" width="180" height="26" fill="rgba(111,207,151,.1)" /><polyline points="8,40 55,37 105,20 175,12" fill="none" stroke="url(#tgrad)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /><circle cx="105" cy="20" r="4" fill="#0E0B08" stroke="#6FCF97" strokeWidth="2.4" /></svg>
-          </div>
-          <div className="gpanel gp-range" data-float="1.5">
-            <div className="rh"><span>Report</span><span className="ok">● ready</span></div>
-            <div className="rn"><div className="ric">A</div><div><div className="rnm">Amine Clinic</div><div className="rvl">branded PDF + share link</div></div></div>
-            <div className="mini-track"><i className="r" /><i className="w" /><i className="g" /><i className="w" /><i className="r" /><div className="mini-mark" data-left="46%" /></div>
-          </div>
-          <div className="gpanel gp-streak" data-float="1.7">
-            <svg className="sr" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(245,166,35,.14)" strokeWidth="4" /><circle cx="22" cy="22" r="18" fill="none" stroke="url(#ringG)" strokeWidth="4" strokeLinecap="round" strokeDasharray="113" strokeDashoffset="34" transform="rotate(-90 22 22)" /></svg>
-            <div><div className="sb">24</div><div className="sl">patients</div></div>
-          </div>
-        </>}
-        ticker={ticker}
-      />
+      <nav className="nav">
+        <a href="/" className="brand">lab<b>read</b><span>for doctors</span></a>
+        <a href="#join" className="nav-cta">Get early access</a>
+      </nav>
 
-      {/* FEATURES */}
-      <section className="sec" id="learn"><div className="wrap">
-        <div className="sec-head rv">
-          <span className="eyebrow">Why clinicians choose labread</span>
-          <h2>Interpretation that does the <span className="ital">heavy lifting.</span></h2>
-        </div>
-        <div className="feat-grid">
-          <div className="feat rv">
-            <div className="fi"><svg viewBox="0 0 24 24"><path d="M4 4h16v14H4z" /><path d="M8 9h8M8 13h6" /><circle cx="18" cy="18" r="3" /></svg></div>
-            <h3>Reports in your name</h3>
-            <p>Your clinic's name and logo sit on every interpretation. Send patients a clean, professional report as a PDF or a secure link they can open anywhere.</p>
+      <div className="wrap">
+        {/* HERO */}
+        <section className="act">
+          <div className="hero">
+            <div className="hero-copy">
+              <div className="eyebrow">for doctors &amp; consultants</div>
+              <h1>You have <em>four minutes.</em><br />She has thirty questions.</h1>
+              <p className="lede">
+                You know what her ferritin means. She doesn't. And there isn't time to explain it
+                properly — so she leaves, opens Google at midnight, and calls your office in the morning
+                because <b>a forum told her it was cancer.</b>
+              </p>
+              <p className="lede" style={{ marginBottom: 40 }}>
+                labread writes the explanation you'd give her if you had thirty minutes.
+                Under your name. Before she walks out.
+              </p>
+              <WaitlistForm
+                audience="doctor"
+                id="join"
+                placeholder="your clinic email"
+                buttonLabel="Get early access →"
+                note="free during beta · no integration needed"
+              />
+            </div>
+
+            <div className="clock">
+              <svg viewBox="0 0 200 200">
+                <defs>
+                  <linearGradient id="cg" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#FFC069" /><stop offset="100%" stopColor="#8A2C08" />
+                  </linearGradient>
+                  <filter id="cgl"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+                </defs>
+                <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,176,102,.07)" strokeWidth="8" />
+                <circle cx="100" cy="100" r="86" fill="none" stroke="url(#cg)" strokeWidth="8"
+                  strokeLinecap="round" strokeDasharray="540" strokeDashoffset="486"
+                  transform="rotate(-90 100 100)" filter="url(#cgl)" />
+              </svg>
+              <div className="clock-center">
+                <div className="clock-num">4</div>
+                <div className="clock-lab">minutes</div>
+                <div className="clock-sub">the average follow-up consultation</div>
+              </div>
+            </div>
           </div>
-          <div className="feat rv">
-            <div className="fi"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 6-7" /><path d="M3 21h18" /></svg></div>
-            <h3>Every trend, one timeline</h3>
-            <p>A patient's whole history, in one view. labread plots each marker across visits with clear reference zones, so a slow drift is obvious long before it turns into a problem.</p>
+        </section>
+
+        {/* TWO CONVERSATIONS */}
+        <section className="act rv">
+          <div className="two-hd">
+            <div className="eyebrow mid">what happens after she leaves</div>
+            <h2>There are two conversations.<br />You're only in <em>one</em> of them.</h2>
+            <p className="lede">
+              The one in your office lasts four minutes. The one in her head lasts all week.
+              labread doesn't replace you — it shows up in the second conversation, saying what you would have said.
+            </p>
           </div>
-          <div className="feat rv">
-            <div className="fi"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 1 1-3.5-6.6L21 4v5h-5" /></svg></div>
-            <h3>Answers in plain words</h3>
-            <p>Ask labread to put any result in patient-friendly language, draft follow-up guidance, or prep a visit summary — in seconds, ready to send.</p>
+
+          <div className="two">
+            <div className="conv conv-cold">
+              <div className="conv-when">without labread</div>
+              <div className="beat"><span className="beat-t">14:02</span><span className="beat-x">She leaves with a PDF. Ferritin 18, CRP 4.2, a wall of reference ranges.</span></div>
+              <div className="beat"><span className="beat-t">23:40</span><span className="beat-x">She searches "CRP 4.2 high." The third result is a cancer forum.</span></div>
+              <div className="beat"><span className="beat-t">01:15</span><span className="beat-x">She's still reading. She hasn't slept. She's convinced something is wrong.</span></div>
+              <div className="beat"><span className="beat-t">08:30</span><span className="beat-x">Your receptionist takes the call. She wants an urgent appointment.</span></div>
+              <div className="beat"><span className="beat-t">11:00</span><span className="beat-x">You spend the slot re-explaining what you already said yesterday.</span></div>
+            </div>
+
+            <div className="conv conv-warm">
+              <div className="conv-when">with labread</div>
+              <div className="beat"><span className="beat-t">14:02</span><span className="beat-x">She leaves with a report from <b>your clinic</b> — every value explained in plain language.</span></div>
+              <div className="beat"><span className="beat-t">19:20</span><span className="beat-x">She reads: <b>"Your CRP is mildly raised — worth monitoring, not alarming."</b> She exhales.</span></div>
+              <div className="beat"><span className="beat-t">19:35</span><span className="beat-x">She reads about her ferritin. It's low. She understands why she's tired.</span></div>
+              <div className="beat"><span className="beat-t">08:30</span><span className="beat-x">No call. She's following the protocol you approved.</span></div>
+              <div className="beat"><span className="beat-t">+90 days</span><span className="beat-x">She comes back with a re-test and <b>an informed question.</b></span></div>
+            </div>
           </div>
-        </div>
-      </div></section>
+        </section>
 
-      {/* WORKFLOW */}
-      <section className="sec"><div className="wrap">
-        <div className="sec-head rv">
-          <span className="eyebrow">Fits your workflow</span>
-          <h2>From upload to branded report in <span className="ital">four steps.</span></h2>
-        </div>
-        <div className="flow">
-          <div className="flow-step rv"><div className="n">1</div><h4>Add the patient</h4><p>Create a profile in seconds — or pull from your existing roster.</p></div>
-          <div className="flow-step rv"><div className="n">2</div><h4>Upload the test</h4><p>Drop any lab's PDF or photo. labread reads every parameter.</p></div>
-          <div className="flow-step rv"><div className="n">3</div><h4>AI interprets</h4><p>Get flagged abnormals, plain-language notes, and trend context.</p></div>
-          <div className="flow-step rv"><div className="n">4</div><h4>Share the report</h4><p>Send a branded PDF or secure link straight to your patient.</p></div>
-        </div>
+        {/* BRANDED REPORT */}
+        <section className="act rv">
+          <div className="report-split">
+            <div>
+              <div className="eyebrow">your name on it</div>
+              <h2>A report she'll actually <em>read.</em></h2>
+              <p className="lede" style={{ marginTop: 26 }}>
+                Upload her results. labread generates a branded interpretation in seconds —
+                your clinic, your colours, your authority. Flagged markers first, each with a
+                plain-language note she can understand without you in the room.
+              </p>
+              <p className="lede" style={{ marginTop: 20 }}>
+                You review it before it goes out. <b>labread does the writing. You keep the judgement.</b>
+              </p>
+            </div>
 
-        <div className="compliance rv">
-          <span className="ci"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z" /><path d="M9 12l2 2 4-4" /></svg>HIPAA-aware handling</span>
-          <span className="ci"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>Encrypted end-to-end</span>
-          <span className="ci"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M2 12h20M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg>Region-friendly delivery</span>
-        </div>
-      </div></section>
+            <div className="rep">
+              <div className="rep-hd">
+                <div>
+                  <div className="rep-clinic">Cabinet Dr. Amrani</div>
+                  <div className="rep-pb">powered by labread</div>
+                </div>
+                <div className="rep-pt">
+                  <div className="rep-pt-n">Fatima B.</div>
+                  <div className="rep-pt-i">34F · 12 JUL 2026</div>
+                </div>
+              </div>
 
-      {/* PRICING */}
-      <section className="sec pricing" id="pricing"><div className="wrap">
-        <div className="sec-head rv">
-          <span className="eyebrow">Pricing for clinicians</span>
-          <h2>One plan. <span className="ital">Nothing held back.</span></h2>
-          <p>Built for solo doctors and small practices. No setup fees, no contracts, cancel anytime.</p>
-        </div>
-        <div className="price-one rv">
-          <div className="price-frame">
-            <span className="best-tag"><span className="dot" />Best value</span>
-            <div className="pname">Practice plan</div>
-            <div className="price"><span className="amt">$59</span><span className="per">/ month</span></div>
-            <div className="annual"><b>Pay yearly, 2 months on us</b><span>$590 / year instead of $708</span></div>
-            <ul>
-              <li>{CHECK}1 clinician account</li>
-              <li>{CHECK}Up to 150 patient analyses a month</li>
-              <li>{CHECK}Unlimited patient profiles</li>
-              <li>{CHECK}Full trend tracking &amp; AI clarifications</li>
-              <li>{CHECK}Branded reports — share by link or PDF</li>
-            </ul>
-            <Link className="pbtn" to="/get-started">Get started</Link>
+              <div className="rm">
+                <div className="rm-top"><span className="rm-name">Ferritin</span><span className="rm-val">18 ng/mL · low</span></div>
+                <div className="rm-bar"><div className="rm-fill" style={{ width: "12%", background: "#E8743B", color: "#E8743B" }} /></div>
+                <p className="rm-note">Iron stores in the bottom 15%. Consistent with her reported fatigue. Optimal 30–150.</p>
+              </div>
+
+              <div className="rm">
+                <div className="rm-top"><span className="rm-name">CRP</span><span className="rm-val">4.2 mg/L · elevated</span></div>
+                <div className="rm-bar"><div className="rm-fill" style={{ width: "60%", background: "#8A2C08", color: "#8A2C08" }} /></div>
+                <p className="rm-note">Mildly raised. Worth monitoring — not alarming on its own. Recheck in 8 weeks.</p>
+              </div>
+
+              <div className="rm">
+                <div className="rm-top"><span className="rm-name">TSH</span><span className="rm-val">2.1 mIU/L · normal</span></div>
+                <div className="rm-bar"><div className="rm-fill" style={{ width: "44%", background: "#FFC069", color: "#FFC069" }} /></div>
+              </div>
+
+              <div className="rm">
+                <div className="rm-top"><span className="rm-name">Hemoglobin</span><span className="rm-val">14.2 g/dL · optimal</span></div>
+                <div className="rm-bar"><div className="rm-fill" style={{ width: "66%", background: "#FFC069", color: "#FFC069" }} /></div>
+              </div>
+
+              <div className="rep-foot">
+                <span>16 markers · 2 flagged</span>
+                <span>reviewed by dr. amrani</span>
+              </div>
+            </div>
           </div>
-        </div>
-        <p className="price-foot">Running a lab or clinic with higher volume? <Link to="/for-labs">See enterprise plans for labs &amp; clinics →</Link></p>
-      </div></section>
+        </section>
 
-      {/* FINAL CTA */}
-      <section className="final"><div className="wrap">
-        <h2>Give every patient a report they <span className="ital">actually understand.</span></h2>
-        <p>Start free today — add your first patient and generate a branded interpretation in minutes.</p>
-        <div className="hero-cta">
-          <Link className="btn btn-amber" to="/get-started">Start free {ARROW}</Link>
-          <a className="btn btn-ghost" href="#pricing">See pricing</a>
-        </div>
-      </div></section>
+        {/* THE MATH */}
+        <section className="act rv">
+          <div className="two-hd">
+            <div className="eyebrow mid">why you can trust the output</div>
+            <h2>The AI never decides the <em>medicine.</em></h2>
+            <p className="lede">
+              This is the part that matters to you, so we'll be precise about it.
+              labread is two layers, and only one of them is a language model.
+            </p>
+          </div>
 
-      <MarketingFooter copy="© 2026 labread · Clinic-grade interpretation, in your name." />
+          <div className="layers">
+            <div className="layer layer-1">
+              <div className="layer-eb">layer one · deterministic</div>
+              <h3>The math decides</h3>
+              <p>A rules-based pipeline extracts every value and maps it to validated clinical reference ranges, adjusted for age and biological sex. There is no model here. No inference. No hallucination is possible — it is the same arithmetic you would do yourself.</p>
+            </div>
+
+            <div className="layer-sep"><span>then, and only then</span></div>
+
+            <div className="layer layer-2">
+              <div className="layer-eb">layer two · constrained</div>
+              <h3>Anna explains</h3>
+              <p>A language model turns the result into a sentence a patient understands. She can only describe what the math already established. She cannot invent a number, change a status, diagnose, prescribe, or alarm. She narrates. She never decides.</p>
+            </div>
+          </div>
+
+          <p className="layer-guard">
+            never diagnoses · never doses · never replaces a clinician<br />
+            every report ends with: worth discussing with your doctor
+          </p>
+        </section>
+
+        {/* WHAT YOU GET */}
+        <section className="act short rv">
+          <div className="two-hd">
+            <div className="eyebrow mid">what your practice gets</div>
+            <h2>Built for a <em>clinic,</em> not a wellness app.</h2>
+          </div>
+
+          <div className="grid2">
+            <div className="card">
+              <div className="card-eb">coverage</div>
+              <h3>50+ markers, any lab, any language</h3>
+              <p>Moroccan labs, French labs, international panels. Arabic, French, English. labread reads the formats your patients actually bring you — not just the ones Silicon Valley thought of.</p>
+            </div>
+            <div className="card">
+              <div className="card-eb">trends</div>
+              <h3>The trajectory, not the snapshot</h3>
+              <p>Upload every test she brings you and labread shows the line. Is ferritin climbing? Did CRP settle? A single value tells you almost nothing. The direction tells you everything.</p>
+            </div>
+            <div className="card">
+              <div className="card-eb">continuity</div>
+              <h3>She comes back informed</h3>
+              <p>labread generates a 90-day protocol from her results — small daily actions, a streak, a re-test. She doesn't disappear for a year. She returns with data and a real question.</p>
+            </div>
+            <div className="card">
+              <div className="card-eb">privacy</div>
+              <h3>EU-hosted, CNDP registered</h3>
+              <p>Patient data lives in Paris. Registered with Morocco's data protection authority under Law 09-08. Never used to train models. Never sold. You can tell your patients that honestly.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* FINAL */}
+        <section className="act final rv">
+          <div className="eyebrow mid">early access · morocco first</div>
+          <h2>Give her back the thirty minutes you <em>don't have.</em></h2>
+          <p className="lede">labread opens soon. Free for practices during the beta.</p>
+          <WaitlistForm
+            audience="doctor"
+            placeholder="your clinic email"
+            buttonLabel="Get early access →"
+            note="no integration required · data hosted in the eu"
+          />
+        </section>
+      </div>
+
+      <footer>
+        <a href="/" className="brand">lab<b>read</b></a>
+        <div className="f-links">
+          <a href="/">For you</a>
+          <a href="/for-doctors">For doctors</a>
+          <a href="/for-clinics">For clinics</a>
+          <a href="/privacy">Privacy</a>
+        </div>
+        <span className="f-note">© 2026 labread · labread.health</span>
+      </footer>
     </div>
   );
 }

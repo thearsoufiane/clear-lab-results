@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { isAppRoute } from "@/lib/app-routes";
 
 const KEY = "labread:disclaimer-accepted";
 
 export function DisclaimerModal() {
   const [open, setOpen] = useState(false);
+  // The "not a medical diagnosis" gate belongs to the app, where results are
+  // shown — never to the public marketing/legal/learn pages. Mounted once at the
+  // root, so re-check on every navigation.
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
     try {
       if (!localStorage.getItem(KEY)) setOpen(true);
     } catch {}
   }, []);
+
+  if (!isAppRoute(pathname)) return null;
 
   const accept = () => {
     try { localStorage.setItem(KEY, "1"); } catch {}
