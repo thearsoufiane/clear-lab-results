@@ -37,8 +37,8 @@ export const Route = createFileRoute("/")({
 
 const html = `<style>
   :root{
-    --bg:#0B0907; --bg-2:#100D0A; --surface:#171209; --surface-2:#1C160D;
-    --line:rgba(245,166,35,.12); --line-soft:rgba(245,166,35,.07);
+    --bg:#0C0A07; --bg-2:#100D0A; --surface:#171209; --surface-2:#1C160D;
+    --line:rgba(255,176,102,.1); --line-soft:rgba(255,176,102,.06);
     --cream:#F4ECDF; --muted:#9E9384; --faint:#6F6557;
     --amber:#F5A623; --amber-lite:#FFC069; --amber-deep:#E8743B;
     --grad:linear-gradient(135deg,#FFC069 0%,#F5853F 60%,#E8743B 100%);
@@ -47,7 +47,7 @@ const html = `<style>
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--cream);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body{background:radial-gradient(ellipse 110% 78% at 50% 42%,rgba(232,116,59,.1) 0%,rgba(232,116,59,.03) 40%,transparent 66%) fixed,var(--bg);color:var(--cream);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
   .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--amber);display:inline-flex;align-items:center;gap:14px}
@@ -74,15 +74,21 @@ const html = `<style>
   .wl.done .wl-input,.wl.done .wl-btn{display:none}
   .wl.done .wl-msg{font-size:14.5px;font-family:var(--sans);margin-top:0}
   .final .wl{margin:0 auto}
-  /* audience pills — single-select, sit above the email input */
-  .wl-aud{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:2px}
-  .wl-pill{font-family:var(--sans);font-size:13.5px;line-height:1;padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:.2s;white-space:nowrap;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-  .wl-pill:hover{border-color:rgba(245,166,35,.4);color:var(--cream)}
-  .wl-pill.on{background:var(--grad);border-color:transparent;color:#1a0f02;font-weight:600;box-shadow:0 0 20px rgba(245,133,63,.34)}
+  /* audience pills — single-select text tabs (ember underline + dot when active,
+     no fill), shared by both homepage waitlist forms (hero + final CTA) */
+  .wl-aud{flex-basis:100%;display:flex;flex-wrap:wrap;gap:22px;justify-content:center;margin-bottom:2px}
+  .wl-pill{font-family:var(--sans);font-size:13.5px;line-height:1;padding:4px 2px;border:none;border-bottom:2px solid transparent;border-radius:0;background:none;box-shadow:none;color:var(--cream);font-weight:500;opacity:.5;cursor:pointer;transition:.2s;white-space:nowrap}
+  .wl-pill:hover{opacity:.8;border-bottom-color:transparent}
+  .wl-pill.on{opacity:1;font-weight:600;border-bottom-color:var(--amber)}
+  .wl-pill.on::before{content:"\\25CF";font-size:8px;margin-right:7px;color:var(--amber);vertical-align:middle}
   .wl.done .wl-aud{display:none}
+  /* HERO CTA: gently breathing glow (opacity of the shadow, no bounce) */
+  @keyframes heroGlowPulse{0%,100%{box-shadow:0 0 22px rgba(245,133,63,.30)}50%{box-shadow:0 0 46px rgba(245,133,63,.62)}}
+  .hero .wl-btn{animation:heroGlowPulse 4s ease-in-out infinite}
+  .hero .wl-btn[disabled]{animation:none}
+  @media (prefers-reduced-motion:reduce){.hero .wl-btn{animation:none}}
 
   /* ANNOUNCEMENT */
-  .topbar{background:linear-gradient(90deg,rgba(232,116,59,.14),rgba(245,166,35,.06));border-bottom:1px solid var(--line-soft);text-align:center;font-size:13.5px;color:var(--cream);padding:9px 16px;letter-spacing:.01em}
   .topbar a{color:var(--amber-lite);font-weight:500}
 
   /* NAV */
@@ -103,16 +109,61 @@ const html = `<style>
   .nav-cta .signin{font-size:14.5px;color:var(--muted)}
   .menu-btn{display:none;background:none;border:none;color:var(--cream);font-size:24px;cursor:pointer}
 
-  /* HERO */
-  .hero{position:relative;text-align:center;padding:84px 0 60px;overflow:hidden}
-  .hero::before{content:"";position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:900px;height:560px;background:radial-gradient(ellipse at center,rgba(245,133,63,.20),transparent 65%);filter:blur(20px);pointer-events:none}
-  .hero-badge{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 16px;font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);margin-bottom:30px}
-  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
-  .hero h1{font-size:clamp(46px,7.4vw,90px);position:relative}
-  .hero-sub{max-width:600px;margin:26px auto 0;color:var(--muted);font-size:19px}
-  .hero-sub b{color:var(--cream);font-weight:600}
-  .hero-cta{display:flex;gap:14px;justify-content:center;margin-top:36px;flex-wrap:wrap}
-  .hero-note{margin-top:26px;font-size:13.5px;color:var(--faint);display:inline-flex;align-items:center;gap:8px}
+  /* WNAV — minimal fixed bar over the hero */
+  .wnav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:28px 56px}
+  .wnav-brand{font-family:var(--serif);font-size:24px;font-weight:300;color:#E8743B;text-decoration:none;letter-spacing:-.01em}
+  .wnav-right{display:flex;align-items:center;gap:32px}
+  .wnav-right a{font-size:14px;color:rgba(237,229,217,.5);text-decoration:none;transition:color .15s}
+  .wnav-right a:hover{color:#EDE5D9}
+  .wnav .wnav-cta{border:1px solid rgba(255,255,255,.25);color:#fff;background:transparent;border-radius:100px;padding:10px 24px}
+  .wnav .wnav-cta:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.06)}
+
+  /* HERO — "The Whisper" (full-viewport photo, golden orb, alternating-color headline) */
+  .whero{position:relative;width:100vw;min-height:max(100vh,780px);overflow:hidden;background:#070604}
+  .whero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right 30%;z-index:0}
+  .whero-orb{position:absolute;top:10%;right:18%;width:50vw;max-width:650px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,227,184,.55) 0%,rgba(255,192,105,.35) 18%,rgba(232,116,59,.2) 38%,transparent 65%);filter:blur(50px);mix-blend-mode:screen;pointer-events:none;z-index:1}
+  .whero-shade{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(to right,#070604 0%,rgba(7,6,4,.9) 25%,rgba(7,6,4,.4) 52%,transparent 72%)}
+  .whero-bottomfade{position:absolute;left:0;right:0;bottom:0;height:40%;z-index:2;pointer-events:none;background:linear-gradient(to top,rgba(7,6,4,.6),transparent)}
+  .whero-inner{position:relative;z-index:3;min-height:max(100vh,780px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;max-width:600px;padding:0 24px 0 56px}
+  .whero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#FFC069;opacity:.7;display:inline-flex;align-items:center;gap:14px;margin-bottom:28px}
+  .whero-eyebrow::before{content:"";width:28px;height:1px;background:#E8743B}
+  .whero-h1{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(34px,4.8vw,62px);line-height:1.18;letter-spacing:-1px;max-width:600px}
+  .whero-h1 .cr{color:#EDE5D9}
+  .whero-h1 .em{color:#FFC069;text-shadow:0 0 40px rgba(255,192,105,.3)}
+  .whero-sub{font-family:var(--sans);font-size:17px;color:rgba(237,229,217,.5);line-height:1.75;max-width:420px;margin-top:26px}
+  .whero-cta{display:flex;align-items:center;gap:26px;margin-top:34px;flex-wrap:wrap}
+  .whero-join{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#FFC069,#E8743B);color:#160B04;padding:17px 38px;border-radius:100px;box-shadow:0 0 36px rgba(232,116,59,.4);font-family:var(--sans);font-weight:600;font-size:15px;text-decoration:none;transition:box-shadow .22s,transform .2s}
+  .whero-join:hover{box-shadow:0 0 54px rgba(232,116,59,.6);transform:translateY(-1px)}
+  .whero-how{font-family:var(--sans);font-size:14.5px;color:rgba(237,229,217,.5);text-decoration:none;border-bottom:1px solid rgba(255,192,105,.2);padding-bottom:2px;transition:.2s}
+  .whero-how:hover{color:#EDE5D9;border-bottom-color:rgba(255,192,105,.5)}
+  .whero-launch{margin-top:30px;font-family:var(--sans);font-size:13px;color:rgba(237,229,217,.25);display:flex;align-items:center;gap:9px}
+  .whero-launch .dot{width:5px;height:5px;border-radius:50%;background:#E8743B;box-shadow:0 0 8px rgba(232,116,59,.7);flex-shrink:0}
+  .whero-bar{position:absolute;left:0;right:0;bottom:48px;z-index:3;display:flex;align-items:flex-end;justify-content:space-between;padding:0 56px;pointer-events:none}
+  .whero-stats{display:flex}
+  .whero-stat{padding:0 26px;border-left:1px solid rgba(255,192,105,.15);display:flex;flex-direction:column;gap:3px}
+  .whero-stat:first-child{padding-left:0;border-left:none}
+  .whero-stat .n{font-family:var(--serif);font-size:18px;font-weight:300;color:#EDE5D9}
+  .whero-stat .l{font-family:var(--sans);font-size:10.5px;color:rgba(237,229,217,.5)}
+  .whero-scroll{pointer-events:auto;display:flex;flex-direction:column;align-items:center;font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:rgba(237,229,217,.5);text-decoration:none}
+  .whero-scroll::after{content:"";display:block;width:1px;height:32px;margin-top:10px;background:linear-gradient(to bottom,#E8743B,transparent);transform-origin:top;animation:wheroDrip 2.4s ease-in-out infinite}
+  @keyframes wheroDrip{0%,100%{opacity:.3;transform:scaleY(.5)}50%{opacity:1;transform:scaleY(1)}}
+  @media(prefers-reduced-motion:reduce){.whero-scroll::after{animation:none}}
+  @media(max-width:900px){
+    .whero-bar{display:none}
+    .whero-inner{max-width:none;padding:0 24px}
+    .whero-h1{font-size:clamp(28px,7vw,46px)}
+    .wnav{padding:22px 24px}
+    .wnav-right a:not(.wnav-cta){display:none}
+    .whero-orb{right:0;top:4%;width:70vw}
+  }
+  /* WAITLIST section (moved out of the hero) */
+  .waitlist{text-align:center;scroll-margin-top:82px;background:radial-gradient(ellipse 80% 70% at 50% 45%,rgba(232,116,59,.07) 0%,transparent 62%),linear-gradient(to bottom,rgba(7,6,4,.8) 0%,transparent 200px)}
+  .waitlist .wl{margin:0 auto}
+  .waitlist .hero-note{justify-content:center;margin-top:20px}
+  /* DASHBOARD PREVIEW section (restored below the waitlist) */
+  .dash-section{padding:64px 0 80px;scroll-margin-top:80px;background:radial-gradient(ellipse 72% 58% at center,rgba(255,176,102,.03) 0%,transparent 66%)}
+  .dash-section .dash-stage{margin-top:0}
+  .hero-note{font-size:13.5px;color:var(--faint);display:inline-flex;align-items:center;gap:8px}
   .hero-note svg{width:15px;height:15px;stroke:var(--green)}
 
   /* BIOMARKER CARD (signature) */
@@ -449,54 +500,65 @@ const html = `<style>
   </symbol>
 </defs></svg>
 
-<!-- ANNOUNCEMENT -->
-<div class="topbar">labread now reads <b style="color:var(--amber-lite)">50+ biomarkers</b> across any lab, in any language &nbsp;<a href="#">See what's new →</a></div>
-
 <!-- NAV -->
-<nav class="nav"><div class="wrap nav-in">
-  <a class="brand" href="#"><svg class="logo-mark"><use href="#lm"/></svg><span class="word">labread</span></a>
-  <div class="nav-links">
+<nav class="wnav">
+  <a class="wnav-brand" href="/">labread</a>
+  <div class="wnav-right">
     <a href="/for-you">For you</a>
     <a href="/for-doctors">For doctors</a>
     <a href="/for-clinics">For clinics</a>
-    <a href="#learn">Learn</a>
-    <a href="#coach">Coach</a>
-  </div>
-  <div class="nav-cta">
-    <a class="btn btn-amber" href="#waitlist">Join the waitlist</a>
-  </div>
-  <button class="menu-btn" aria-label="Menu">☰</button>
-</div>
-  <div class="nav-drawer">
-    <a href="/for-you">For you</a>
-    <a href="/for-doctors">For doctors</a>
-    <a href="/for-clinics">For clinics</a>
-    <a href="#learn">Learn</a>
-    <a href="#coach">Coach</a>
-    <a class="btn btn-amber" href="#waitlist">Join the waitlist</a>
+    <a class="wnav-cta" href="#waitlist">Join the waitlist</a>
   </div>
 </nav>
 
 <!-- HERO -->
-<header class="hero"><div class="wrap">
-  <div class="hero-badge"><span class="dot"></span>AI-Powered Medical Clarity</div>
-  <h1>Your blood test,<br><span class="ital">finally explained.</span></h1>
-  <p class="hero-sub">Understand your results, get a simple plan, and <b>watch your numbers move</b>. Not a one-time report — a health you can actually follow.</p>
-  <div class="hero-cta">
-    <form class="wl" id="waitlist" novalidate>
-      <div class="wl-aud" role="group" aria-label="Which best describes you?">
-        <button type="button" class="wl-pill on" data-aud="individual" aria-pressed="true">I want to understand my results</button>
-        <button type="button" class="wl-pill" data-aud="doctor" aria-pressed="false">I'm a doctor or consultant</button>
-        <button type="button" class="wl-pill" data-aud="clinic" aria-pressed="false">I run a lab or clinic</button>
-      </div>
-      <input class="wl-input" type="email" placeholder="your@email.com" aria-label="Email" autocomplete="email">
-      <button class="btn btn-amber wl-btn" type="submit">Join the waitlist →</button>
-      <div class="wl-msg" aria-live="polite"></div>
-    </form>
-    <a class="btn btn-ghost" href="#sample">See a sample report</a>
+<header class="whero">
+  <img class="whero-img" src="/hero.jpg" alt="" />
+  <div class="whero-orb"></div>
+  <div class="whero-shade"></div>
+  <div class="whero-bottomfade"></div>
+  <div class="whero-inner">
+    <div class="whero-eyebrow">the health os your doctor never gave you</div>
+    <h1 class="whero-h1"><span class="cr">your body has been</span> <span class="em">speaking</span> <span class="cr">your</span> <span class="em">entire life.</span></h1>
+    <p class="whero-sub">You just haven't had anyone to translate it. labread reads your blood, explains every number, and gives you ninety days to change what matters.</p>
+    <div class="whero-cta">
+      <a class="whero-join" href="#waitlist">Join the waitlist →</a>
+      <a class="whero-how" href="#how">See how it works</a>
+    </div>
+    <div class="whero-launch"><span class="dot"></span>Launching soon in Morocco. Be first.</div>
   </div>
-  <div class="hero-note"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Data hosted in the EU · Never used to train AI · CNDP registered</div>
+  <div class="whero-bar">
+    <div class="whero-stats">
+      <div class="whero-stat"><span class="n">50+ biomarkers</span><span class="l">From any lab, any language</span></div>
+      <div class="whero-stat"><span class="n">90-day protocol</span><span class="l">Built from your results</span></div>
+      <div class="whero-stat"><span class="n">Anna</span><span class="l">AI coach who knows your blood</span></div>
+    </div>
+    <a class="whero-scroll" href="#waitlist">scroll</a>
+  </div>
+</header>
 
+<!-- WAITLIST -->
+<section class="block waitlist" id="waitlist"><div class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Early access</span>
+    <h2>Be first when labread <span class="ital">opens.</span></h2>
+    <p>Tell us who you are — we'll email you the day we launch.</p>
+  </div>
+  <form class="wl" novalidate>
+    <div class="wl-aud" role="group" aria-label="Which best describes you?">
+      <button type="button" class="wl-pill on" data-aud="individual" aria-pressed="true">For me</button>
+      <button type="button" class="wl-pill" data-aud="doctor" aria-pressed="false">I'm a doctor</button>
+      <button type="button" class="wl-pill" data-aud="clinic" aria-pressed="false">I run a clinic</button>
+    </div>
+    <input class="wl-input" type="email" placeholder="your@email.com" aria-label="Email" autocomplete="email">
+    <button class="btn btn-amber wl-btn" type="submit">Join the waitlist →</button>
+    <div class="wl-msg" aria-live="polite"></div>
+  </form>
+  <div class="hero-note"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Data hosted in the EU · Never used to train AI · CNDP registered</div>
+</div></section>
+
+<!-- DASHBOARD PREVIEW (restored — the "Today" mockup) -->
+<section class="dash-section" id="how"><div class="wrap">
   <div class="dash-stage">
     <div class="dash-fit">
     <div class="dash">
@@ -568,7 +630,7 @@ const html = `<style>
     </div>
     </div>
   </div>
-</div></header>
+</div></section>
 
 <!-- TICKER -->
 <div class="ticker"><div class="ticker-track">
@@ -867,9 +929,9 @@ const html = `<style>
   <p>Your next blood test doesn't have to be a mystery. Get your first report in minutes.</p>
   <form class="wl" id="waitlist-final" novalidate>
     <div class="wl-aud" role="group" aria-label="Which best describes you?">
-      <button type="button" class="wl-pill on" data-aud="individual" aria-pressed="true">I want to understand my results</button>
-      <button type="button" class="wl-pill" data-aud="doctor" aria-pressed="false">I'm a doctor or consultant</button>
-      <button type="button" class="wl-pill" data-aud="clinic" aria-pressed="false">I run a lab or clinic</button>
+      <button type="button" class="wl-pill on" data-aud="individual" aria-pressed="true">For me</button>
+      <button type="button" class="wl-pill" data-aud="doctor" aria-pressed="false">I'm a doctor</button>
+      <button type="button" class="wl-pill" data-aud="clinic" aria-pressed="false">I run a clinic</button>
     </div>
     <input class="wl-input" type="email" placeholder="your@email.com" aria-label="Email" autocomplete="email">
     <button class="btn btn-amber wl-btn" type="submit">Join the waitlist →</button>

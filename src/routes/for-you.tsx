@@ -46,10 +46,10 @@ html{scroll-behavior:smooth}
 @keyframes lrOrbPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 
 .lr-fy{
-  --void:#080705;--ember:#E8743B;--ember-hot:#FF9147;--ember-glow:#FFC069;--ember-deep:#8A2C08;
+  --void:#0C0A07;--ember:#E8743B;--ember-hot:#FF9147;--ember-glow:#FFC069;--ember-deep:#8A2C08;
   --glass:rgba(255,255,255,.035);--glass-line:rgba(255,176,102,.14);
   --text:#EDE5D9;--dim:rgba(237,229,217,.5);--faint:rgba(237,229,217,.28);
-  --line:rgba(255,176,102,.07);
+  --line:rgba(255,176,102,.06);
   background:var(--void);color:var(--text);font-family:'Inter',-apple-system,sans-serif;
   font-size:17px;line-height:1.6;overflow-x:clip;box-sizing:border-box;-webkit-font-smoothing:antialiased;
 

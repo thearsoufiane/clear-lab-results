@@ -41,10 +41,10 @@ html{scroll-behavior:smooth}
 @keyframes lrBreathe{0%,100%{opacity:.55}50%{opacity:1}}
 
 .lr-clin{
-  --void:#080705;--ember:#E8743B;--ember-glow:#FFC069;--ember-deep:#8A2C08;
+  --void:#0C0A07;--ember:#E8743B;--ember-glow:#FFC069;--ember-deep:#8A2C08;
   --glass:rgba(255,255,255,.035);--glass-line:rgba(255,176,102,.14);
   --text:#EDE5D9;--dim:rgba(237,229,217,.5);--faint:rgba(237,229,217,.28);
-  --line:rgba(255,176,102,.07);
+  --line:rgba(255,176,102,.06);
   background:var(--void);color:var(--text);font-family:'Inter',-apple-system,sans-serif;
   font-size:17px;line-height:1.6;overflow-x:clip;box-sizing:border-box;-webkit-font-smoothing:antialiased;
 
@@ -100,7 +100,8 @@ html{scroll-behavior:smooth}
   .wait-done{align-items:center;justify-content:center;gap:11px;background:var(--glass);border:1px solid var(--glass-line);border-radius:100px;padding:15px 24px;color:var(--ember-glow);font-size:15px;backdrop-filter:blur(14px)}
   .wait-err{margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ember)}
 
-  .wall-wrap{margin-top:66px;position:relative;max-width:900px;width:100%}
+  .wall-wrap{margin-top:66px;position:relative;z-index:0;max-width:900px;width:100%}
+  .wall-wrap::before{content:"";position:absolute;inset:-14%;background:radial-gradient(ellipse at center,rgba(255,176,102,.05),transparent 65%);filter:blur(32px);z-index:-1;pointer-events:none}
   .wall{display:grid;grid-template-columns:repeat(30,1fr);gap:5px}
   .doc{aspect-ratio:.72;border-radius:2px;background:rgba(255,255,255,.045);position:relative;overflow:hidden}
   .doc::before,.doc::after{content:'';position:absolute;left:18%;right:18%;height:1px;background:rgba(255,255,255,.05)}
@@ -134,7 +135,7 @@ html{scroll-behavior:smooth}
   .ep-p{font-family:'JetBrains Mono',monospace;font-size:13px}
   .ep-d{font-size:12.5px;color:var(--faint);margin-top:7px;line-height:1.5}
 
-  .code{background:rgba(0,0,0,.5);border:1px solid var(--line);border-radius:16px;padding:28px;overflow-x:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .code{background:rgba(12,10,7,.6);border:1px solid var(--line);border-radius:16px;padding:28px;overflow-x:auto;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 70px rgba(232,116,59,.06)}
   .code pre{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;color:var(--dim)}
   .ck{color:var(--ember-glow)}
   .cs{color:var(--ember)}
