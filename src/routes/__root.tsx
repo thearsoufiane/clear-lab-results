@@ -85,10 +85,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      {
-        rel: "canonical",
-        href: "https://labread.health",
-      },
+      // NOTE: no canonical here. The root head() runs for EVERY route, and
+      // TanStack does not dedupe links by `rel`, so a canonical here would be
+      // emitted on top of each page's own canonical (two canonical tags per
+      // page — which search engines may ignore). Each leaf route sets its own
+      // canonical instead; see e.g. src/routes/index.tsx for the home page.
     ],
   }),
   shellComponent: RootShell,
